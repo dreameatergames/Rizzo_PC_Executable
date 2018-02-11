@@ -1,0 +1,25 @@
+#include <windows.h> // include for version info constants
+
+107 ICON "Rizzo_Island.ico"
+
+1 VERSIONINFO
+FILEVERSION 1,0,0,0
+PRODUCTVERSION 1,0,0,0
+FILETYPE VFT_APP
+{
+  BLOCK "StringFileInfo"
+	 {
+		 BLOCK "040904E4"
+		 {
+			 VALUE "CompanyName", "Island Games"
+			 VALUE "FileVersion", "1.0"
+			 VALUE "FileDescription", "The Game Rizzo Island for Windows"
+			 VALUE "InternalName", "Rizzo_Island.exe"
+			 VALUE "LegalCopyright", "id Software, Forest Hale, David Croshaw, and contributors"
+			 VALUE "LegalTrademarks", ""
+			 VALUE "OriginalFilename", "Rizzo_Island.exe"
+			 VALUE "ProductName", "Rizzo_Island"
+			 VALUE "ProductVersion", "1.0"
+		 }
+	 }
+}
