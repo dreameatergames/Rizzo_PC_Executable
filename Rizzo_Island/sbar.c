@@ -45,7 +45,7 @@ cachepic_t *sb_items[32];
 
 // 0-4 are based on health (in 20 increments)
 // 0 is static, 1 is temporary animation
-cachepic_t *sb_faces[5][2];
+zz
 cachepic_t *sb_health; // GAME_NEXUIZ
 
 cachepic_t *sb_face_invis;
@@ -163,10 +163,6 @@ static void sbar_start(void)
 		sb_nums[0][10] = Draw_CachePic_Flags ("gfx/num_minus", CACHEPICFLAG_QUIET);
 		sb_colon = Draw_CachePic_Flags ("gfx/num_colon", CACHEPICFLAG_QUIET);
 
-		sb_ammo[0] = Draw_CachePic_Flags ("gfx/sb_shells", CACHEPICFLAG_QUIET);
-		sb_ammo[1] = Draw_CachePic_Flags ("gfx/sb_bullets", CACHEPICFLAG_QUIET);
-		sb_ammo[2] = Draw_CachePic_Flags ("gfx/sb_rocket", CACHEPICFLAG_QUIET);
-		sb_ammo[3] = Draw_CachePic_Flags ("gfx/sb_cells", CACHEPICFLAG_QUIET);
 
 		sb_armor[0] = Draw_CachePic_Flags ("gfx/sb_armor", CACHEPICFLAG_QUIET);
 		sb_armor[1] = NULL;
@@ -174,18 +170,7 @@ static void sbar_start(void)
 
 		sb_health = Draw_CachePic_Flags ("gfx/sb_health", CACHEPICFLAG_QUIET);
 
-		sb_items[2] = Draw_CachePic_Flags ("gfx/sb_slowmo", CACHEPICFLAG_QUIET);
-		sb_items[3] = Draw_CachePic_Flags ("gfx/sb_invinc", CACHEPICFLAG_QUIET);
-		sb_items[4] = Draw_CachePic_Flags ("gfx/sb_energy", CACHEPICFLAG_QUIET);
-		sb_items[5] = Draw_CachePic_Flags ("gfx/sb_str", CACHEPICFLAG_QUIET);
 
-		sb_items[11] = Draw_CachePic_Flags ("gfx/sb_flag_red_taken", CACHEPICFLAG_QUIET);
-		sb_items[12] = Draw_CachePic_Flags ("gfx/sb_flag_red_lost", CACHEPICFLAG_QUIET);
-		sb_items[13] = Draw_CachePic_Flags ("gfx/sb_flag_red_carrying", CACHEPICFLAG_QUIET);
-		sb_items[14] = Draw_CachePic_Flags ("gfx/sb_key_carrying", CACHEPICFLAG_QUIET);
-		sb_items[15] = Draw_CachePic_Flags ("gfx/sb_flag_blue_taken", CACHEPICFLAG_QUIET);
-		sb_items[16] = Draw_CachePic_Flags ("gfx/sb_flag_blue_lost", CACHEPICFLAG_QUIET);
-		sb_items[17] = Draw_CachePic_Flags ("gfx/sb_flag_blue_carrying", CACHEPICFLAG_QUIET);
 
 		sb_sbar = Draw_CachePic_Flags ("gfx/sbar", CACHEPICFLAG_QUIET);
 		sb_sbar_minimal = Draw_CachePic_Flags ("gfx/sbar_minimal", CACHEPICFLAG_QUIET);
@@ -222,69 +207,8 @@ static void sbar_start(void)
 		sb_colon = Draw_CachePic_Flags ("gfx/num_colon", CACHEPICFLAG_QUIET);
 		sb_slash = Draw_CachePic_Flags ("gfx/num_slash", CACHEPICFLAG_QUIET);
 
-		sb_weapons[0][0] = Draw_CachePic_Flags ("gfx/inv_shotgun", CACHEPICFLAG_QUIET);
-		sb_weapons[0][1] = Draw_CachePic_Flags ("gfx/inv_sshotgun", CACHEPICFLAG_QUIET);
-		sb_weapons[0][2] = Draw_CachePic_Flags ("gfx/inv_nailgun", CACHEPICFLAG_QUIET);
-		sb_weapons[0][3] = Draw_CachePic_Flags ("gfx/inv_snailgun", CACHEPICFLAG_QUIET);
-		sb_weapons[0][4] = Draw_CachePic_Flags ("gfx/inv_rlaunch", CACHEPICFLAG_QUIET);
-		sb_weapons[0][5] = Draw_CachePic_Flags ("gfx/inv_srlaunch", CACHEPICFLAG_QUIET);
-		sb_weapons[0][6] = Draw_CachePic_Flags ("gfx/inv_lightng", CACHEPICFLAG_QUIET);
 
-		sb_weapons[1][0] = Draw_CachePic_Flags ("gfx/inv2_shotgun", CACHEPICFLAG_QUIET);
-		sb_weapons[1][1] = Draw_CachePic_Flags ("gfx/inv2_sshotgun", CACHEPICFLAG_QUIET);
-		sb_weapons[1][2] = Draw_CachePic_Flags ("gfx/inv2_nailgun", CACHEPICFLAG_QUIET);
-		sb_weapons[1][3] = Draw_CachePic_Flags ("gfx/inv2_snailgun", CACHEPICFLAG_QUIET);
-		sb_weapons[1][4] = Draw_CachePic_Flags ("gfx/inv2_rlaunch", CACHEPICFLAG_QUIET);
-		sb_weapons[1][5] = Draw_CachePic_Flags ("gfx/inv2_srlaunch", CACHEPICFLAG_QUIET);
-		sb_weapons[1][6] = Draw_CachePic_Flags ("gfx/inv2_lightng", CACHEPICFLAG_QUIET);
 
-		for (i = 0;i < 5;i++)
-		{
-			sb_weapons[2+i][0] = Draw_CachePic_Flags (va(vabuf, sizeof(vabuf), "gfx/inva%i_shotgun",i+1), CACHEPICFLAG_QUIET);
-			sb_weapons[2+i][1] = Draw_CachePic_Flags (va(vabuf, sizeof(vabuf), "gfx/inva%i_sshotgun",i+1), CACHEPICFLAG_QUIET);
-			sb_weapons[2+i][2] = Draw_CachePic_Flags (va(vabuf, sizeof(vabuf), "gfx/inva%i_nailgun",i+1), CACHEPICFLAG_QUIET);
-			sb_weapons[2+i][3] = Draw_CachePic_Flags (va(vabuf, sizeof(vabuf), "gfx/inva%i_snailgun",i+1), CACHEPICFLAG_QUIET);
-			sb_weapons[2+i][4] = Draw_CachePic_Flags (va(vabuf, sizeof(vabuf), "gfx/inva%i_rlaunch",i+1), CACHEPICFLAG_QUIET);
-			sb_weapons[2+i][5] = Draw_CachePic_Flags (va(vabuf, sizeof(vabuf), "gfx/inva%i_srlaunch",i+1), CACHEPICFLAG_QUIET);
-			sb_weapons[2+i][6] = Draw_CachePic_Flags (va(vabuf, sizeof(vabuf), "gfx/inva%i_lightng",i+1), CACHEPICFLAG_QUIET);
-		}
-
-		sb_ammo[0] = Draw_CachePic_Flags ("gfx/sb_shells", CACHEPICFLAG_QUIET);
-		sb_ammo[1] = Draw_CachePic_Flags ("gfx/sb_nails", CACHEPICFLAG_QUIET);
-		sb_ammo[2] = Draw_CachePic_Flags ("gfx/sb_rocket", CACHEPICFLAG_QUIET);
-		sb_ammo[3] = Draw_CachePic_Flags ("gfx/sb_cells", CACHEPICFLAG_QUIET);
-
-		sb_armor[0] = Draw_CachePic_Flags ("gfx/sb_armor1", CACHEPICFLAG_QUIET);
-		sb_armor[1] = Draw_CachePic_Flags ("gfx/sb_armor2", CACHEPICFLAG_QUIET);
-		sb_armor[2] = Draw_CachePic_Flags ("gfx/sb_armor3", CACHEPICFLAG_QUIET);
-
-		sb_items[0] = Draw_CachePic_Flags ("gfx/sb_key1", CACHEPICFLAG_QUIET);
-		sb_items[1] = Draw_CachePic_Flags ("gfx/sb_key2", CACHEPICFLAG_QUIET);
-		sb_items[2] = Draw_CachePic_Flags ("gfx/sb_invis", CACHEPICFLAG_QUIET);
-		sb_items[3] = Draw_CachePic_Flags ("gfx/sb_invuln", CACHEPICFLAG_QUIET);
-		sb_items[4] = Draw_CachePic_Flags ("gfx/sb_suit", CACHEPICFLAG_QUIET);
-		sb_items[5] = Draw_CachePic_Flags ("gfx/sb_quad", CACHEPICFLAG_QUIET);
-
-		sb_sigil[0] = Draw_CachePic_Flags ("gfx/sb_sigil1", CACHEPICFLAG_QUIET);
-		sb_sigil[1] = Draw_CachePic_Flags ("gfx/sb_sigil2", CACHEPICFLAG_QUIET);
-		sb_sigil[2] = Draw_CachePic_Flags ("gfx/sb_sigil3", CACHEPICFLAG_QUIET);
-		sb_sigil[3] = Draw_CachePic_Flags ("gfx/sb_sigil4", CACHEPICFLAG_QUIET);
-
-		sb_faces[4][0] = Draw_CachePic_Flags ("gfx/face1", CACHEPICFLAG_QUIET);
-		sb_faces[4][1] = Draw_CachePic_Flags ("gfx/face_p1", CACHEPICFLAG_QUIET);
-		sb_faces[3][0] = Draw_CachePic_Flags ("gfx/face2", CACHEPICFLAG_QUIET);
-		sb_faces[3][1] = Draw_CachePic_Flags ("gfx/face_p2", CACHEPICFLAG_QUIET);
-		sb_faces[2][0] = Draw_CachePic_Flags ("gfx/face3", CACHEPICFLAG_QUIET);
-		sb_faces[2][1] = Draw_CachePic_Flags ("gfx/face_p3", CACHEPICFLAG_QUIET);
-		sb_faces[1][0] = Draw_CachePic_Flags ("gfx/face4", CACHEPICFLAG_QUIET);
-		sb_faces[1][1] = Draw_CachePic_Flags ("gfx/face_p4", CACHEPICFLAG_QUIET);
-		sb_faces[0][0] = Draw_CachePic_Flags ("gfx/face5", CACHEPICFLAG_QUIET);
-		sb_faces[0][1] = Draw_CachePic_Flags ("gfx/face_p5", CACHEPICFLAG_QUIET);
-
-		sb_face_invis = Draw_CachePic_Flags ("gfx/face_invis", CACHEPICFLAG_QUIET);
-		sb_face_invuln = Draw_CachePic_Flags ("gfx/face_invul2", CACHEPICFLAG_QUIET);
-		sb_face_invis_invuln = Draw_CachePic_Flags ("gfx/face_inv2", CACHEPICFLAG_QUIET);
-		sb_face_quad = Draw_CachePic_Flags ("gfx/face_quad", CACHEPICFLAG_QUIET);
 
 		sb_sbar = Draw_CachePic_Flags ("gfx/sbar", CACHEPICFLAG_QUIET);
 		sb_ibar = Draw_CachePic_Flags ("gfx/ibar", CACHEPICFLAG_QUIET);
@@ -860,20 +784,6 @@ static void Sbar_DrawInventory (void)
 					Sbar_DrawPic ((i+2)*24, -16, rsb_weapons[i]);
 	}
 
-	// ammo counts
-	for (i=0 ; i<4 ; i++)
-	{
-		dpsnprintf (num, sizeof(num), "%4i",cl.stats[STAT_SHELLS+i] );
-		if (num[0] != ' ')
-			Sbar_DrawCharacter ( (6*i+0)*8 - 2, -24, 18 + num[0] - '0');
-		if (num[1] != ' ')
-			Sbar_DrawCharacter ( (6*i+1)*8 - 2, -24, 18 + num[1] - '0');
-		if (num[2] != ' ')
-			Sbar_DrawCharacter ( (6*i+2)*8 - 2, -24, 18 + num[2] - '0');
-		if (num[3] != ' ')
-			Sbar_DrawCharacter ( (6*i+3)*8 - 2, -24, 18 + num[3] - '0');
-	}
-
 	// items
 	for (i=0 ; i<6 ; i++)
 		if (cl.stats[STAT_ITEMS] & (1<<(17+i)))
@@ -1395,20 +1305,6 @@ void Sbar_Draw (void)
 				}
 
 				// armor
-				if (cl.stats[STAT_ARMOR] > 0)
-				{
-					Sbar_DrawStretchPic (72, 0, sb_armor[0], sbar_alpha_fg.value, 24, 24);
-					if(cl.stats[STAT_ARMOR] > 200)
-						Sbar_DrawXNum(0,0,cl.stats[STAT_ARMOR],3,24,0,1,0,1,0);
-					else if(cl.stats[STAT_ARMOR] > 100)
-						Sbar_DrawXNum(0,0,cl.stats[STAT_ARMOR],3,24,0.2,1,0.2,1,0);
-					else if(cl.stats[STAT_ARMOR] > 50)
-						Sbar_DrawXNum(0,0,cl.stats[STAT_ARMOR],3,24,0.6,0.7,0.8,1,0);
-					else if(cl.stats[STAT_ARMOR] > 25)
-						Sbar_DrawXNum(0,0,cl.stats[STAT_ARMOR],3,24,1,1,0.2,1,0);
-					else
-						Sbar_DrawXNum(0,0,cl.stats[STAT_ARMOR],3,24,0.7,0,0,1,0);
-				}
 
 				// health
 				if (cl.stats[STAT_HEALTH] != 0)
@@ -1427,21 +1323,6 @@ void Sbar_Draw (void)
 				}
 
 				// ammo
-				if ((cl.stats[STAT_ITEMS] & (NEX_IT_SHELLS | NEX_IT_BULLETS | NEX_IT_ROCKETS | NEX_IT_CELLS)) || cl.stats[STAT_AMMO] != 0)
-				{
-					if (cl.stats[STAT_ITEMS] & NEX_IT_SHELLS)
-						Sbar_DrawStretchPic (296, 0, sb_ammo[0], sbar_alpha_fg.value, 24, 24);
-					else if (cl.stats[STAT_ITEMS] & NEX_IT_BULLETS)
-						Sbar_DrawStretchPic (296, 0, sb_ammo[1], sbar_alpha_fg.value, 24, 24);
-					else if (cl.stats[STAT_ITEMS] & NEX_IT_ROCKETS)
-						Sbar_DrawStretchPic (296, 0, sb_ammo[2], sbar_alpha_fg.value, 24, 24);
-					else if (cl.stats[STAT_ITEMS] & NEX_IT_CELLS)
-						Sbar_DrawStretchPic (296, 0, sb_ammo[3], sbar_alpha_fg.value, 24, 24);
-					if(cl.stats[STAT_AMMO] > 10)
-						Sbar_DrawXNum(224, 0, cl.stats[STAT_AMMO], 3, 24, 0.6,0.7,0.8,1,0);
-					else
-						Sbar_DrawXNum(224, 0, cl.stats[STAT_AMMO], 3, 24, 0.7,0,0,1,0);
-				}
 
 				if (sbar_x + 320 + 160 <= vid_conwidth.integer)
 					Sbar_MiniDeathmatchOverlay (sbar_x + 320, sbar_y);
@@ -1499,9 +1380,6 @@ void Sbar_Draw (void)
 						Sbar_DrawPic ((int) x, -177, sb_items[blueflag+14]);
 				}
 
-				// armor
-				Sbar_DrawXNum ((340-3*24), 12, cl.stats[STAT_ARMOR], 3, 24, 0.6,0.7,0.8,1,0);
-
 				// health
 				if(cl.stats[STAT_HEALTH] > 100)
 					Sbar_DrawXNum((154-3*24),12,cl.stats[STAT_HEALTH],3,24,1,1,1,1,0);
@@ -1509,31 +1387,6 @@ void Sbar_Draw (void)
 					Sbar_DrawXNum((154-3*24),12,cl.stats[STAT_HEALTH],3,24,0.7,0,0,1,0);
 				else
 					Sbar_DrawXNum((154-3*24),12,cl.stats[STAT_HEALTH],3,24,0.6,0.7,0.8,1,0);
-
-				// AK dont draw ammo for the laser
-				if(cl.stats[STAT_ACTIVEWEAPON] != 12)
-				{
-					if (cl.stats[STAT_ITEMS] & NEX_IT_SHELLS)
-						Sbar_DrawPic (519, 0, sb_ammo[0]);
-					else if (cl.stats[STAT_ITEMS] & NEX_IT_BULLETS)
-						Sbar_DrawPic (519, 0, sb_ammo[1]);
-					else if (cl.stats[STAT_ITEMS] & NEX_IT_ROCKETS)
-						Sbar_DrawPic (519, 0, sb_ammo[2]);
-					else if (cl.stats[STAT_ITEMS] & NEX_IT_CELLS)
-						Sbar_DrawPic (519, 0, sb_ammo[3]);
-
-					if(cl.stats[STAT_AMMO] <= 10)
-						Sbar_DrawXNum ((519-3*24), 12, cl.stats[STAT_AMMO], 3, 24, 0.7, 0,0,1,0);
-					else
-						Sbar_DrawXNum ((519-3*24), 12, cl.stats[STAT_AMMO], 3, 24, 0.6, 0.7,0.8,1,0);
-
-				}
-
-				if (sb_lines > 24)
-					DrawQ_Pic(sbar_x,sbar_y,sb_sbar_overlay,0,0,1,1,1,1,DRAWFLAG_MODULATE);
-
-				if (sbar_x + 600 + 160 <= vid_conwidth.integer)
-					Sbar_MiniDeathmatchOverlay (sbar_x + 600, sbar_y);
 
 				if (sbar_x > 0)
 					Sbar_Score(-16);
@@ -1634,10 +1487,7 @@ void Sbar_Draw (void)
 					Sbar_DrawAlphaPic (0, 0, sb_scorebar, sbar_alpha_bg.value);
 				Sbar_DrawScoreboard ();
 			}
-			else if (sb_lines)
-			{
-				Sbar_DrawAlphaPic (0, 0, sb_sbar, sbar_alpha_bg.value);
-
+	
 				// keys (hipnotic only)
 				//MED 01/04/97 moved keys here so they would not be overwritten
 				if (gamemode == GAME_HIPNOTIC || gamemode == GAME_QUOTH)
@@ -1667,21 +1517,9 @@ void Sbar_Draw (void)
 							else if (cl.stats[STAT_ITEMS] & RIT_ARMOR1)
 								Sbar_DrawPic (0, 0, sb_armor[0]);
 						}
-						else
-						{
-							Sbar_DrawNum (24, 0, cl.stats[STAT_ARMOR], 3, cl.stats[STAT_ARMOR] <= 25);
-							if (cl.stats[STAT_ITEMS] & IT_ARMOR3)
-								Sbar_DrawPic (0, 0, sb_armor[2]);
-							else if (cl.stats[STAT_ITEMS] & IT_ARMOR2)
-								Sbar_DrawPic (0, 0, sb_armor[1]);
-							else if (cl.stats[STAT_ITEMS] & IT_ARMOR1)
-								Sbar_DrawPic (0, 0, sb_armor[0]);
-						}
 					}
 				}
 
-				// face
-				Sbar_DrawFace ();
 
 				// health
 				Sbar_DrawNum (136, 0, cl.stats[STAT_HEALTH], 3, cl.stats[STAT_HEALTH] <= 25);

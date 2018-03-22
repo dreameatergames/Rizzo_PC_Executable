@@ -1,0 +1,215 @@
+﻿cl : Command line warning D9030: '/Gm' is incompatible with multiprocessing; ignoring /MP switch
+  zone.c
+  world.c
+  wad.c
+  view.c
+  vid_shared.c
+  vid_sdl.c
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\vid_sdl.c(20): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  utf8lib.c
+  thread_sdl.c
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\thread_sdl.c(1): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  sys_shared.c
+  sys_sdl.c
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sys_sdl.c(21): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  svvm_cmds.c
+  svbsp.c
+  sv_user.c
+  sv_phys.c
+  sv_move.c
+  sv_main.c
+  sv_demo.c
+  snd_wav.c
+  snd_sdl.c
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\snd_sdl.c(20): fatal error C1083: Cannot open include file: 'SDL.h': No such file or directory
+  snd_ogg.c
+  Generating Code...
+  Compiling...
+  snd_mix.c
+  snd_mem.c
+  snd_main.c
+  sbar.c
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(49): warning C4431: missing type specifier - int assumed. Note: C no longer supports default-int
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(49): error C2054: expected '(' to follow 'zz'
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(49): error C2085: 'sb_health': not in formal parameter list
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(51): error C2085: 'sb_face_invis': not in formal parameter list
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(52): error C2085: 'sb_face_quad': not in formal parameter list
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(53): error C2085: 'sb_face_invuln': not in formal parameter list
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(54): error C2085: 'sb_face_invis_invuln': not in formal parameter list
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(56): error C2082: redefinition of formal parameter 'sb_showscores'
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(58): error C2082: redefinition of formal parameter 'sb_lines'
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(60): error C2057: expected constant expression
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(60): error C2466: cannot allocate an array of constant size 0
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(60): error C2085: 'rsb_invbar': not in formal parameter list
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(61): error C2057: expected constant expression
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(61): error C2466: cannot allocate an array of constant size 0
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(61): error C2085: 'rsb_weapons': not in formal parameter list
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(62): error C2057: expected constant expression
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(62): error C2466: cannot allocate an array of constant size 0
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(62): error C2085: 'rsb_items': not in formal parameter list
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(63): error C2057: expected constant expression
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(63): error C2466: cannot allocate an array of constant size 0
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(63): error C2085: 'rsb_ammo': not in formal parameter list
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(64): error C2085: 'rsb_teambord': not in formal parameter list
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(67): error C2057: expected constant expression
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(67): error C2466: cannot allocate an array of constant size 0
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(67): error C2087: 'hsb_weapons': missing subscript
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(67): error C2085: 'hsb_weapons': not in formal parameter list
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(69): error C2057: expected constant expression
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(69): error C2466: cannot allocate an array of constant size 0
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(69): error C2085: 'hipweapons': not in formal parameter list
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(69): error C2143: syntax error: missing ';' before '='
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(171): error C2065: 'sb_health': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(171): warning C4047: '=': 'int' differs in levels of indirection from 'cachepic_t *'
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(220): error C2065: 'hsb_weapons': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(220): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(221): error C2065: 'hsb_weapons': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(221): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(222): error C2065: 'hsb_weapons': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(222): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(223): error C2065: 'hsb_weapons': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(223): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(224): error C2065: 'hsb_weapons': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(224): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(226): error C2065: 'hsb_weapons': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(226): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(227): error C2065: 'hsb_weapons': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(227): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(228): error C2065: 'hsb_weapons': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(228): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(229): error C2065: 'hsb_weapons': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(229): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(230): error C2065: 'hsb_weapons': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(230): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(234): error C2065: 'hsb_weapons': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(234): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(235): error C2065: 'hsb_weapons': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(235): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(236): error C2065: 'hsb_weapons': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(236): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(237): error C2065: 'hsb_weapons': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(237): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(238): error C2065: 'hsb_weapons': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(238): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(246): error C2065: 'rsb_invbar': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(246): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(247): error C2065: 'rsb_invbar': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(247): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(249): error C2065: 'rsb_weapons': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(249): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(250): error C2065: 'rsb_weapons': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(250): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(251): error C2065: 'rsb_weapons': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(251): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(252): error C2065: 'rsb_weapons': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(252): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(253): error C2065: 'rsb_weapons': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(253): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(255): error C2065: 'rsb_items': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(255): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(256): error C2065: 'rsb_items': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(256): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(259): error C2065: 'rsb_teambord': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(259): warning C4047: '=': 'int' differs in levels of indirection from 'cachepic_t *'
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(262): error C2065: 'rsb_ammo': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(262): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(263): error C2065: 'rsb_ammo': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(263): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(264): error C2065: 'rsb_ammo': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(264): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(701): error C2065: 'rsb_invbar': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(701): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(701): error C2440: 'function': cannot convert from 'float' to 'cachepic_t *'
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(701): warning C4024: 'Sbar_DrawAlphaPic': different types for formal and actual parameter 3
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(701): error C2198: 'Sbar_DrawAlphaPic': too few arguments for call
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(703): error C2065: 'rsb_invbar': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(703): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(703): error C2440: 'function': cannot convert from 'float' to 'cachepic_t *'
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(703): warning C4024: 'Sbar_DrawAlphaPic': different types for formal and actual parameter 3
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(703): error C2198: 'Sbar_DrawAlphaPic': too few arguments for call
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(736): error C2065: 'hipweapons': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(736): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(738): error C2065: 'hipweapons': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(738): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(742): error C2065: 'hipweapons': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(742): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(758): error C2065: 'hsb_weapons': undeclared identifier
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(758): error C2109: subscript requires array or pointer type
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\sbar.c(758): fatal error C1003: error count exceeds 100; stopping compilation
+  r_sprites.c
+  r_sky.c
+  r_shadow.c
+  r_modules.c
+  r_lightning.c
+  r_explosion.c
+  prvm_exec.c
+  prvm_edict.c
+  prvm_cmds.c
+  protocol.c
+  portals.c
+  polygon.c
+  palette.c
+  netconn.c
+  mvm_cmds.c
+  model_sprite.c
+  Generating Code...
+  Compiling...
+  model_shared.c
+  model_brush.c
+  model_alias.c
+  mod_skeletal_animatevertices_sse.c
+  mod_skeletal_animatevertices_generic.c
+  meshqueue.c
+  menu.c
+c:\users\wiiki\documents\dreamcast\rizzo island\source code\rizzo_pc_executable\rizzo_island\menu.c(1576): warning C4101: 'f': unreferenced local variable
+  mdfour.c
+  matrixlib.c
+  mathlib.c
+  libcurl.c
+  lhnet.c
+  keys.c
+  jpeg.c
+  image_png.c
+  image.c
+  host_cmd.c
+  host.c
+  hmac.c
+  gl_textures.c
+  Generating Code...
+  Compiling...
+  gl_rsurf.c
+  gl_rmain.c
+  gl_draw.c
+  gl_backend.c
+  ft2.c
+  fs.c
+  fractalnoise.c
+  filematch.c
+  dpvsimpledecode.c
+  dpsoftrast.c
+  cvar.c
+  curves.c
+  csprogs.c
+  console.c
+  common.c
+  collision.c
+  cmd.c
+  clvm_cmds.c
+  cl_video.c
+  cl_screen.c
+  Generating Code...
+  Compiling...
+  cl_particles.c
+  cl_parse.c
+  cl_main.c
+  cl_input.c
+  cl_dyntexture.c
+  cl_demo.c
+  cl_collision.c
+  cd_shared.c
+  cd_sdl.c
+  cap_ogg.c
+  cap_avi.c
+  builddate.c
+  bih.c
+  Generating Code...
