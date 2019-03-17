@@ -45,7 +45,7 @@ cachepic_t *sb_items[32];
 
 // 0-4 are based on health (in 20 increments)
 // 0 is static, 1 is temporary animation
-zz
+
 cachepic_t *sb_health; // GAME_NEXUIZ
 
 cachepic_t *sb_face_invis;
@@ -926,12 +926,6 @@ static void Sbar_DrawFace (void)
 		Sbar_DrawPic (112, 0, sb_face_invis );
 	else if (cl.stats[STAT_ITEMS] & IT_INVULNERABILITY)
 		Sbar_DrawPic (112, 0, sb_face_invuln);
-	else
-	{
-		f = cl.stats[STAT_HEALTH] / 20;
-		f = bound(0, f, 4);
-		Sbar_DrawPic (112, 0, sb_faces[f][cl.time <= cl.faceanimtime]);
-	}
 }
 double topspeed = 0;
 double topspeedxy = 0;
@@ -1304,8 +1298,6 @@ void Sbar_Draw (void)
 						Sbar_DrawPic ((int) x, (int) ((vid_conheight.integer - sbar_y) - (sbar_flagstatus_pos.value + 128)), sb_items[blueflag+14]);
 				}
 
-				// armor
-
 				// health
 				if (cl.stats[STAT_HEALTH] != 0)
 				{
@@ -1507,22 +1499,14 @@ void Sbar_Draw (void)
 					}
 					else
 					{
-						if (gamemode == GAME_ROGUE)
-						{
-							Sbar_DrawNum (24, 0, cl.stats[STAT_ARMOR], 3, cl.stats[STAT_ARMOR] <= 25);
-							if (cl.stats[STAT_ITEMS] & RIT_ARMOR3)
-								Sbar_DrawPic (0, 0, sb_armor[2]);
-							else if (cl.stats[STAT_ITEMS] & RIT_ARMOR2)
-								Sbar_DrawPic (0, 0, sb_armor[1]);
-							else if (cl.stats[STAT_ITEMS] & RIT_ARMOR1)
-								Sbar_DrawPic (0, 0, sb_armor[0]);
-						}
+						
+				
 					}
 				}
 
 
 				// health
-				Sbar_DrawNum (136, 0, cl.stats[STAT_HEALTH], 3, cl.stats[STAT_HEALTH] <= 25);
+				Sbar_DrawNum (136, 0, cl.stats[STAT_HEALTH], 3, 0);
 
 				// ammo icon
 				if (gamemode == GAME_ROGUE)
@@ -1554,7 +1538,7 @@ void Sbar_Draw (void)
 						Sbar_DrawPic (224, 0, sb_ammo[3]);
 				}
 
-				Sbar_DrawNum (248, 0, cl.stats[STAT_AMMO], 3, cl.stats[STAT_AMMO] <= 10);
+				Sbar_DrawNum (248, 0, cl.stats[STAT_AMMO], 3, 0);
 
 				// LordHavoc: changed to draw the deathmatch overlays in any multiplayer mode
 				if ((!cl.islocalgame || cl.gametype != GAME_COOP))
@@ -1567,7 +1551,6 @@ void Sbar_Draw (void)
 				}
 			}
 		}
-	}
 
 	if (cl.csqc_vidvars.drawcrosshair && crosshair.integer >= 1 && !cl.intermission && !r_letterbox.value)
 	{
