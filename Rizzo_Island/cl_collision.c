@@ -70,7 +70,7 @@ float CL_SelectTraceLine(const vec3_t start, const vec3_t end, vec3_t impact, ve
 	}
 	maxfrac = bound(0, maxfrac, 1);
 	//maxrealfrac = bound(0, maxrealfrac, 1);
-	//if (maxfrac < 0 || maxfrac > 1) Con_Printf("fraction out of bounds %f %s:%d\n", maxfrac, __FILE__, __LINE__);
+	//if (maxfrac < 0 || maxfrac > 1) Con_DPrintf("fraction out of bounds %f %s:%d\n", maxfrac, __FILE__, __LINE__);
 	if (impact)
 		VectorLerp(start, maxfrac, end, impact);
 	return maxfrac;
@@ -127,7 +127,7 @@ void CL_LinkEdict(prvm_edict_t *ent)
 		dp_model_t *model = CL_GetModelByIndex( (int)PRVM_clientedictfloat(ent, modelindex) );
 		if (model == NULL)
 		{
-			Con_Printf("edict %i: SOLID_BSP with invalid modelindex!\n", PRVM_NUM_FOR_EDICT(ent));
+			Con_DPrintf("edict %i: SOLID_BSP with invalid modelindex!\n", PRVM_NUM_FOR_EDICT(ent));
 
 			model = CL_GetModelByIndex( 0 );
 		}
@@ -235,7 +235,7 @@ trace_t CL_TracePoint(const vec3_t start, int type, prvm_edict_t *passedict, int
 	VectorClear(clipmins2);
 	VectorClear(clipmaxs2);
 #if COLLISIONPARANOID >= 3
-	Con_Printf("move(%f %f %f)", clipstart[0], clipstart[1], clipstart[2]);
+	Con_DPrintf("move(%f %f %f)", clipstart[0], clipstart[1], clipstart[2]);
 #endif
 
 	// clip to world
@@ -357,7 +357,7 @@ skipnetworkplayers:
 		if (numtouchedicts > MAX_EDICTS)
 		{
 			// this never happens
-			Con_Printf("CL_EntitiesInBox returned %i edicts, max was %i\n", numtouchedicts, MAX_EDICTS);
+			Con_DPrintf("CL_EntitiesInBox returned %i edicts, max was %i\n", numtouchedicts, MAX_EDICTS);
 			numtouchedicts = MAX_EDICTS;
 		}
 	}
@@ -453,7 +453,7 @@ trace_t CL_TraceLine(const vec3_t start, const vec3_t end, int type, prvm_edict_
 	VectorClear(clipmins2);
 	VectorClear(clipmaxs2);
 #if COLLISIONPARANOID >= 3
-	Con_Printf("move(%f %f %f,%f %f %f)", clipstart[0], clipstart[1], clipstart[2], clipend[0], clipend[1], clipend[2]);
+	Con_DPrintf("move(%f %f %f,%f %f %f)", clipstart[0], clipstart[1], clipstart[2], clipend[0], clipend[1], clipend[2]);
 #endif
 
 	// clip to world
@@ -575,7 +575,7 @@ skipnetworkplayers:
 		if (numtouchedicts > MAX_EDICTS)
 		{
 			// this never happens
-			Con_Printf("CL_EntitiesInBox returned %i edicts, max was %i\n", numtouchedicts, MAX_EDICTS);
+			Con_DPrintf("CL_EntitiesInBox returned %i edicts, max was %i\n", numtouchedicts, MAX_EDICTS);
 			numtouchedicts = MAX_EDICTS;
 		}
 	}
@@ -687,7 +687,7 @@ trace_t CL_TraceBox(const vec3_t start, const vec3_t mins, const vec3_t maxs, co
 	VectorCopy(mins, clipmins2);
 	VectorCopy(maxs, clipmaxs2);
 #if COLLISIONPARANOID >= 3
-	Con_Printf("move(%f %f %f,%f %f %f)", clipstart[0], clipstart[1], clipstart[2], clipend[0], clipend[1], clipend[2]);
+	Con_DPrintf("move(%f %f %f,%f %f %f)", clipstart[0], clipstart[1], clipstart[2], clipend[0], clipend[1], clipend[2]);
 #endif
 
 	// clip to world
@@ -820,7 +820,7 @@ skipnetworkplayers:
 		if (numtouchedicts > MAX_EDICTS)
 		{
 			// this never happens
-			Con_Printf("CL_EntitiesInBox returned %i edicts, max was %i\n", numtouchedicts, MAX_EDICTS);
+			Con_DPrintf("CL_EntitiesInBox returned %i edicts, max was %i\n", numtouchedicts, MAX_EDICTS);
 			numtouchedicts = MAX_EDICTS;
 		}
 	}
@@ -904,7 +904,7 @@ trace_t CL_Cache_TraceLineSurfaces(const vec3_t start, const vec3_t end, int typ
 	VectorCopy(start, clipstart);
 	VectorCopy(end, clipend);
 #if COLLISIONPARANOID >= 3
-	Con_Printf("move(%f %f %f,%f %f %f)", clipstart[0], clipstart[1], clipstart[2], clipend[0], clipend[1], clipend[2]);
+	Con_DPrintf("move(%f %f %f,%f %f %f)", clipstart[0], clipstart[1], clipstart[2], clipend[0], clipend[1], clipend[2]);
 #endif
 
 	// clip to world
@@ -947,7 +947,7 @@ trace_t CL_Cache_TraceLineSurfaces(const vec3_t start, const vec3_t end, int typ
 		if (numtouchedicts > MAX_EDICTS)
 		{
 			// this never happens
-			Con_Printf("CL_EntitiesInBox returned %i edicts, max was %i\n", numtouchedicts, MAX_EDICTS);
+			Con_DPrintf("CL_EntitiesInBox returned %i edicts, max was %i\n", numtouchedicts, MAX_EDICTS);
 			numtouchedicts = MAX_EDICTS;
 		}
 	}

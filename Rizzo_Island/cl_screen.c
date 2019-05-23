@@ -682,7 +682,7 @@ static void SCR_InfoBar_f(void)
 	}
 	else
 	{
-		Con_Printf("usage:\ninfobar expiretime \"string\"\n");
+		Con_DPrintf("usage:\ninfobar expiretime \"string\"\n");
 	}
 }
 //=============================================================================
@@ -1465,7 +1465,7 @@ void SCR_ScreenShot_f (void)
 		}
 		else
 		{
-			Con_Printf("screenshot: supplied filename must end in .jpg or .tga or .png\n");
+			Con_DPrintf("screenshot: supplied filename must end in .jpg or .tga or .png\n");
 			return;
 		}
 	}
@@ -1531,16 +1531,16 @@ void SCR_ScreenShot_f (void)
 	buffer2 = (unsigned char *)Mem_Alloc(tempmempool, vid.width * vid.height * (scr_screenshot_alpha.integer ? 4 : 3));
 
 	if (SCR_ScreenShot (filename, buffer1, buffer2, 0, 0, vid.width, vid.height, false, false, false, jpeg, png, true, scr_screenshot_alpha.integer != 0))
-		Con_Printf("Wrote %s\n", filename);
+		Con_DPrintf("Wrote %s\n", filename);
 	else
 	{
-		Con_Printf("Unable to write %s\n", filename);
+		Con_DPrintf("Unable to write %s\n", filename);
 		if(jpeg || png)
 		{
 			if(SCR_ScreenShot (filename, buffer1, buffer2, 0, 0, vid.width, vid.height, false, false, false, false, false, true, scr_screenshot_alpha.integer != 0))
 			{
 				strlcpy(filename + strlen(filename) - 3, "tga", 4);
-				Con_Printf("Wrote %s\n", filename);
+				Con_DPrintf("Wrote %s\n", filename);
 			}
 		}
 	}
@@ -1673,7 +1673,7 @@ void SCR_CaptureVideo_EndVideo(void)
 		return;
 	cls.capturevideo.active = false;
 
-	Con_Printf("Finishing capture of %s.%s (%d frames, %d audio frames)\n", cls.capturevideo.basename, cls.capturevideo.formatextension, cls.capturevideo.frame, cls.capturevideo.soundsampleframe);
+	Con_DPrintf("Finishing capture of %s.%s (%d frames, %d audio frames)\n", cls.capturevideo.basename, cls.capturevideo.formatextension, cls.capturevideo.frame, cls.capturevideo.soundsampleframe);
 
 	if (cls.capturevideo.videofile)
 	{
@@ -1792,7 +1792,7 @@ static void SCR_CaptureVideo(void)
 			SCR_CaptureVideo_BeginVideo();
 		if (cls.capturevideo.framerate != cl_capturevideo_fps.value * cl_capturevideo_framestep.integer)
 		{
-			Con_Printf("You can not change the video framerate while recording a video.\n");
+			Con_DPrintf("You can not change the video framerate while recording a video.\n");
 			Cvar_SetValueQuick(&cl_capturevideo_fps, cls.capturevideo.framerate / (double) cl_capturevideo_framestep.integer);
 		}
 		// for AVI saving we have to make sure that sound is saved before video
@@ -1809,7 +1809,7 @@ static void SCR_CaptureVideo(void)
 		if (newframenum - cls.capturevideo.frame > 60 * (int)ceil(cls.capturevideo.framerate))
 		{
 			Cvar_SetValueQuick(&cl_capturevideo, 0);
-			Con_Printf("video saving failed on frame %i, your machine is too slow for this capture speed.\n", cls.capturevideo.frame);
+			Con_DPrintf("video saving failed on frame %i, your machine is too slow for this capture speed.\n", cls.capturevideo.frame);
 			SCR_CaptureVideo_EndVideo();
 			return;
 		}
@@ -1819,7 +1819,7 @@ static void SCR_CaptureVideo(void)
 		if (cls.capturevideo.error)
 		{
 			Cvar_SetValueQuick(&cl_capturevideo, 0);
-			Con_Printf("video saving failed on frame %i, out of disk space? stopping video capture.\n", cls.capturevideo.frame);
+			Con_DPrintf("video saving failed on frame %i, out of disk space? stopping video capture.\n", cls.capturevideo.frame);
 			SCR_CaptureVideo_EndVideo();
 		}
 	}
@@ -2752,7 +2752,7 @@ void CL_UpdateScreen(void)
 			//   actualfps < cl_minfps.value
 
 			/*
-			Con_Printf("adjust UP if fps > %f, adjust DOWN if fps < %f\n",
+			Con_DPrintf("adjust UP if fps > %f, adjust DOWN if fps < %f\n",
 					cl_minfps.value * (1.0 + cl_minfps_qualityhysteresis.value / cl_minfps_qualitymultiply.value),
 					cl_minfps.value);
 			*/

@@ -421,7 +421,7 @@ void VID_SetMouse(qboolean fullscreengrab, qboolean relative, qboolean hidecurso
 		SDL_WM_GrabInput( relative ? SDL_GRAB_ON : SDL_GRAB_OFF );
 #else
 		vid_usingmouse_relativeworks = SDL_SetRelativeMouseMode(relative ? SDL_TRUE : SDL_FALSE) == 0;
-//		Con_Printf("VID_SetMouse(%i, %i, %i) relativeworks = %i\n", (int)fullscreengrab, (int)relative, (int)hidecursor, (int)vid_usingmouse_relativeworks);
+//		Con_DPrintf("VID_SetMouse(%i, %i, %i) relativeworks = %i\n", (int)fullscreengrab, (int)relative, (int)hidecursor, (int)vid_usingmouse_relativeworks);
 #endif
 #ifdef MACOSX
 		if(relative)
@@ -1478,7 +1478,7 @@ void Sys_SendKeyEvents( void )
 #include <SDL_opengles.h>
 #endif
 
-//#define PRECALL //Con_Printf("GLCALL %s:%i\n", __FILE__, __LINE__)
+//#define PRECALL //Con_DPrintf("GLCALL %s:%i\n", __FILE__, __LINE__)
 #define PRECALL
 #define POSTCALL
 GLboolean wrapglIsBuffer(GLuint buffer) {PRECALL;return glIsBuffer(buffer);POSTCALL;}
@@ -1496,12 +1496,12 @@ GLint wrapglGetAttribLocation(GLuint programObj, const GLchar *name) {PRECALL;re
 GLint wrapglGetUniformLocation(GLuint programObj, const GLchar *name) {PRECALL;return glGetUniformLocation(programObj, name);POSTCALL;}
 //GLvoid* wrapglMapBuffer(GLenum target, GLenum access) {PRECALL;return glMapBuffer(target, access);POSTCALL;}
 const GLubyte* wrapglGetString(GLenum name) {PRECALL;return (const GLubyte*)glGetString(name);POSTCALL;}
-void wrapglActiveStencilFace(GLenum e) {PRECALL;Con_Printf("glActiveStencilFace(e)\n");POSTCALL;}
+void wrapglActiveStencilFace(GLenum e) {PRECALL;Con_DPrintf("glActiveStencilFace(e)\n");POSTCALL;}
 void wrapglActiveTexture(GLenum e) {PRECALL;glActiveTexture(e);POSTCALL;}
-void wrapglAlphaFunc(GLenum func, GLclampf ref) {PRECALL;Con_Printf("glAlphaFunc(func, ref)\n");POSTCALL;}
-void wrapglArrayElement(GLint i) {PRECALL;Con_Printf("glArrayElement(i)\n");POSTCALL;}
+void wrapglAlphaFunc(GLenum func, GLclampf ref) {PRECALL;Con_DPrintf("glAlphaFunc(func, ref)\n");POSTCALL;}
+void wrapglArrayElement(GLint i) {PRECALL;Con_DPrintf("glArrayElement(i)\n");POSTCALL;}
 void wrapglAttachShader(GLuint containerObj, GLuint obj) {PRECALL;glAttachShader(containerObj, obj);POSTCALL;}
-//void wrapglBegin(GLenum mode) {PRECALL;Con_Printf("glBegin(mode)\n");POSTCALL;}
+//void wrapglBegin(GLenum mode) {PRECALL;Con_DPrintf("glBegin(mode)\n");POSTCALL;}
 //void wrapglBeginQuery(GLenum target, GLuint qid) {PRECALL;glBeginQuery(target, qid);POSTCALL;}
 void wrapglBindAttribLocation(GLuint programObj, GLuint index, const GLchar *name) {PRECALL;glBindAttribLocation(programObj, index, name);POSTCALL;}
 //void wrapglBindFragDataLocation(GLuint programObj, GLuint index, const GLchar *name) {PRECALL;glBindFragDataLocation(programObj, index, name);POSTCALL;}
@@ -1515,21 +1515,21 @@ void wrapglBufferData(GLenum target, GLsizeiptrARB size, const GLvoid *data, GLe
 void wrapglBufferSubData(GLenum target, GLintptrARB offset, GLsizeiptrARB size, const GLvoid *data) {PRECALL;glBufferSubData(target, offset, size, data);POSTCALL;}
 void wrapglClear(GLbitfield mask) {PRECALL;glClear(mask);POSTCALL;}
 void wrapglClearColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha) {PRECALL;glClearColor(red, green, blue, alpha);POSTCALL;}
-void wrapglClearDepth(GLclampd depth) {PRECALL;/*Con_Printf("glClearDepth(%f)\n", depth);glClearDepthf((float)depth);*/POSTCALL;}
+void wrapglClearDepth(GLclampd depth) {PRECALL;/*Con_DPrintf("glClearDepth(%f)\n", depth);glClearDepthf((float)depth);*/POSTCALL;}
 void wrapglClearStencil(GLint s) {PRECALL;glClearStencil(s);POSTCALL;}
-void wrapglClientActiveTexture(GLenum target) {PRECALL;Con_Printf("glClientActiveTexture(target)\n");POSTCALL;}
-void wrapglColor4f(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha) {PRECALL;Con_Printf("glColor4f(red, green, blue, alpha)\n");POSTCALL;}
-void wrapglColor4ub(GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha) {PRECALL;Con_Printf("glColor4ub(red, green, blue, alpha)\n");POSTCALL;}
+void wrapglClientActiveTexture(GLenum target) {PRECALL;Con_DPrintf("glClientActiveTexture(target)\n");POSTCALL;}
+void wrapglColor4f(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha) {PRECALL;Con_DPrintf("glColor4f(red, green, blue, alpha)\n");POSTCALL;}
+void wrapglColor4ub(GLubyte red, GLubyte green, GLubyte blue, GLubyte alpha) {PRECALL;Con_DPrintf("glColor4ub(red, green, blue, alpha)\n");POSTCALL;}
 void wrapglColorMask(GLboolean red, GLboolean green, GLboolean blue, GLboolean alpha) {PRECALL;glColorMask(red, green, blue, alpha);POSTCALL;}
-void wrapglColorPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr) {PRECALL;Con_Printf("glColorPointer(size, type, stride, ptr)\n");POSTCALL;}
+void wrapglColorPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr) {PRECALL;Con_DPrintf("glColorPointer(size, type, stride, ptr)\n");POSTCALL;}
 void wrapglCompileShader(GLuint shaderObj) {PRECALL;glCompileShader(shaderObj);POSTCALL;}
 void wrapglCompressedTexImage2D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border,  GLsizei imageSize, const void *data) {PRECALL;glCompressedTexImage2D(target, level, internalformat, width, height, border, imageSize, data);POSTCALL;}
-void wrapglCompressedTexImage3D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLsizei imageSize, const void *data) {PRECALL;Con_Printf("glCompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize, data)\n");POSTCALL;}
+void wrapglCompressedTexImage3D(GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLsizei imageSize, const void *data) {PRECALL;Con_DPrintf("glCompressedTexImage3D(target, level, internalformat, width, height, depth, border, imageSize, data)\n");POSTCALL;}
 void wrapglCompressedTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLsizei imageSize, const void *data) {PRECALL;glCompressedTexSubImage2D(target, level, xoffset, yoffset, width, height, format, imageSize, data);POSTCALL;}
-void wrapglCompressedTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *data) {PRECALL;Con_Printf("glCompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data)\n");POSTCALL;}
+void wrapglCompressedTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLsizei imageSize, const void *data) {PRECALL;Con_DPrintf("glCompressedTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, imageSize, data)\n");POSTCALL;}
 void wrapglCopyTexImage2D(GLenum target, GLint level, GLenum internalformat, GLint x, GLint y, GLsizei width, GLsizei height, GLint border) {PRECALL;glCopyTexImage2D(target, level, internalformat, x, y, width, height, border);POSTCALL;}
 void wrapglCopyTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint x, GLint y, GLsizei width, GLsizei height) {PRECALL;glCopyTexSubImage2D(target, level, xoffset, yoffset, x, y, width, height);POSTCALL;}
-void wrapglCopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height) {PRECALL;Con_Printf("glCopyTexSubImage3D(target, level, xoffset, yoffset, zoffset, x, y, width, height)\n");POSTCALL;}
+void wrapglCopyTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height) {PRECALL;Con_DPrintf("glCopyTexSubImage3D(target, level, xoffset, yoffset, zoffset, x, y, width, height)\n");POSTCALL;}
 void wrapglCullFace(GLenum mode) {PRECALL;glCullFace(mode);POSTCALL;}
 void wrapglDeleteBuffers(GLsizei n, const GLuint *buffers) {PRECALL;glDeleteBuffers(n, buffers);POSTCALL;}
 void wrapglDeleteFramebuffers(GLsizei n, const GLuint *framebuffers) {PRECALL;glDeleteFramebuffers(n, framebuffers);POSTCALL;}
@@ -1544,24 +1544,24 @@ void wrapglDepthMask(GLboolean flag) {PRECALL;glDepthMask(flag);POSTCALL;}
 void wrapglDepthRangef(GLclampf near_val, GLclampf far_val) {PRECALL;glDepthRangef(near_val, far_val);POSTCALL;}
 void wrapglDetachShader(GLuint containerObj, GLuint attachedObj) {PRECALL;glDetachShader(containerObj, attachedObj);POSTCALL;}
 void wrapglDisable(GLenum cap) {PRECALL;glDisable(cap);POSTCALL;}
-void wrapglDisableClientState(GLenum cap) {PRECALL;Con_Printf("glDisableClientState(cap)\n");POSTCALL;}
+void wrapglDisableClientState(GLenum cap) {PRECALL;Con_DPrintf("glDisableClientState(cap)\n");POSTCALL;}
 void wrapglDisableVertexAttribArray(GLuint index) {PRECALL;glDisableVertexAttribArray(index);POSTCALL;}
 void wrapglDrawArrays(GLenum mode, GLint first, GLsizei count) {PRECALL;glDrawArrays(mode, first, count);POSTCALL;}
-void wrapglDrawBuffer(GLenum mode) {PRECALL;Con_Printf("glDrawBuffer(mode)\n");POSTCALL;}
-void wrapglDrawBuffers(GLsizei n, const GLenum *bufs) {PRECALL;Con_Printf("glDrawBuffers(n, bufs)\n");POSTCALL;}
+void wrapglDrawBuffer(GLenum mode) {PRECALL;Con_DPrintf("glDrawBuffer(mode)\n");POSTCALL;}
+void wrapglDrawBuffers(GLsizei n, const GLenum *bufs) {PRECALL;Con_DPrintf("glDrawBuffers(n, bufs)\n");POSTCALL;}
 void wrapglDrawElements(GLenum mode, GLsizei count, GLenum type, const GLvoid *indices) {PRECALL;glDrawElements(mode, count, type, indices);POSTCALL;}
 //void wrapglDrawRangeElements(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, const GLvoid *indices) {PRECALL;glDrawRangeElements(mode, start, end, count, type, indices);POSTCALL;}
 //void wrapglDrawRangeElementsEXT(GLenum mode, GLuint start, GLuint end, GLsizei count, GLenum type, const GLvoid *indices) {PRECALL;glDrawRangeElements(mode, start, end, count, type, indices);POSTCALL;}
 void wrapglEnable(GLenum cap) {PRECALL;glEnable(cap);POSTCALL;}
-void wrapglEnableClientState(GLenum cap) {PRECALL;Con_Printf("glEnableClientState(cap)\n");POSTCALL;}
+void wrapglEnableClientState(GLenum cap) {PRECALL;Con_DPrintf("glEnableClientState(cap)\n");POSTCALL;}
 void wrapglEnableVertexAttribArray(GLuint index) {PRECALL;glEnableVertexAttribArray(index);POSTCALL;}
-//void wrapglEnd(void) {PRECALL;Con_Printf("glEnd()\n");POSTCALL;}
+//void wrapglEnd(void) {PRECALL;Con_DPrintf("glEnd()\n");POSTCALL;}
 //void wrapglEndQuery(GLenum target) {PRECALL;glEndQuery(target);POSTCALL;}
 void wrapglFinish(void) {PRECALL;glFinish();POSTCALL;}
 void wrapglFlush(void) {PRECALL;glFlush();POSTCALL;}
 void wrapglFramebufferRenderbuffer(GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer) {PRECALL;glFramebufferRenderbuffer(target, attachment, renderbuffertarget, renderbuffer);POSTCALL;}
 void wrapglFramebufferTexture2D(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level) {PRECALL;glFramebufferTexture2D(target, attachment, textarget, texture, level);POSTCALL;}
-void wrapglFramebufferTexture3D(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, GLint zoffset) {PRECALL;Con_Printf("glFramebufferTexture3D()\n");POSTCALL;}
+void wrapglFramebufferTexture3D(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, GLint zoffset) {PRECALL;Con_DPrintf("glFramebufferTexture3D()\n");POSTCALL;}
 void wrapglGenBuffers(GLsizei n, GLuint *buffers) {PRECALL;glGenBuffers(n, buffers);POSTCALL;}
 void wrapglGenFramebuffers(GLsizei n, GLuint *framebuffers) {PRECALL;glGenFramebuffers(n, framebuffers);POSTCALL;}
 //void wrapglGenQueries(GLsizei n, GLuint *ids) {PRECALL;glGenQueries(n, ids);POSTCALL;}
@@ -1572,8 +1572,8 @@ void wrapglGetActiveAttrib(GLuint programObj, GLuint index, GLsizei maxLength, G
 void wrapglGetActiveUniform(GLuint programObj, GLuint index, GLsizei maxLength, GLsizei *length, GLint *size, GLenum *type, GLchar *name) {PRECALL;glGetActiveUniform(programObj, index, maxLength, length, size, type, name);POSTCALL;}
 void wrapglGetAttachedShaders(GLuint containerObj, GLsizei maxCount, GLsizei *count, GLuint *obj) {PRECALL;glGetAttachedShaders(containerObj, maxCount, count, obj);POSTCALL;}
 void wrapglGetBooleanv(GLenum pname, GLboolean *params) {PRECALL;glGetBooleanv(pname, params);POSTCALL;}
-void wrapglGetCompressedTexImage(GLenum target, GLint lod, void *img) {PRECALL;Con_Printf("glGetCompressedTexImage(target, lod, img)\n");POSTCALL;}
-void wrapglGetDoublev(GLenum pname, GLdouble *params) {PRECALL;Con_Printf("glGetDoublev(pname, params)\n");POSTCALL;}
+void wrapglGetCompressedTexImage(GLenum target, GLint lod, void *img) {PRECALL;Con_DPrintf("glGetCompressedTexImage(target, lod, img)\n");POSTCALL;}
+void wrapglGetDoublev(GLenum pname, GLdouble *params) {PRECALL;Con_DPrintf("glGetDoublev(pname, params)\n");POSTCALL;}
 void wrapglGetFloatv(GLenum pname, GLfloat *params) {PRECALL;glGetFloatv(pname, params);POSTCALL;}
 void wrapglGetFramebufferAttachmentParameteriv(GLenum target, GLenum attachment, GLenum pname, GLint *params) {PRECALL;glGetFramebufferAttachmentParameteriv(target, attachment, pname, params);POSTCALL;}
 void wrapglGetShaderInfoLog(GLuint obj, GLsizei maxLength, GLsizei *length, GLchar *infoLog) {PRECALL;glGetShaderInfoLog(obj, maxLength, length, infoLog);POSTCALL;}
@@ -1586,9 +1586,9 @@ void wrapglGetProgramiv(GLuint obj, GLenum pname, GLint *params) {PRECALL;glGetP
 //void wrapglGetQueryiv(GLenum target, GLenum pname, GLint *params) {PRECALL;glGetQueryiv(target, pname, params);POSTCALL;}
 void wrapglGetRenderbufferParameteriv(GLenum target, GLenum pname, GLint *params) {PRECALL;glGetRenderbufferParameteriv(target, pname, params);POSTCALL;}
 void wrapglGetShaderSource(GLuint obj, GLsizei maxLength, GLsizei *length, GLchar *source) {PRECALL;glGetShaderSource(obj, maxLength, length, source);POSTCALL;}
-void wrapglGetTexImage(GLenum target, GLint level, GLenum format, GLenum type, GLvoid *pixels) {PRECALL;Con_Printf("glGetTexImage(target, level, format, type, pixels)\n");POSTCALL;}
-void wrapglGetTexLevelParameterfv(GLenum target, GLint level, GLenum pname, GLfloat *params) {PRECALL;Con_Printf("glGetTexLevelParameterfv(target, level, pname, params)\n");POSTCALL;}
-void wrapglGetTexLevelParameteriv(GLenum target, GLint level, GLenum pname, GLint *params) {PRECALL;Con_Printf("glGetTexLevelParameteriv(target, level, pname, params)\n");POSTCALL;}
+void wrapglGetTexImage(GLenum target, GLint level, GLenum format, GLenum type, GLvoid *pixels) {PRECALL;Con_DPrintf("glGetTexImage(target, level, format, type, pixels)\n");POSTCALL;}
+void wrapglGetTexLevelParameterfv(GLenum target, GLint level, GLenum pname, GLfloat *params) {PRECALL;Con_DPrintf("glGetTexLevelParameterfv(target, level, pname, params)\n");POSTCALL;}
+void wrapglGetTexLevelParameteriv(GLenum target, GLint level, GLenum pname, GLint *params) {PRECALL;Con_DPrintf("glGetTexLevelParameteriv(target, level, pname, params)\n");POSTCALL;}
 void wrapglGetTexParameterfv(GLenum target, GLenum pname, GLfloat *params) {PRECALL;glGetTexParameterfv(target, pname, params);POSTCALL;}
 void wrapglGetTexParameteriv(GLenum target, GLenum pname, GLint *params) {PRECALL;glGetTexParameteriv(target, pname, params);POSTCALL;}
 void wrapglGetUniformfv(GLuint programObj, GLint location, GLfloat *params) {PRECALL;glGetUniformfv(programObj, location, params);POSTCALL;}
@@ -1596,44 +1596,44 @@ void wrapglGetUniformiv(GLuint programObj, GLint location, GLint *params) {PRECA
 void wrapglHint(GLenum target, GLenum mode) {PRECALL;glHint(target, mode);POSTCALL;}
 void wrapglLineWidth(GLfloat width) {PRECALL;glLineWidth(width);POSTCALL;}
 void wrapglLinkProgram(GLuint programObj) {PRECALL;glLinkProgram(programObj);POSTCALL;}
-void wrapglLoadIdentity(void) {PRECALL;Con_Printf("glLoadIdentity()\n");POSTCALL;}
-void wrapglLoadMatrixf(const GLfloat *m) {PRECALL;Con_Printf("glLoadMatrixf(m)\n");POSTCALL;}
-void wrapglMatrixMode(GLenum mode) {PRECALL;Con_Printf("glMatrixMode(mode)\n");POSTCALL;}
-void wrapglMultiTexCoord1f(GLenum target, GLfloat s) {PRECALL;Con_Printf("glMultiTexCoord1f(target, s)\n");POSTCALL;}
-void wrapglMultiTexCoord2f(GLenum target, GLfloat s, GLfloat t) {PRECALL;Con_Printf("glMultiTexCoord2f(target, s, t)\n");POSTCALL;}
-void wrapglMultiTexCoord3f(GLenum target, GLfloat s, GLfloat t, GLfloat r) {PRECALL;Con_Printf("glMultiTexCoord3f(target, s, t, r)\n");POSTCALL;}
-void wrapglMultiTexCoord4f(GLenum target, GLfloat s, GLfloat t, GLfloat r, GLfloat q) {PRECALL;Con_Printf("glMultiTexCoord4f(target, s, t, r, q)\n");POSTCALL;}
-void wrapglNormalPointer(GLenum type, GLsizei stride, const GLvoid *ptr) {PRECALL;Con_Printf("glNormalPointer(type, stride, ptr)\n");POSTCALL;}
+void wrapglLoadIdentity(void) {PRECALL;Con_DPrintf("glLoadIdentity()\n");POSTCALL;}
+void wrapglLoadMatrixf(const GLfloat *m) {PRECALL;Con_DPrintf("glLoadMatrixf(m)\n");POSTCALL;}
+void wrapglMatrixMode(GLenum mode) {PRECALL;Con_DPrintf("glMatrixMode(mode)\n");POSTCALL;}
+void wrapglMultiTexCoord1f(GLenum target, GLfloat s) {PRECALL;Con_DPrintf("glMultiTexCoord1f(target, s)\n");POSTCALL;}
+void wrapglMultiTexCoord2f(GLenum target, GLfloat s, GLfloat t) {PRECALL;Con_DPrintf("glMultiTexCoord2f(target, s, t)\n");POSTCALL;}
+void wrapglMultiTexCoord3f(GLenum target, GLfloat s, GLfloat t, GLfloat r) {PRECALL;Con_DPrintf("glMultiTexCoord3f(target, s, t, r)\n");POSTCALL;}
+void wrapglMultiTexCoord4f(GLenum target, GLfloat s, GLfloat t, GLfloat r, GLfloat q) {PRECALL;Con_DPrintf("glMultiTexCoord4f(target, s, t, r, q)\n");POSTCALL;}
+void wrapglNormalPointer(GLenum type, GLsizei stride, const GLvoid *ptr) {PRECALL;Con_DPrintf("glNormalPointer(type, stride, ptr)\n");POSTCALL;}
 void wrapglPixelStorei(GLenum pname, GLint param) {PRECALL;glPixelStorei(pname, param);POSTCALL;}
-void wrapglPointSize(GLfloat size) {PRECALL;Con_Printf("glPointSize(size)\n");POSTCALL;}
-//void wrapglPolygonMode(GLenum face, GLenum mode) {PRECALL;Con_Printf("glPolygonMode(face, mode)\n");POSTCALL;}
+void wrapglPointSize(GLfloat size) {PRECALL;Con_DPrintf("glPointSize(size)\n");POSTCALL;}
+//void wrapglPolygonMode(GLenum face, GLenum mode) {PRECALL;Con_DPrintf("glPolygonMode(face, mode)\n");POSTCALL;}
 void wrapglPolygonOffset(GLfloat factor, GLfloat units) {PRECALL;glPolygonOffset(factor, units);POSTCALL;}
-void wrapglPolygonStipple(const GLubyte *mask) {PRECALL;Con_Printf("glPolygonStipple(mask)\n");POSTCALL;}
-void wrapglReadBuffer(GLenum mode) {PRECALL;Con_Printf("glReadBuffer(mode)\n");POSTCALL;}
+void wrapglPolygonStipple(const GLubyte *mask) {PRECALL;Con_DPrintf("glPolygonStipple(mask)\n");POSTCALL;}
+void wrapglReadBuffer(GLenum mode) {PRECALL;Con_DPrintf("glReadBuffer(mode)\n");POSTCALL;}
 void wrapglReadPixels(GLint x, GLint y, GLsizei width, GLsizei height, GLenum format, GLenum type, GLvoid *pixels) {PRECALL;glReadPixels(x, y, width, height, format, type, pixels);POSTCALL;}
 void wrapglRenderbufferStorage(GLenum target, GLenum internalformat, GLsizei width, GLsizei height) {PRECALL;glRenderbufferStorage(target, internalformat, width, height);POSTCALL;}
 void wrapglScissor(GLint x, GLint y, GLsizei width, GLsizei height) {PRECALL;glScissor(x, y, width, height);POSTCALL;}
 void wrapglShaderSource(GLuint shaderObj, GLsizei count, const GLchar **string, const GLint *length) {PRECALL;glShaderSource(shaderObj, count, string, length);POSTCALL;}
 void wrapglStencilFunc(GLenum func, GLint ref, GLuint mask) {PRECALL;glStencilFunc(func, ref, mask);POSTCALL;}
-void wrapglStencilFuncSeparate(GLenum func1, GLenum func2, GLint ref, GLuint mask) {PRECALL;Con_Printf("glStencilFuncSeparate(func1, func2, ref, mask)\n");POSTCALL;}
+void wrapglStencilFuncSeparate(GLenum func1, GLenum func2, GLint ref, GLuint mask) {PRECALL;Con_DPrintf("glStencilFuncSeparate(func1, func2, ref, mask)\n");POSTCALL;}
 void wrapglStencilMask(GLuint mask) {PRECALL;glStencilMask(mask);POSTCALL;}
 void wrapglStencilOp(GLenum fail, GLenum zfail, GLenum zpass) {PRECALL;glStencilOp(fail, zfail, zpass);POSTCALL;}
-void wrapglStencilOpSeparate(GLenum e1, GLenum e2, GLenum e3, GLenum e4) {PRECALL;Con_Printf("glStencilOpSeparate(e1, e2, e3, e4)\n");POSTCALL;}
-void wrapglTexCoord1f(GLfloat s) {PRECALL;Con_Printf("glTexCoord1f(s)\n");POSTCALL;}
-void wrapglTexCoord2f(GLfloat s, GLfloat t) {PRECALL;Con_Printf("glTexCoord2f(s, t)\n");POSTCALL;}
-void wrapglTexCoord3f(GLfloat s, GLfloat t, GLfloat r) {PRECALL;Con_Printf("glTexCoord3f(s, t, r)\n");POSTCALL;}
-void wrapglTexCoord4f(GLfloat s, GLfloat t, GLfloat r, GLfloat q) {PRECALL;Con_Printf("glTexCoord4f(s, t, r, q)\n");POSTCALL;}
-void wrapglTexCoordPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr) {PRECALL;Con_Printf("glTexCoordPointer(size, type, stride, ptr)\n");POSTCALL;}
-void wrapglTexEnvf(GLenum target, GLenum pname, GLfloat param) {PRECALL;Con_Printf("glTexEnvf(target, pname, param)\n");POSTCALL;}
-void wrapglTexEnvfv(GLenum target, GLenum pname, const GLfloat *params) {PRECALL;Con_Printf("glTexEnvfv(target, pname, params)\n");POSTCALL;}
-void wrapglTexEnvi(GLenum target, GLenum pname, GLint param) {PRECALL;Con_Printf("glTexEnvi(target, pname, param)\n");POSTCALL;}
+void wrapglStencilOpSeparate(GLenum e1, GLenum e2, GLenum e3, GLenum e4) {PRECALL;Con_DPrintf("glStencilOpSeparate(e1, e2, e3, e4)\n");POSTCALL;}
+void wrapglTexCoord1f(GLfloat s) {PRECALL;Con_DPrintf("glTexCoord1f(s)\n");POSTCALL;}
+void wrapglTexCoord2f(GLfloat s, GLfloat t) {PRECALL;Con_DPrintf("glTexCoord2f(s, t)\n");POSTCALL;}
+void wrapglTexCoord3f(GLfloat s, GLfloat t, GLfloat r) {PRECALL;Con_DPrintf("glTexCoord3f(s, t, r)\n");POSTCALL;}
+void wrapglTexCoord4f(GLfloat s, GLfloat t, GLfloat r, GLfloat q) {PRECALL;Con_DPrintf("glTexCoord4f(s, t, r, q)\n");POSTCALL;}
+void wrapglTexCoordPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr) {PRECALL;Con_DPrintf("glTexCoordPointer(size, type, stride, ptr)\n");POSTCALL;}
+void wrapglTexEnvf(GLenum target, GLenum pname, GLfloat param) {PRECALL;Con_DPrintf("glTexEnvf(target, pname, param)\n");POSTCALL;}
+void wrapglTexEnvfv(GLenum target, GLenum pname, const GLfloat *params) {PRECALL;Con_DPrintf("glTexEnvfv(target, pname, params)\n");POSTCALL;}
+void wrapglTexEnvi(GLenum target, GLenum pname, GLint param) {PRECALL;Con_DPrintf("glTexEnvi(target, pname, param)\n");POSTCALL;}
 void wrapglTexImage2D(GLenum target, GLint level, GLint internalFormat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid *pixels) {PRECALL;glTexImage2D(target, level, internalFormat, width, height, border, format, type, pixels);POSTCALL;}
-void wrapglTexImage3D(GLenum target, GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type, const GLvoid *pixels) {PRECALL;Con_Printf("glTexImage3D(target, level, internalformat, width, height, depth, border, format, type, pixels)\n");POSTCALL;}
+void wrapglTexImage3D(GLenum target, GLint level, GLenum internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type, const GLvoid *pixels) {PRECALL;Con_DPrintf("glTexImage3D(target, level, internalformat, width, height, depth, border, format, type, pixels)\n");POSTCALL;}
 void wrapglTexParameterf(GLenum target, GLenum pname, GLfloat param) {PRECALL;glTexParameterf(target, pname, param);POSTCALL;}
 void wrapglTexParameterfv(GLenum target, GLenum pname, GLfloat *params) {PRECALL;glTexParameterfv(target, pname, params);POSTCALL;}
 void wrapglTexParameteri(GLenum target, GLenum pname, GLint param) {PRECALL;glTexParameteri(target, pname, param);POSTCALL;}
 void wrapglTexSubImage2D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid *pixels) {PRECALL;glTexSubImage2D(target, level, xoffset, yoffset, width, height, format, type, pixels);POSTCALL;}
-void wrapglTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const GLvoid *pixels) {PRECALL;Con_Printf("glTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels)\n");POSTCALL;}
+void wrapglTexSubImage3D(GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const GLvoid *pixels) {PRECALL;Con_DPrintf("glTexSubImage3D(target, level, xoffset, yoffset, zoffset, width, height, depth, format, type, pixels)\n");POSTCALL;}
 void wrapglUniform1f(GLint location, GLfloat v0) {PRECALL;glUniform1f(location, v0);POSTCALL;}
 void wrapglUniform1fv(GLint location, GLsizei count, const GLfloat *value) {PRECALL;glUniform1fv(location, count, value);POSTCALL;}
 void wrapglUniform1i(GLint location, GLint v0) {PRECALL;glUniform1i(location, v0);POSTCALL;}
@@ -1655,11 +1655,11 @@ void wrapglUniformMatrix3fv(GLint location, GLsizei count, GLboolean transpose, 
 void wrapglUniformMatrix4fv(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value) {PRECALL;glUniformMatrix4fv(location, count, transpose, value);POSTCALL;}
 void wrapglUseProgram(GLuint programObj) {PRECALL;glUseProgram(programObj);POSTCALL;}
 void wrapglValidateProgram(GLuint programObj) {PRECALL;glValidateProgram(programObj);POSTCALL;}
-void wrapglVertex2f(GLfloat x, GLfloat y) {PRECALL;Con_Printf("glVertex2f(x, y)\n");POSTCALL;}
-void wrapglVertex3f(GLfloat x, GLfloat y, GLfloat z) {PRECALL;Con_Printf("glVertex3f(x, y, z)\n");POSTCALL;}
-void wrapglVertex4f(GLfloat x, GLfloat y, GLfloat z, GLfloat w) {PRECALL;Con_Printf("glVertex4f(x, y, z, w)\n");POSTCALL;}
+void wrapglVertex2f(GLfloat x, GLfloat y) {PRECALL;Con_DPrintf("glVertex2f(x, y)\n");POSTCALL;}
+void wrapglVertex3f(GLfloat x, GLfloat y, GLfloat z) {PRECALL;Con_DPrintf("glVertex3f(x, y, z)\n");POSTCALL;}
+void wrapglVertex4f(GLfloat x, GLfloat y, GLfloat z, GLfloat w) {PRECALL;Con_DPrintf("glVertex4f(x, y, z, w)\n");POSTCALL;}
 void wrapglVertexAttribPointer(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid *pointer) {PRECALL;glVertexAttribPointer(index, size, type, normalized, stride, pointer);POSTCALL;}
-void wrapglVertexPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr) {PRECALL;Con_Printf("glVertexPointer(size, type, stride, ptr)\n");POSTCALL;}
+void wrapglVertexPointer(GLint size, GLenum type, GLsizei stride, const GLvoid *ptr) {PRECALL;Con_DPrintf("glVertexPointer(size, type, stride, ptr)\n");POSTCALL;}
 void wrapglViewport(GLint x, GLint y, GLsizei width, GLsizei height) {PRECALL;glViewport(x, y, width, height);POSTCALL;}
 void wrapglVertexAttrib1f(GLuint index, GLfloat v0) {PRECALL;glVertexAttrib1f(index, v0);POSTCALL;}
 //void wrapglVertexAttrib1s(GLuint index, GLshort v0) {PRECALL;glVertexAttrib1s(index, v0);POSTCALL;}
@@ -1940,9 +1940,9 @@ void GLES_Init(void)
 	if (!gl_platformextensions)
 		gl_platformextensions = "";
 	
-	Con_Printf("GL_VENDOR: %s\n", gl_vendor);
-	Con_Printf("GL_RENDERER: %s\n", gl_renderer);
-	Con_Printf("GL_VERSION: %s\n", gl_version);
+	Con_DPrintf("GL_VENDOR: %s\n", gl_vendor);
+	Con_DPrintf("GL_RENDERER: %s\n", gl_renderer);
+	Con_DPrintf("GL_VERSION: %s\n", gl_version);
 	Con_DPrintf("GL_EXTENSIONS: %s\n", gl_extensions);
 	Con_DPrintf("%s_EXTENSIONS: %s\n", gl_platform, gl_platformextensions);
 	
@@ -2003,8 +2003,8 @@ void GLES_Init(void)
 	if (vid.support.ext_texture_3d)
 		qglGetIntegerv(GL_MAX_3D_TEXTURE_SIZE, (GLint*)&vid.maxtexturesize_3d);
 #endif
-	Con_Printf("GL_MAX_CUBE_MAP_TEXTURE_SIZE = %i\n", vid.maxtexturesize_cubemap);
-	Con_Printf("GL_MAX_3D_TEXTURE_SIZE = %i\n", vid.maxtexturesize_3d);
+	Con_DPrintf("GL_MAX_CUBE_MAP_TEXTURE_SIZE = %i\n", vid.maxtexturesize_cubemap);
+	Con_DPrintf("GL_MAX_3D_TEXTURE_SIZE = %i\n", vid.maxtexturesize_3d);
 	{
 #define GL_ALPHA_BITS                           0x0D55
 #define GL_RED_BITS                             0x0D52
@@ -2019,7 +2019,7 @@ void GLES_Init(void)
 		qglGetIntegerv(GL_ALPHA_BITS  , &fb_a);
 		qglGetIntegerv(GL_DEPTH_BITS  , &fb_d);
 		qglGetIntegerv(GL_STENCIL_BITS, &fb_s);
-		Con_Printf("Framebuffer depth is R%iG%iB%iA%iD%iS%i\n", fb_r, fb_g, fb_b, fb_a, fb_d, fb_s);
+		Con_DPrintf("Framebuffer depth is R%iG%iB%iA%iD%iS%i\n", fb_r, fb_g, fb_b, fb_a, fb_d, fb_s);
 	}
 
 	// verify that cubemap textures are really supported
@@ -2030,7 +2030,7 @@ void GLES_Init(void)
 	if (vid.support.ext_texture_3d && vid.maxtexturesize_3d < 32)
 	{
 		vid.support.ext_texture_3d = false;
-		Con_Printf("GL_OES_texture_3d reported bogus GL_MAX_3D_TEXTURE_SIZE, disabled\n");
+		Con_DPrintf("GL_OES_texture_3d reported bogus GL_MAX_3D_TEXTURE_SIZE, disabled\n");
 	}
 
 	vid.texunits = 4;
@@ -2087,10 +2087,10 @@ void VID_Init (void)
 #endif
 
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-		Sys_Error ("Failed to init SDL video subsystem: %s", SDL_GetError());
+		Con_DPrintf ("Failed to init SDL video subsystem: %s", SDL_GetError());
 	vid_sdl_initjoysticksystem = SDL_InitSubSystem(SDL_INIT_JOYSTICK) >= 0;
 	if (vid_sdl_initjoysticksystem)
-		Con_Printf("Failed to init SDL joystick subsystem: %s\n", SDL_GetError());
+		Con_DPrintf("Failed to init SDL joystick subsystem: %s\n", SDL_GetError());
 	vid_isfullscreen = false;
 }
 
@@ -2132,11 +2132,11 @@ void VID_EnableJoystick(qboolean enable)
 #else
 				const char *joystickname = SDL_JoystickName(vid_sdljoystick);
 #endif
-				Con_Printf("Joystick %i opened (SDL_Joystick %i is \"%s\" with %i axes, %i buttons, %i balls)\n", index, sdlindex, joystickname, (int)SDL_JoystickNumAxes(vid_sdljoystick), (int)SDL_JoystickNumButtons(vid_sdljoystick), (int)SDL_JoystickNumBalls(vid_sdljoystick));
+				Con_DPrintf("Joystick %i opened (SDL_Joystick %i is \"%s\" with %i axes, %i buttons, %i balls)\n", index, sdlindex, joystickname, (int)SDL_JoystickNumAxes(vid_sdljoystick), (int)SDL_JoystickNumButtons(vid_sdljoystick), (int)SDL_JoystickNumBalls(vid_sdljoystick));
 			}
 			else
 			{
-				Con_Printf("Joystick %i failed (SDL_JoystickOpen(%i) returned: %s)\n", index, sdlindex, SDL_GetError());
+				Con_DPrintf("Joystick %i failed (SDL_JoystickOpen(%i) returned: %s)\n", index, sdlindex, SDL_GetError());
 				sdlindex = -1;
 			}
 		}
@@ -2251,7 +2251,7 @@ static SDL_Surface *VID_WrapSDL_SetVideoMode(int screenwidth, int screenheight, 
 				icon->pixels = data;
 			else
 			{
-				Con_Printf(	"Failed to create surface for the window Icon!\n"
+				Con_DPrintf(	"Failed to create surface for the window Icon!\n"
 						"%s\n", SDL_GetError());
 				free(data);
 			}
@@ -2343,26 +2343,26 @@ static SDL_Surface *VID_WrapSDL_SetVideoMode(int screenwidth, int screenheight, 
 					}
 					else
 					{
-						Con_Printf(	"Failed to create surface for the window Icon!\n"
+						Con_DPrintf(	"Failed to create surface for the window Icon!\n"
 								"%s\n", SDL_GetError());
 						free(data);
 					}
 				}
 				else
 				{
-					Con_Printf("This XPM's palette looks odd. Can't continue.\n");
+					Con_DPrintf("This XPM's palette looks odd. Can't continue.\n");
 				}
 			}
 			else
 			{
 				// NOTE: Only 1-char colornames are supported
-				Con_Printf("This XPM's palette is either huge or idiotically unoptimized. It's key size is %i\n", isize);
+				Con_DPrintf("This XPM's palette is either huge or idiotically unoptimized. It's key size is %i\n", isize);
 			}
 		}
 		else
 		{
 			// NOTE: Only 1-char colornames are supported
-			Con_Printf("Sorry, but this does not even look similar to an XPM.\n");
+			Con_DPrintf("Sorry, but this does not even look similar to an XPM.\n");
 		}
 	}
 
@@ -2408,7 +2408,7 @@ static SDL_Surface *VID_WrapSDL_SetVideoMode(int screenwidth, int screenheight, 
 					}
 					else
 					{
-						Con_Printf("Skipping NETWM icon #%d because there is no space left\n", i);
+						Con_DPrintf("Skipping NETWM icon #%d because there is no space left\n", i);
 					}
 					++i;
 					Mem_Free(data);
@@ -2440,7 +2440,7 @@ static void VID_OutputVersion(void)
 #else
 	SDL_GetVersion(&version);
 #endif
-	Con_Printf(	"Linked against SDL version %d.%d.%d\n"
+	Con_DPrintf(	"Linked against SDL version %d.%d.%d\n"
 					"Using SDL library version %d.%d.%d\n",
 					SDL_MAJOR_VERSION, SDL_MINOR_VERSION, SDL_PATCHLEVEL,
 					version.major, version.minor, version.patch );
@@ -2472,7 +2472,7 @@ static void AdjustWindowBounds(viddef_mode_t *mode, RECT *rect)
 	if (screenHeight == workHeight)
 		titleBarPixels = -rect->top;
 
-	//Con_Printf("window mode: %dx%d, workArea: %d/%d-%d/%d (%dx%d), title: %d\n", width, height, workArea.left, workArea.top, workArea.right, workArea.bottom, workArea.right - workArea.left, workArea.bottom - workArea.top, titleBarPixels);
+	//Con_DPrintf("window mode: %dx%d, workArea: %d/%d-%d/%d (%dx%d), title: %d\n", width, height, workArea.left, workArea.top, workArea.right, workArea.bottom, workArea.right - workArea.left, workArea.bottom - workArea.top, titleBarPixels);
 
 	// if height and width matches the physical or previously adjusted screen height and width, adjust it to available desktop area
 	if ((width == GetSystemMetrics(SM_CXSCREEN) || width == workWidth) && (height == screenHeight || height == workHeight - titleBarPixels))
@@ -2538,7 +2538,7 @@ static qboolean VID_InitModeGL(viddef_mode_t *mode)
 		drivername = com_argv[i + 1];
 	if (SDL_GL_LoadLibrary(drivername) < 0)
 	{
-		Con_Printf("Unable to load GL driver \"%s\": %s\n", drivername, SDL_GetError());
+		Con_DPrintf("Unable to load GL driver \"%s\": %s\n", drivername, SDL_GetError());
 		return false;
 	}
 #endif
@@ -2650,7 +2650,7 @@ static qboolean VID_InitModeGL(viddef_mode_t *mode)
 	video_screen = VID_WrapSDL_SetVideoMode(mode->width, mode->height, mode->bitsperpixel, flags);
 	if (video_screen == NULL)
 	{
-		Con_Printf("Failed to set video mode to %ix%i: %s\n", mode->width, mode->height, SDL_GetError());
+		Con_DPrintf("Failed to set video mode to %ix%i: %s\n", mode->width, mode->height, SDL_GetError());
 		VID_Shutdown();
 		return false;
 	}
@@ -2661,7 +2661,7 @@ static qboolean VID_InitModeGL(viddef_mode_t *mode)
 	window = SDL_CreateWindow(gamename, xPos, yPos, mode->width, mode->height, windowflags);
 	if (window == NULL)
 	{
-		Con_Printf("Failed to set video mode to %ix%i: %s\n", mode->width, mode->height, SDL_GetError());
+		Con_DPrintf("Failed to set video mode to %ix%i: %s\n", mode->width, mode->height, SDL_GetError());
 		VID_Shutdown();
 		return false;
 	}
@@ -2669,7 +2669,7 @@ static qboolean VID_InitModeGL(viddef_mode_t *mode)
 	context = SDL_GL_CreateContext(window);
 	if (context == NULL)
 	{
-		Con_Printf("Failed to initialize OpenGL context: %s\n", SDL_GetError());
+		Con_DPrintf("Failed to initialize OpenGL context: %s\n", SDL_GetError());
 		VID_Shutdown();
 		return false;
 	}
@@ -2762,7 +2762,7 @@ static qboolean VID_InitModeSoft(viddef_mode_t *mode)
 	video_screen = VID_WrapSDL_SetVideoMode(mode->width, mode->height, mode->bitsperpixel, flags);
 	if (video_screen == NULL)
 	{
-		Con_Printf("Failed to set video mode to %ix%i: %s\n", mode->width, mode->height, SDL_GetError());
+		Con_DPrintf("Failed to set video mode to %ix%i: %s\n", mode->width, mode->height, SDL_GetError());
 		VID_Shutdown();
 		return false;
 	}
@@ -2773,7 +2773,7 @@ static qboolean VID_InitModeSoft(viddef_mode_t *mode)
 	window = SDL_CreateWindow(gamename, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, mode->width, mode->height, windowflags);
 	if (window == NULL)
 	{
-		Con_Printf("Failed to set video mode to %ix%i: %s\n", mode->width, mode->height, SDL_GetError());
+		Con_DPrintf("Failed to set video mode to %ix%i: %s\n", mode->width, mode->height, SDL_GetError());
 		VID_Shutdown();
 		return false;
 	}
@@ -2784,7 +2784,7 @@ static qboolean VID_InitModeSoft(viddef_mode_t *mode)
 	vid_softsurface = SDL_CreateRGBSurface(SDL_SWSURFACE, mode->width, mode->height, 32, 0x00FF0000, 0x0000FF00, 0x00000000FF, 0xFF000000);
 	if (vid_softsurface == NULL)
 	{
-		Con_Printf("Failed to setup software rasterizer framebuffer %ix%ix32bpp: %s\n", mode->width, mode->height, SDL_GetError());
+		Con_DPrintf("Failed to setup software rasterizer framebuffer %ix%ix32bpp: %s\n", mode->width, mode->height, SDL_GetError());
 		VID_Shutdown();
 		return false;
 	}
@@ -2798,7 +2798,7 @@ static qboolean VID_InitModeSoft(viddef_mode_t *mode)
 	vid.softdepthpixels = (unsigned int *)calloc(1, mode->width * mode->height * 4);
 	if (DPSOFTRAST_Init(mode->width, mode->height, vid_soft_threads.integer, vid_soft_interlace.integer, (unsigned int *)vid_softsurface->pixels, (unsigned int *)vid.softdepthpixels) < 0)
 	{
-		Con_Printf("Failed to initialize software rasterizer\n");
+		Con_DPrintf("Failed to initialize software rasterizer\n");
 		VID_Shutdown();
 		return false;
 	}
@@ -2831,7 +2831,7 @@ qboolean VID_InitMode(viddef_mode_t *mode)
 	steelstorm_showing_mousecursor = Cvar_FindVar("steelstorm_showing_mousecursor");
 
 	if (!SDL_WasInit(SDL_INIT_VIDEO) && SDL_InitSubSystem(SDL_INIT_VIDEO) < 0)
-		Sys_Error ("Failed to init SDL video subsystem: %s", SDL_GetError());
+		Con_DPrintf ("Failed to init SDL video subsystem: %s", SDL_GetError());
 
 #if SDL_MAJOR_VERSION != 1
 	Cvar_SetValueQuick(&vid_touchscreen_supportshowkeyboard, SDL_HasScreenKeyboardSupport() ? 1 : 0);

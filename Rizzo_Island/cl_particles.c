@@ -339,7 +339,7 @@ static void CL_Particles_ParseEffectInfo(const char *textstart, const char *text
 		}
 		if (argc < 1)
 			continue;
-#define checkparms(n) if (argc != (n)) {Con_Printf("%s:%i: error while parsing: %s given %i parameters, should be %i parameters\n", filename, linenumber, argv[0], argc, (n));break;}
+#define checkparms(n) if (argc != (n)) {Con_DPrintf("%s:%i: error while parsing: %s given %i parameters, should be %i parameters\n", filename, linenumber, argv[0], argc, (n));break;}
 #define readints(array, n) checkparms(n+1);for (arrayindex = 0;arrayindex < argc - 1;arrayindex++) array[arrayindex] = strtol(argv[1+arrayindex], NULL, 0)
 #define readfloats(array, n) checkparms(n+1);for (arrayindex = 0;arrayindex < argc - 1;arrayindex++) array[arrayindex] = atof(argv[1+arrayindex])
 #define readint(var) checkparms(2);var = strtol(argv[1], NULL, 0)
@@ -351,7 +351,7 @@ static void CL_Particles_ParseEffectInfo(const char *textstart, const char *text
 			checkparms(2);
 			if (numparticleeffectinfo >= MAX_PARTICLEEFFECTINFO)
 			{
-				Con_Printf("%s:%i: too many effects!\n", filename, linenumber);
+				Con_DPrintf("%s:%i: too many effects!\n", filename, linenumber);
 				break;
 			}
 			for (effectnameindex = 1;effectnameindex < MAX_PARTICLEEFFECTNAME;effectnameindex++)
@@ -370,7 +370,7 @@ static void CL_Particles_ParseEffectInfo(const char *textstart, const char *text
 			// if we run out of names, abort
 			if (effectnameindex == MAX_PARTICLEEFFECTNAME)
 			{
-				Con_Printf("%s:%i: too many effects!\n", filename, linenumber);
+				Con_DPrintf("%s:%i: too many effects!\n", filename, linenumber);
 				break;
 			}
 			for(i = 0; i < numparticleeffectinfo; ++i)
@@ -390,7 +390,7 @@ static void CL_Particles_ParseEffectInfo(const char *textstart, const char *text
 		}
 		else if (info == NULL)
 		{
-			Con_Printf("%s:%i: command %s encountered before effect\n", filename, linenumber, argv[0]);
+			Con_DPrintf("%s:%i: command %s encountered before effect\n", filename, linenumber, argv[0]);
 			break;
 		}
 
@@ -412,7 +412,7 @@ static void CL_Particles_ParseEffectInfo(const char *textstart, const char *text
 			else if (!strcmp(argv[1], "smoke")) info->particletype = pt_smoke;
 			else if (!strcmp(argv[1], "decal")) info->particletype = pt_decal;
 			else if (!strcmp(argv[1], "entityparticle")) info->particletype = pt_entityparticle;
-			else Con_Printf("%s:%i: unrecognized particle type %s\n", filename, linenumber, argv[1]);
+			else Con_DPrintf("%s:%i: unrecognized particle type %s\n", filename, linenumber, argv[1]);
 			info->blendmode = particletype[info->particletype].blendmode;
 			info->orientation = particletype[info->particletype].orientation;
 		}
@@ -422,7 +422,7 @@ static void CL_Particles_ParseEffectInfo(const char *textstart, const char *text
 			if (!strcmp(argv[1], "alpha")) info->blendmode = PBLEND_ALPHA;
 			else if (!strcmp(argv[1], "add")) info->blendmode = PBLEND_ADD;
 			else if (!strcmp(argv[1], "invmod")) info->blendmode = PBLEND_INVMOD;
-			else Con_Printf("%s:%i: unrecognized blendmode %s\n", filename, linenumber, argv[1]);
+			else Con_DPrintf("%s:%i: unrecognized blendmode %s\n", filename, linenumber, argv[1]);
 		}
 		else if (!strcmp(argv[0], "orientation"))
 		{
@@ -431,7 +431,7 @@ static void CL_Particles_ParseEffectInfo(const char *textstart, const char *text
 			else if (!strcmp(argv[1], "spark")) info->orientation = PARTICLE_SPARK;
 			else if (!strcmp(argv[1], "oriented")) info->orientation = PARTICLE_ORIENTED_DOUBLESIDED;
 			else if (!strcmp(argv[1], "beam")) info->orientation = PARTICLE_HBEAM;
-			else Con_Printf("%s:%i: unrecognized orientation %s\n", filename, linenumber, argv[1]);
+			else Con_DPrintf("%s:%i: unrecognized orientation %s\n", filename, linenumber, argv[1]);
 		}
 		else if (!strcmp(argv[0], "color")) {readints(info->color, 2);}
 		else if (!strcmp(argv[0], "tex")) {readints(info->tex, 2);}
@@ -468,7 +468,7 @@ static void CL_Particles_ParseEffectInfo(const char *textstart, const char *text
 		else if (!strcmp(argv[0], "stainless")) {info->staintex[0] = -2; info->staincolor[0] = (unsigned int)-1; info->staincolor[1] = (unsigned int)-1; info->stainalpha[0] = 1; info->stainalpha[1] = 1; info->stainsize[0] = 2; info->stainsize[1] = 2; }
 		else if (!strcmp(argv[0], "rotate")) {readfloats(info->rotate, 4);}
 		else
-			Con_Printf("%s:%i: skipping unknown command %s\n", filename, linenumber, argv[0]);
+			Con_DPrintf("%s:%i: skipping unknown command %s\n", filename, linenumber, argv[0]);
 #undef checkparms
 #undef readints
 #undef readfloats
@@ -1743,11 +1743,11 @@ void CL_ReadPointFile_f (void)
 	pointfile = (char *)FS_LoadFile(name, tempmempool, true, NULL);
 	if (!pointfile)
 	{
-		Con_Printf("Could not open %s\n", name);
+		Con_DPrintf("Could not open %s\n", name);
 		return;
 	}
 
-	Con_Printf("Reading %s...\n", name);
+	Con_DPrintf("Reading %s...\n", name);
 	VectorClear(leakorg);
 	c = 0;
 	s = 0;
@@ -1784,7 +1784,7 @@ void CL_ReadPointFile_f (void)
 	}
 	Mem_Free(pointfile);
 	VectorCopy(leakorg, vecorg);
-	Con_Printf("%i points read (%i particles spawned)\nLeak at %f %f %f\n", c, s, leakorg[0], leakorg[1], leakorg[2]);
+	Con_DPrintf("%i points read (%i particles spawned)\nLeak at %f %f %f\n", c, s, leakorg[0], leakorg[1], leakorg[2]);
 
 	if (c == 0)
 	{
@@ -2003,7 +2003,7 @@ void CL_ParticleRain (const vec3_t mins, const vec3_t maxs, const vec3_t dir, in
 		}
 		break;
 	default:
-		Con_Printf ("CL_ParticleRain: unknown type %i (0 = rain, 1 = snow)\n", type);
+		Con_DPrintf ("CL_ParticleRain: unknown type %i (0 = rain, 1 = snow)\n", type);
 	}
 }
 
@@ -2064,7 +2064,7 @@ static void setuptex(int texnum, unsigned char *data, unsigned char *particletex
 	int basex, basey, w, h, y;
 	CL_Particle_PixelCoordsForTexnum(texnum, &basex, &basey, &w, &h);
 	if(w != PARTICLETEXTURESIZE || h != PARTICLETEXTURESIZE)
-		Sys_Error("invalid particle texture size for autogenerating");
+		Con_DPrintf("invalid particle texture size for autogenerating");
 	for (y = 0;y < PARTICLETEXTURESIZE;y++)
 		memcpy(particletexturedata + ((basey + y) * PARTICLEFONTSIZE + basex) * 4, data + y * PARTICLETEXTURESIZE * 4, PARTICLETEXTURESIZE * 4);
 }
@@ -2419,12 +2419,12 @@ static void R_InitParticleTexture (void)
 			}
 			if (!texturename[0])
 			{
-				Con_Printf("particles/particlefont.txt: syntax should be texnum x1 y1 x2 y2 texturename or texnum x1 y1 x2 y2 or texnum texturename\n");
+				Con_DPrintf("particles/particlefont.txt: syntax should be texnum x1 y1 x2 y2 texturename or texnum x1 y1 x2 y2 or texnum texturename\n");
 				continue;
 			}
 			if (i < 0 || i >= MAX_PARTICLETEXTURES)
 			{
-				Con_Printf("particles/particlefont.txt: texnum %i outside valid range (0 to %i)\n", i, MAX_PARTICLETEXTURES);
+				Con_DPrintf("particles/particlefont.txt: texnum %i outside valid range (0 to %i)\n", i, MAX_PARTICLETEXTURES);
 				continue;
 			}
 			sf = R_SkinFrame_LoadExternal(texturename, TEXF_ALPHA | TEXF_FORCELINEAR | TEXF_RGBMULTIPLYBYALPHA, true); // note: this loads as sRGB if sRGB is active!

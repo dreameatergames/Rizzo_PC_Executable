@@ -151,7 +151,7 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 	if (s_isRunning)
 		return true;
 
-	Con_Printf("Initializing CoreAudio...\n");
+	Con_DPrintf("Initializing CoreAudio...\n");
 	snd_threaded = false;
 
 	if(requested->width != 2)
@@ -170,12 +170,12 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 	status = AudioHardwareGetProperty(kAudioHardwarePropertyDefaultOutputDevice, &propertySize, &outputDeviceID);
 	if (status)
 	{
-		Con_Printf("CoreAudio: AudioDeviceGetProperty() returned %d when getting kAudioHardwarePropertyDefaultOutputDevice\n", (int)status);
+		Con_DPrintf("CoreAudio: AudioDeviceGetProperty() returned %d when getting kAudioHardwarePropertyDefaultOutputDevice\n", (int)status);
 		return false;
 	}
 	if (outputDeviceID == kAudioDeviceUnknown)
 	{
-		Con_Printf("CoreAudio: outputDeviceID is kAudioDeviceUnknown\n");
+		Con_DPrintf("CoreAudio: outputDeviceID is kAudioDeviceUnknown\n");
 		return false;
 	}
 
@@ -185,7 +185,7 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 	status = AudioDeviceSetProperty(outputDeviceID, NULL, 0, false, kAudioDevicePropertyBufferSize, propertySize, &bufferByteCount);
 	if (status)
 	{
-		Con_Printf("CoreAudio: AudioDeviceSetProperty() returned %d when setting kAudioDevicePropertyBufferSize to %d\n", (int)status, CHUNK_SIZE);
+		Con_DPrintf("CoreAudio: AudioDeviceSetProperty() returned %d when setting kAudioDevicePropertyBufferSize to %d\n", (int)status, CHUNK_SIZE);
 		return false;
 	}
 
@@ -193,7 +193,7 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 	status = AudioDeviceGetProperty(outputDeviceID, 0, false, kAudioDevicePropertyBufferSize, &propertySize, &bufferByteCount);
 	if (status)
 	{
-		Con_Printf("CoreAudio: AudioDeviceGetProperty() returned %d when setting kAudioDevicePropertyBufferSize\n", (int)status);
+		Con_DPrintf("CoreAudio: AudioDeviceGetProperty() returned %d when setting kAudioDevicePropertyBufferSize\n", (int)status);
 		return false;
 	}
 
@@ -204,29 +204,29 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 		return false;
 	}
 	submissionChunk /= requested->channels;
-	Con_Printf("   Chunk size = %d sample frames\n", submissionChunk);
+	Con_DPrintf("   Chunk size = %d sample frames\n", submissionChunk);
 
 	// Print out the device status
 	propertySize = sizeof(streamDesc);
 	status = AudioDeviceGetProperty(outputDeviceID, 0, false, kAudioDevicePropertyStreamFormat, &propertySize, &streamDesc);
 	if (status)
 	{
-		Con_Printf("CoreAudio: AudioDeviceGetProperty() returned %d when getting kAudioDevicePropertyStreamFormat\n", (int)status);
+		Con_DPrintf("CoreAudio: AudioDeviceGetProperty() returned %d when getting kAudioDevicePropertyStreamFormat\n", (int)status);
 		return false;
 	}
 
 	Con_Print ("   Hardware format:\n");
-	Con_Printf("    %5d mSampleRate\n", (unsigned int)streamDesc.mSampleRate);
-	Con_Printf("     %c%c%c%c mFormatID\n",
+	Con_DPrintf("    %5d mSampleRate\n", (unsigned int)streamDesc.mSampleRate);
+	Con_DPrintf("     %c%c%c%c mFormatID\n",
 				(char)(streamDesc.mFormatID >> 24),
 				(char)(streamDesc.mFormatID >> 16),
 				(char)(streamDesc.mFormatID >>  8),
 				(char)(streamDesc.mFormatID >>  0));
-	Con_Printf("    %5u mBytesPerPacket\n", (unsigned int)streamDesc.mBytesPerPacket);
-	Con_Printf("    %5u mFramesPerPacket\n", (unsigned int)streamDesc.mFramesPerPacket);
-	Con_Printf("    %5u mBytesPerFrame\n", (unsigned int)streamDesc.mBytesPerFrame);
-	Con_Printf("    %5u mChannelsPerFrame\n", (unsigned int)streamDesc.mChannelsPerFrame);
-	Con_Printf("    %5u mBitsPerChannel\n", (unsigned int)streamDesc.mBitsPerChannel);
+	Con_DPrintf("    %5u mBytesPerPacket\n", (unsigned int)streamDesc.mBytesPerPacket);
+	Con_DPrintf("    %5u mFramesPerPacket\n", (unsigned int)streamDesc.mFramesPerPacket);
+	Con_DPrintf("    %5u mBytesPerFrame\n", (unsigned int)streamDesc.mBytesPerFrame);
+	Con_DPrintf("    %5u mChannelsPerFrame\n", (unsigned int)streamDesc.mChannelsPerFrame);
+	Con_DPrintf("    %5u mBitsPerChannel\n", (unsigned int)streamDesc.mBitsPerChannel);
 
 	// Suggest proper settings if they differ
 	if (requested->channels != streamDesc.mChannelsPerFrame || requested->speed != streamDesc.mSampleRate)
@@ -264,7 +264,7 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 							return true;
 						}
 						else
-							Con_Printf("CoreAudio: AudioDeviceStart() returned %d\n", (int)status);
+							Con_DPrintf("CoreAudio: AudioDeviceStart() returned %d\n", (int)status);
 						Mem_Free(mixbuffer);
 						mixbuffer = NULL;
 					}
@@ -283,7 +283,7 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 			AudioDeviceRemoveIOProc(outputDeviceID, audioDeviceIOProc);
 		}
 		else
-			Con_Printf("CoreAudio: AudioDeviceAddIOProc() returned %d\n", (int)status);
+			Con_DPrintf("CoreAudio: AudioDeviceAddIOProc() returned %d\n", (int)status);
 	}
 	else
 		Con_Print("CoreAudio: Default audio device doesn't support linear PCM!\n");
@@ -308,7 +308,7 @@ void SndSys_Shutdown(void)
 	status = AudioDeviceStop(outputDeviceID, audioDeviceIOProc);
 	if (status)
 	{
-		Con_Printf("AudioDeviceStop: returned %d\n", (int)status);
+		Con_DPrintf("AudioDeviceStop: returned %d\n", (int)status);
 		return;
 	}
 	s_isRunning = false;
@@ -318,7 +318,7 @@ void SndSys_Shutdown(void)
 	status = AudioDeviceRemoveIOProc(outputDeviceID, audioDeviceIOProc);
 	if (status)
 	{
-		Con_Printf("AudioDeviceRemoveIOProc: returned %d\n", (int)status);
+		Con_DPrintf("AudioDeviceRemoveIOProc: returned %d\n", (int)status);
 		return;
 	}
 

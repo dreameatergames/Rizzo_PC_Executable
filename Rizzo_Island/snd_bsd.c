@@ -63,7 +63,7 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 	audio_fd = open (snddev, O_WRONLY | O_NDELAY | O_NONBLOCK);
 	if (audio_fd < 0)
 	{
-		Con_Printf("Can't open the sound device (%s)\n", snddev);
+		Con_DPrintf("Can't open the sound device (%s)\n", snddev);
 		return false;
 	}
 
@@ -92,7 +92,7 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 
 	if (ioctl (audio_fd, AUDIO_SETINFO, &info) != 0)
 	{
-		Con_Printf("Can't set up the sound device (%s)\n", snddev);
+		Con_DPrintf("Can't set up the sound device (%s)\n", snddev);
 		return false;
 	}
 
@@ -153,18 +153,18 @@ void SndSys_Submit (void)
 		written = write (audio_fd, &snd_renderbuffer->ring[startoffset * factor], limit * factor);
 		if (written < 0)
 		{
-			Con_Printf("SndSys_Submit: audio write returned %d!\n", written);
+			Con_DPrintf("SndSys_Submit: audio write returned %d!\n", written);
 			return;
 		}
 
 		if (written % factor != 0)
-			Sys_Error("SndSys_Submit: nb of bytes written (%d) isn't aligned to a frame sample!\n", written);
+			Con_DPrintf("SndSys_Submit: nb of bytes written (%d) isn't aligned to a frame sample!\n", written);
 
 		snd_renderbuffer->startframe += written / factor;
 
 		if ((unsigned int)written < limit * factor)
 		{
-			Con_Printf("SndSys_Submit: audio can't keep up! (%u < %u)\n", written, limit * factor);
+			Con_DPrintf("SndSys_Submit: audio can't keep up! (%u < %u)\n", written, limit * factor);
 			return;
 		}
 
@@ -175,7 +175,7 @@ void SndSys_Submit (void)
 	written = write (audio_fd, &snd_renderbuffer->ring[startoffset * factor], nbframes * factor);
 	if (written < 0)
 	{
-		Con_Printf("SndSys_Submit: audio write returned %d!\n", written);
+		Con_DPrintf("SndSys_Submit: audio write returned %d!\n", written);
 		return;
 	}
 	snd_renderbuffer->startframe += written / factor;

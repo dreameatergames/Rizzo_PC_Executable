@@ -208,7 +208,7 @@ static void IN_BestWeapon_Register(const char *name, int impulse, int weaponbit,
 			break;
 	if(i >= IN_BESTWEAPON_MAX)
 	{
-		Con_Printf("no slot left for weapon definition; increase IN_BESTWEAPON_MAX\n");
+		Con_DPrintf("no slot left for weapon definition; increase IN_BESTWEAPON_MAX\n");
 		return; // sorry
 	}
 	strlcpy(in_bestweapon_info[i].name, name, sizeof(in_bestweapon_info[i].name));
@@ -264,7 +264,7 @@ static void IN_BestWeapon_Register_f (void)
 	}
 	else
 	{
-		Con_Printf("Usage: %s weaponshortname impulse itemcode activeweaponcode ammostat ammomin; %s clear; %s quake\n", Cmd_Argv(0), Cmd_Argv(0), Cmd_Argv(0));
+		Con_DPrintf("Usage: %s weaponshortname impulse itemcode activeweaponcode ammostat ammomin; %s clear; %s quake\n", Cmd_Argv(0), Cmd_Argv(0), Cmd_Argv(0));
 	}
 }
 
@@ -274,7 +274,7 @@ static void IN_BestWeapon (void)
 	const char *t;
 	if (Cmd_Argc() < 2)
 	{
-		Con_Printf("bestweapon requires 1 or more parameters\n");
+		Con_DPrintf("bestweapon requires 1 or more parameters\n");
 		return;
 	}
 	for (i = 1;i < Cmd_Argc();i++)
@@ -311,7 +311,7 @@ void IN_CycleWeapon (void)
 	const char *t;
 	if (Cmd_Argc() < 2)
 	{
-		Con_Printf("bestweapon requires 1 or more parameters\n");
+		Con_DPrintf("bestweapon requires 1 or more parameters\n");
 		return;
 	}
 	for (i = 1;i < Cmd_Argc();i++)
@@ -956,7 +956,7 @@ static void CL_ClientMovement_Move(cl_clientmovement_state_t *s)
 				VectorCopy(trace2.endpos, currentorigin2);
 				VectorSet(neworigin2, trace2.endpos[0], trace2.endpos[1], s->origin[2]);
 				trace3 = CL_TraceBox(currentorigin2, s->mins, s->maxs, neworigin2, MOVE_NORMAL, s->self, SUPERCONTENTS_SOLID | SUPERCONTENTS_BODY | SUPERCONTENTS_PLAYERCLIP, 0, collision_extendmovelength.value, true, true, NULL, true);
-				//Con_Printf("%f %f %f %f : %f %f %f %f : %f %f %f %f\n", trace.fraction, trace.endpos[0], trace.endpos[1], trace.endpos[2], trace2.fraction, trace2.endpos[0], trace2.endpos[1], trace2.endpos[2], trace3.fraction, trace3.endpos[0], trace3.endpos[1], trace3.endpos[2]);
+				//Con_DPrintf("%f %f %f %f : %f %f %f %f : %f %f %f %f\n", trace.fraction, trace.endpos[0], trace.endpos[1], trace.endpos[2], trace2.fraction, trace2.endpos[0], trace2.endpos[1], trace2.endpos[2], trace3.fraction, trace3.endpos[0], trace3.endpos[1], trace3.endpos[2]);
 				// accept the new trace if it made some progress
 				if (fabs(trace3.endpos[0] - trace.endpos[0]) >= 0.03125 || fabs(trace3.endpos[1] - trace.endpos[1]) >= 0.03125)
 				{
@@ -1454,7 +1454,7 @@ static void CL_ClientMovement_Physics_Walk(cl_clientmovement_state_t *s)
 
 static void CL_ClientMovement_PlayerMove(cl_clientmovement_state_t *s)
 {
-	//Con_Printf(" %f", frametime);
+	//Con_DPrintf(" %f", frametime);
 	if (!s->cmd.jump)
 		s->cmd.canjump = true;
 	s->waterjumptime -= s->cmd.frametime;
@@ -1560,7 +1560,7 @@ void CL_UpdateMoveVars(void)
 void CL_ClientMovement_PlayerMove_Frame(cl_clientmovement_state_t *s)
 {
 	// if a move is more than 50ms, do it as two moves (matching qwsv)
-	//Con_Printf("%i ", s.cmd.msec);
+	//Con_DPrintf("%i ", s.cmd.msec);
 	if(s->cmd.frametime > 0.0005)
 	{
 		if (s->cmd.frametime > 0.05)
@@ -1597,17 +1597,17 @@ void CL_ClientMovement_Replay(void)
 	VectorCopy(cl.entities[cl.playerentity].state_current.origin, s.origin);
 	VectorCopy(cl.mvelocity[0], s.velocity);
 	s.crouched = true; // will be updated on first move
-	//Con_Printf("movement replay starting org %f %f %f vel %f %f %f\n", s.origin[0], s.origin[1], s.origin[2], s.velocity[0], s.velocity[1], s.velocity[2]);
+	//Con_DPrintf("movement replay starting org %f %f %f vel %f %f %f\n", s.origin[0], s.origin[1], s.origin[2], s.velocity[0], s.velocity[1], s.velocity[2]);
 
 	totalmovemsec = 0;
 	for (i = 0;i < CL_MAX_USERCMDS;i++)
 		if (cl.movecmd[i].sequence > cls.servermovesequence)
 			totalmovemsec += cl.movecmd[i].msec;
 	cl.movement_predicted = totalmovemsec >= cl_movement_minping.value && cls.servermovesequence && (cl_movement.integer && !cls.demoplayback && cls.signon == SIGNONS && cl.stats[STAT_HEALTH] > 0 && !cl.intermission);
-	//Con_Printf("%i = %.0f >= %.0f && %u && (%i && %i && %i == %i && %i > 0 && %i\n", cl.movement_predicted, totalmovemsec, cl_movement_minping.value, cls.servermovesequence, cl_movement.integer, !cls.demoplayback, cls.signon, SIGNONS, cl.stats[STAT_HEALTH], !cl.intermission);
+	//Con_DPrintf("%i = %.0f >= %.0f && %u && (%i && %i && %i == %i && %i > 0 && %i\n", cl.movement_predicted, totalmovemsec, cl_movement_minping.value, cls.servermovesequence, cl_movement.integer, !cls.demoplayback, cls.signon, SIGNONS, cl.stats[STAT_HEALTH], !cl.intermission);
 	if (cl.movement_predicted)
 	{
-		//Con_Printf("%ims\n", cl.movecmd[0].msec);
+		//Con_DPrintf("%ims\n", cl.movecmd[0].msec);
 
 		// replay the input queue to predict current location
 		// note: this relies on the fact there's always one queue item at the end
@@ -1627,7 +1627,7 @@ void CL_ClientMovement_Replay(void)
 
 			cl.movecmd[i].canjump = s.cmd.canjump;
 		}
-		//Con_Printf("\n");
+		//Con_DPrintf("\n");
 		CL_ClientMovement_UpdateStatus(&s);
 	}
 	else
@@ -1711,7 +1711,7 @@ static void QW_MSG_WriteDeltaUsercmd(sizebuf_t *buf, usercmd_t *from, usercmd_t 
 void CL_NewFrameReceived(int num)
 {
 	if (developer_networkentities.integer >= 10)
-		Con_Printf("recv: svc_entities %i\n", num);
+		Con_DPrintf("recv: svc_entities %i\n", num);
 	cl.latestframenums[cl.latestframenumsposition] = num;
 	cl.latestsendnums[cl.latestframenumsposition] = cl.cmd.sequence;
 	cl.latestframenumsposition = (cl.latestframenumsposition + 1) % LATESTFRAMENUMS;
@@ -2087,7 +2087,7 @@ void CL_SendMove(void)
 			if (cl.latestsendnums[j] >= oldsequence)
 			{
 				if (developer_networkentities.integer >= 10)
-					Con_Printf("send clc_ackframe %i\n", cl.latestframenums[j]);
+					Con_DPrintf("send clc_ackframe %i\n", cl.latestframenums[j]);
 				MSG_WriteByte(&buf, clc_ackframe);
 				MSG_WriteLong(&buf, cl.latestframenums[j]);
 			}

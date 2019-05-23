@@ -490,7 +490,7 @@ static void VM_CL_findradius (prvm_prog_t *prog)
 	if (numtouchedicts > MAX_EDICTS)
 	{
 		// this never happens	//[515]: for what then ?
-		Con_Printf("CSQC_EntitiesInBox returned %i edicts, max was %i\n", numtouchedicts, MAX_EDICTS);
+		Con_DPrintf("CSQC_EntitiesInBox returned %i edicts, max was %i\n", numtouchedicts, MAX_EDICTS);
 		numtouchedicts = MAX_EDICTS;
 	}
 	for (i = 0;i < numtouchedicts;i++)
@@ -1834,7 +1834,7 @@ static void VM_CL_makestatic (prvm_prog_t *prog)
 		CL_UpdateRenderEntity(&staticent->render);
 	}
 	else
-		Con_Printf("Too many static entities");
+		Con_DPrintf("Too many static entities");
 
 // throw the entity away now
 	PRVM_ED_Free(prog, ent);
@@ -1887,7 +1887,7 @@ static void VM_CL_copyentity (prvm_prog_t *prog)
 static void VM_CL_effect (prvm_prog_t *prog)
 {
 #if 1
-	Con_Printf("WARNING: VM_CL_effect not implemented\n"); // FIXME: this needs to take modelname not modelindex, the csqc defs has it as string and so it shall be
+	Con_DPrintf("WARNING: VM_CL_effect not implemented\n"); // FIXME: this needs to take modelname not modelindex, the csqc defs has it as string and so it shall be
 #else
 	vec3_t org;
 	VM_SAFEPARMCOUNT(5, VM_CL_effect);
@@ -3545,7 +3545,7 @@ void Debug_PolygonBegin(const char *picname, int drawflag)
 		VM_InitPolygons(&debugPolys);
 	if(debugPolys.begin_active)
 	{
-		Con_Printf("Debug_PolygonBegin: called twice without Debug_PolygonEnd after first\n");
+		Con_DPrintf("Debug_PolygonBegin: called twice without Debug_PolygonEnd after first\n");
 		return;
 	}
 	debugPolys.begin_texture = picname[0] ? Draw_CachePic_Flags (picname, CACHEPICFLAG_NOTPERSISTENT)->tex : r_texture_white;
@@ -3558,13 +3558,13 @@ void Debug_PolygonVertex(float x, float y, float z, float s, float t, float r, f
 {
 	if(!debugPolys.begin_active)
 	{
-		Con_Printf("Debug_PolygonVertex: Debug_PolygonBegin wasn't called\n");
+		Con_DPrintf("Debug_PolygonVertex: Debug_PolygonBegin wasn't called\n");
 		return;
 	}
 
 	if(debugPolys.begin_vertices >= VMPOLYGONS_MAXPOINTS)
 	{
-		Con_Printf("Debug_PolygonVertex: may have %i vertices max\n", VMPOLYGONS_MAXPOINTS);
+		Con_DPrintf("Debug_PolygonVertex: may have %i vertices max\n", VMPOLYGONS_MAXPOINTS);
 		return;
 	}
 
@@ -3584,14 +3584,14 @@ void Debug_PolygonEnd(void)
 {
 	if (!debugPolys.begin_active)
 	{
-		Con_Printf("Debug_PolygonEnd: Debug_PolygonBegin wasn't called\n");
+		Con_DPrintf("Debug_PolygonEnd: Debug_PolygonBegin wasn't called\n");
 		return;
 	}
 	debugPolys.begin_active = false;
 	if (debugPolys.begin_vertices >= 3)
 		VMPolygons_Store(&debugPolys);
 	else
-		Con_Printf("Debug_PolygonEnd: %i vertices isn't a good choice\n", debugPolys.begin_vertices);
+		Con_DPrintf("Debug_PolygonEnd: %i vertices isn't a good choice\n", debugPolys.begin_vertices);
 }
 
 /*

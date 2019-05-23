@@ -65,7 +65,7 @@ static void R_TrackSprite(const entity_render_t *ent, vec3_t origin, vec3_t left
 		bCoord[2] *= r_refdef.view.frustum_x;
 		bCoord[1] *= r_refdef.view.frustum_y;
 
-		//Con_Printf("%f %f %f\n", bCoord[0], bCoord[1], bCoord[2]);
+		//Con_DPrintf("%f %f %f\n", bCoord[0], bCoord[1], bCoord[2]);
 		
 		ax = fabs(bCoord[1]);
 		ay = fabs(bCoord[2]);
@@ -243,7 +243,7 @@ static void R_Model_Sprite_Draw_TransparentCallback(const entity_render_t *ent, 
 		up[2] = ent->scale;
 		break;
 	default:
-		Con_Printf("R_SpriteSetup: unknown sprite type %i\n", model->sprite.sprnum_type);
+		Con_DPrintf("R_SpriteSetup: unknown sprite type %i\n", model->sprite.sprnum_type);
 		// fall through to normal sprite
 	case SPR_VP_PARALLEL:
 		// normal sprite

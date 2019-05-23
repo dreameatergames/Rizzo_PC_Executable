@@ -1506,7 +1506,7 @@ void Sbar_Draw (void)
 
 
 				// health
-				Sbar_DrawNum (136, 0, cl.stats[STAT_HEALTH], 3, 0);
+				Sbar_DrawNum (136, 0, cl.stats[STAT_HEALTH], 3, 1);
 
 				// ammo icon
 				if (gamemode == GAME_ROGUE)

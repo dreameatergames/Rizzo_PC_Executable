@@ -202,14 +202,14 @@ void Mod_AliasInit (void)
 #ifdef SSE_POSSIBLE
 	if(Sys_HaveSSE())
 	{
-		Con_Printf("Skeletal animation uses SSE code path\n");
+		Con_DPrintf("Skeletal animation uses SSE code path\n");
 		r_skeletal_use_sse_defined = true;
 		Cvar_RegisterVariable(&r_skeletal_use_sse);
 	}
 	else
-		Con_Printf("Skeletal animation uses generic code path (SSE disabled or not detected)\n");
+		Con_DPrintf("Skeletal animation uses generic code path (SSE disabled or not detected)\n");
 #else
-	Con_Printf("Skeletal animation uses generic code path (SSE not compiled in)\n");
+	Con_DPrintf("Skeletal animation uses generic code path (SSE not compiled in)\n");
 #endif
 }
 
@@ -875,7 +875,7 @@ static void Mod_MDL_LoadFrames (unsigned char* datapointer, int inverts, int *ve
 			interval = LittleFloat (intervals->interval); // FIXME: support variable framerate groups
 			if (interval < 0.01f)
 			{
-				Con_Printf("%s has an invalid interval %f, changing to 0.1\n", loadmodel->name, interval);
+				Con_DPrintf("%s has an invalid interval %f, changing to 0.1\n", loadmodel->name, interval);
 				interval = 0.1f;
 			}
 		}
@@ -1261,7 +1261,7 @@ void Mod_IDP0_Load(dp_model_t *mod, void *buffer, void *bufferend)
 				interval = LittleFloat(pinskinintervals[0].interval);
 				if (interval < 0.01f)
 				{
-					Con_Printf("%s has an invalid interval %f, changing to 0.1\n", loadmodel->name, interval);
+					Con_DPrintf("%s has an invalid interval %f, changing to 0.1\n", loadmodel->name, interval);
 					interval = 0.1f;
 				}
 			}
@@ -1501,12 +1501,12 @@ void Mod_IDP2_Load(dp_model_t *mod, void *buffer, void *bufferend)
 			st = (unsigned short) LittleShort (intri[i].index_st[j]);
 			if (xyz >= numxyz)
 			{
-				Con_Printf("%s has an invalid xyz index (%i) on triangle %i, resetting to 0\n", loadmodel->name, xyz, i);
+				Con_DPrintf("%s has an invalid xyz index (%i) on triangle %i, resetting to 0\n", loadmodel->name, xyz, i);
 				xyz = 0;
 			}
 			if (st >= numst)
 			{
-				Con_Printf("%s has an invalid st index (%i) on triangle %i, resetting to 0\n", loadmodel->name, st, i);
+				Con_DPrintf("%s has an invalid st index (%i) on triangle %i, resetting to 0\n", loadmodel->name, st, i);
 				st = 0;
 			}
 			hashindex = (xyz * 256 + st) & 65535;
@@ -1538,7 +1538,7 @@ void Mod_IDP2_Load(dp_model_t *mod, void *buffer, void *bufferend)
 		stt = LittleShort(inst[hash->st*2+1]);
 		if (sts < 0 || sts >= skinwidth || stt < 0 || stt >= skinheight)
 		{
-			Con_Printf("%s has an invalid skin coordinate (%i %i) on vert %i, changing to 0 0\n", loadmodel->name, sts, stt, i);
+			Con_DPrintf("%s has an invalid skin coordinate (%i %i) on vert %i, changing to 0 0\n", loadmodel->name, sts, stt, i);
 			sts = 0;
 			stt = 0;
 		}
@@ -1704,7 +1704,7 @@ void Mod_IDP3_Load(dp_model_t *mod, void *buffer, void *bufferend)
 			loadmodel->data_tags[i].matrixgl[j] = LittleFloat(pintag->rotationmatrix[j]);
 		for (j = 0;j < 3;j++)
 			loadmodel->data_tags[i].matrixgl[9+j] = LittleFloat(pintag->origin[j]);
-		//Con_Printf("model \"%s\" frame #%i tag #%i \"%s\"\n", loadmodel->name, i / loadmodel->num_tags, i % loadmodel->num_tags, loadmodel->data_tags[i].name);
+		//Con_DPrintf("model \"%s\" frame #%i tag #%i \"%s\"\n", loadmodel->name, i / loadmodel->num_tags, i % loadmodel->num_tags, loadmodel->data_tags[i].name);
 	}
 
 	// load meshes
@@ -1879,12 +1879,12 @@ void Mod_ZYMOTICMODEL_Load(dp_model_t *mod, void *buffer, void *bufferend)
 
 	if (pheader->numtris < 1 || pheader->numverts < 3 || pheader->numshaders < 1)
 	{
-		Con_Printf("%s has no geometry\n", loadmodel->name);
+		Con_DPrintf("%s has no geometry\n", loadmodel->name);
 		return;
 	}
 	if (pheader->numscenes < 1 || pheader->lump_poses.length < (int)sizeof(float[3][4]))
 	{
-		Con_Printf("%s has no animations\n", loadmodel->name);
+		Con_DPrintf("%s has no animations\n", loadmodel->name);
 		return;
 	}
 
@@ -2048,7 +2048,7 @@ void Mod_ZYMOTICMODEL_Load(dp_model_t *mod, void *buffer, void *bufferend)
 			for (k = 0;k < 12;k++)
 				pose[k] = BigFloat(frameposes[j*12+k]);
 			//if (j < loadmodel->num_bones)
-			//	Con_Printf("%s: bone %i = %f %f %f %f : %f %f %f %f : %f %f %f %f : scale = %f\n", loadmodel->name, j, pose[0], pose[1], pose[2], pose[3], pose[4], pose[5], pose[6], pose[7], pose[8], pose[9], pose[10], pose[11], VectorLength(pose));
+			//	Con_DPrintf("%s: bone %i = %f %f %f %f : %f %f %f %f : %f %f %f %f : scale = %f\n", loadmodel->name, j, pose[0], pose[1], pose[2], pose[3], pose[4], pose[5], pose[6], pose[7], pose[8], pose[9], pose[10], pose[11], VectorLength(pose));
 			// scale child bones to match the root scale
 			if (loadmodel->data_bones[j].parent >= 0)
 			{
@@ -2263,12 +2263,12 @@ void Mod_DARKPLACESMODEL_Load(dp_model_t *mod, void *buffer, void *bufferend)
 
 	if (pheader->num_bones < 1 || pheader->num_meshs < 1)
 	{
-		Con_Printf("%s has no geometry\n", loadmodel->name);
+		Con_DPrintf("%s has no geometry\n", loadmodel->name);
 		return;
 	}
 	if (pheader->num_frames < 1)
 	{
-		Con_Printf("%s has no frames\n", loadmodel->name);
+		Con_DPrintf("%s has no frames\n", loadmodel->name);
 		return;
 	}
 
@@ -2676,7 +2676,7 @@ void Mod_PSKMODEL_Load(dp_model_t *mod, void *buffer, void *bufferend)
 		if (developer_extra.integer)
 			Con_DPrintf("%s: %s %x: %i * %i = %i\n", loadmodel->name, pchunk->id, version, recordsize, numrecords, recordsize * numrecords);
 		if (version != 0x1e83b9 && version != 0x1e9179 && version != 0x2e && version != 0x12f2bc && version != 0x12f2f0)
-			Con_Printf ("%s: chunk %s has unknown version %x (0x1e83b9, 0x1e9179, 0x2e, 0x12f2bc, 0x12f2f0 are currently supported), trying to load anyway!\n", loadmodel->name, pchunk->id, version);
+			Con_DPrintf ("%s: chunk %s has unknown version %x (0x1e83b9, 0x1e9179, 0x2e, 0x12f2bc, 0x12f2f0 are currently supported), trying to load anyway!\n", loadmodel->name, pchunk->id, version);
 		if (!strcmp(pchunk->id, "ACTRHEAD"))
 		{
 			// nothing to do
@@ -2712,7 +2712,7 @@ void Mod_PSKMODEL_Load(dp_model_t *mod, void *buffer, void *bufferend)
 				p->texcoord[1] = LittleFloat(p->texcoord[1]);
 				if (p->pntsindex >= numpnts)
 				{
-					Con_Printf("%s: vtxw->pntsindex %i >= numpnts %i\n", loadmodel->name, p->pntsindex, numpnts);
+					Con_DPrintf("%s: vtxw->pntsindex %i >= numpnts %i\n", loadmodel->name, p->pntsindex, numpnts);
 					p->pntsindex = 0;
 				}
 			}
@@ -2734,17 +2734,17 @@ void Mod_PSKMODEL_Load(dp_model_t *mod, void *buffer, void *bufferend)
 				p->group = LittleLong(p->group);
 				if (p->vtxwindex[0] >= numvtxw)
 				{
-					Con_Printf("%s: face->vtxwindex[0] %i >= numvtxw %i\n", loadmodel->name, p->vtxwindex[0], numvtxw);
+					Con_DPrintf("%s: face->vtxwindex[0] %i >= numvtxw %i\n", loadmodel->name, p->vtxwindex[0], numvtxw);
 					p->vtxwindex[0] = 0;
 				}
 				if (p->vtxwindex[1] >= numvtxw)
 				{
-					Con_Printf("%s: face->vtxwindex[1] %i >= numvtxw %i\n", loadmodel->name, p->vtxwindex[1], numvtxw);
+					Con_DPrintf("%s: face->vtxwindex[1] %i >= numvtxw %i\n", loadmodel->name, p->vtxwindex[1], numvtxw);
 					p->vtxwindex[1] = 0;
 				}
 				if (p->vtxwindex[2] >= numvtxw)
 				{
-					Con_Printf("%s: face->vtxwindex[2] %i >= numvtxw %i\n", loadmodel->name, p->vtxwindex[2], numvtxw);
+					Con_DPrintf("%s: face->vtxwindex[2] %i >= numvtxw %i\n", loadmodel->name, p->vtxwindex[2], numvtxw);
 					p->vtxwindex[2] = 0;
 				}
 			}
@@ -2803,7 +2803,7 @@ void Mod_PSKMODEL_Load(dp_model_t *mod, void *buffer, void *bufferend)
 #endif
 				if (p->parent < 0 || p->parent >= numbones)
 				{
-					Con_Printf("%s: bone->parent %i >= numbones %i\n", loadmodel->name, p->parent, numbones);
+					Con_DPrintf("%s: bone->parent %i >= numbones %i\n", loadmodel->name, p->parent, numbones);
 					p->parent = 0;
 				}
 			}
@@ -2824,12 +2824,12 @@ void Mod_PSKMODEL_Load(dp_model_t *mod, void *buffer, void *bufferend)
 				p->boneindex = LittleLong(p->boneindex);
 				if (p->pntsindex < 0 || p->pntsindex >= numpnts)
 				{
-					Con_Printf("%s: weight->pntsindex %i >= numpnts %i\n", loadmodel->name, p->pntsindex, numpnts);
+					Con_DPrintf("%s: weight->pntsindex %i >= numpnts %i\n", loadmodel->name, p->pntsindex, numpnts);
 					p->pntsindex = 0;
 				}
 				if (p->boneindex < 0 || p->boneindex >= numbones)
 				{
-					Con_Printf("%s: weight->boneindex %i >= numbones %i\n", loadmodel->name, p->boneindex, numbones);
+					Con_DPrintf("%s: weight->boneindex %i >= numbones %i\n", loadmodel->name, p->boneindex, numbones);
 					p->boneindex = 0;
 				}
 			}
@@ -2847,7 +2847,7 @@ void Mod_PSKMODEL_Load(dp_model_t *mod, void *buffer, void *bufferend)
 		if (developer_extra.integer)
 			Con_DPrintf("%s: %s %x: %i * %i = %i\n", animname, pchunk->id, version, recordsize, numrecords, recordsize * numrecords);
 		if (version != 0x1e83b9 && version != 0x1e9179 && version != 0x2e && version != 0x12f2bc && version != 0x12f2f0)
-			Con_Printf ("%s: chunk %s has unknown version %x (0x1e83b9, 0x1e9179, 0x2e, 0x12f2bc, 0x12f2f0 are currently supported), trying to load anyway!\n", animname, pchunk->id, version);
+			Con_DPrintf ("%s: chunk %s has unknown version %x (0x1e83b9, 0x1e9179, 0x2e, 0x12f2bc, 0x12f2f0 are currently supported), trying to load anyway!\n", animname, pchunk->id, version);
 		if (!strcmp(pchunk->id, "ANIMHEAD"))
 		{
 			// nothing to do
@@ -2897,7 +2897,7 @@ void Mod_PSKMODEL_Load(dp_model_t *mod, void *buffer, void *bufferend)
 #endif
 				if (p->parent < 0 || p->parent >= numanimbones)
 				{
-					Con_Printf("%s: bone->parent %i >= numanimbones %i\n", animname, p->parent, numanimbones);
+					Con_DPrintf("%s: bone->parent %i >= numanimbones %i\n", animname, p->parent, numanimbones);
 					p->parent = 0;
 				}
 				// check that bones are the same as in the base
@@ -2922,7 +2922,7 @@ void Mod_PSKMODEL_Load(dp_model_t *mod, void *buffer, void *bufferend)
 				p->firstframe = LittleLong(p->firstframe);
 				p->numframes = LittleLong(p->numframes);
 				if (p->numbones != numbones)
-					Con_Printf("%s: animinfo->numbones != numbones, trying to load anyway!\n", animname);
+					Con_DPrintf("%s: animinfo->numbones != numbones, trying to load anyway!\n", animname);
 			}
 			animbuffer = p;
 		}
@@ -2962,7 +2962,7 @@ void Mod_PSKMODEL_Load(dp_model_t *mod, void *buffer, void *bufferend)
 			// TODO: allocate bonepose stuff
 		}
 		else
-			Con_Printf("%s: unknown chunk ID \"%s\"\n", animname, pchunk->id);
+			Con_DPrintf("%s: unknown chunk ID \"%s\"\n", animname, pchunk->id);
 	}
 
 	if (!numpnts || !pnts || !numvtxw || !vtxw || !numfaces || !faces || !nummatts || !matts || !numbones || !bones || !numrawweights || !rawweights)
@@ -3360,7 +3360,7 @@ void Mod_INTERQUAKEMODEL_Load(dp_model_t *mod, void *buffer, void *bufferend)
 		if (pbase + header.ofs_joints + header.num_joints*sizeof(iqmjoint1_t) > pend ||
 			pbase + header.ofs_poses + header.num_poses*sizeof(iqmpose1_t) > pend)
 		{
-			Con_Printf("%s has invalid size or offset information\n", loadmodel->name);
+			Con_DPrintf("%s has invalid size or offset information\n", loadmodel->name);
 			return;
 		}
 	}
@@ -3369,7 +3369,7 @@ void Mod_INTERQUAKEMODEL_Load(dp_model_t *mod, void *buffer, void *bufferend)
 		if (pbase + header.ofs_joints + header.num_joints*sizeof(iqmjoint_t) > pend ||
 			pbase + header.ofs_poses + header.num_poses*sizeof(iqmpose_t) > pend)
 		{
-			Con_Printf("%s has invalid size or offset information\n", loadmodel->name);
+			Con_DPrintf("%s has invalid size or offset information\n", loadmodel->name);
 			return;
 		}
 	}
@@ -3383,7 +3383,7 @@ void Mod_INTERQUAKEMODEL_Load(dp_model_t *mod, void *buffer, void *bufferend)
 		(header.ofs_bounds && pbase + header.ofs_bounds + header.num_frames*sizeof(iqmbounds_t) > pend) ||
 		pbase + header.ofs_comment + header.num_comment > pend)
 	{
-		Con_Printf("%s has invalid size or offset information\n", loadmodel->name);
+		Con_DPrintf("%s has invalid size or offset information\n", loadmodel->name);
 		return;
 	}
 
@@ -3452,7 +3452,7 @@ void Mod_INTERQUAKEMODEL_Load(dp_model_t *mod, void *buffer, void *bufferend)
 	}
 	if (header.num_vertexes > 0 && (!vposition || !vtexcoord || ((header.num_frames > 0 || header.num_anims > 0) && (!vblendindexes || !vblendweights))))
 	{
-		Con_Printf("%s is missing vertex array data\n", loadmodel->name);
+		Con_DPrintf("%s is missing vertex array data\n", loadmodel->name);
 		return;
 	}
 

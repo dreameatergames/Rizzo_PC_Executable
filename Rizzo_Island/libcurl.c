@@ -493,7 +493,7 @@ static unsigned char *decode_image(downloadinfo *di, const char *content_type)
 		else if(filesize >= 7 && !strncmp((char *) data, "\x89PNG\x0D\x0A\x1A\x0A", 7))
 			pixels = PNG_LoadImage_BGRA(data, filesize, &mip);
 		else
-			Con_Printf("Did not detect content type: %s\n", content_type);
+			Con_DPrintf("Did not detect content type: %s\n", content_type);
 		Mem_Free(data);
 	}
 	// do we call Image_MakeLinearColorsFromsRGB or not?
@@ -559,7 +559,7 @@ static void Curl_EndDownload(downloadinfo *di, CurlStatus status, CURLcode error
 
 	if(!di->callback && ok && !di->bytes_received)
 	{
-		Con_Printf("ERROR: empty file\n");
+		Con_DPrintf("ERROR: empty file\n");
 		ok = false;
 	}
 
@@ -693,12 +693,12 @@ static void CheckPendingDownloads(void)
 			{
 				if(!di->buffer)
 				{
-					Con_Printf("Downloading %s -> %s", CleanURL(di->url, urlbuf, sizeof(urlbuf)), di->filename);
+					Con_DPrintf("Downloading %s -> %s", CleanURL(di->url, urlbuf, sizeof(urlbuf)), di->filename);
 
 					di->stream = FS_OpenRealFile(di->filename, "ab", false);
 					if(!di->stream)
 					{
-						Con_Printf("\nFAILED: Could not open output file %s\n", di->filename);
+						Con_DPrintf("\nFAILED: Could not open output file %s\n", di->filename);
 						Curl_EndDownload(di, CURL_DOWNLOAD_FAILED, CURLE_OK, NULL);
 						return;
 					}
@@ -706,7 +706,7 @@ static void CheckPendingDownloads(void)
 					di->startpos = FS_Tell(di->stream);
 
 					if(di->startpos > 0)
-						Con_Printf(", resuming from position %ld", (long) di->startpos);
+						Con_DPrintf(", resuming from position %ld", (long) di->startpos);
 					Con_Print("...\n");
 				}
 				else
@@ -750,7 +750,7 @@ static void CheckPendingDownloads(void)
 				qcurl_easy_setopt(di->curle, CURLOPT_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS | CURLPROTO_FTP);
 				if(qcurl_easy_setopt(di->curle, CURLOPT_REDIR_PROTOCOLS, CURLPROTO_HTTP | CURLPROTO_HTTPS | CURLPROTO_FTP) != CURLE_OK)
 				{
-					Con_Printf("^1WARNING:^7 for security reasons, please upgrade to libcurl 7.19.4 or above. In a later version of DarkPlaces, HTTP redirect support will be disabled for this libcurl version.\n");
+					Con_DPrintf("^1WARNING:^7 for security reasons, please upgrade to libcurl 7.19.4 or above. In a later version of DarkPlaces, HTTP redirect support will be disabled for this libcurl version.\n");
 					//qcurl_easy_setopt(di->curle, CURLOPT_FOLLOWLOCATION, 0);
 				}
 				if(di->post_content_type)
@@ -969,7 +969,7 @@ static qboolean Curl_Begin(const char *URL, const char *extraheaders, double max
 				downloadinfo *existingdownloadinfo = Curl_Find(fn);
 				if(existingdownloadinfo)
 				{
-					Con_Printf("Can't download %s, already getting it from %s!\n", fn, CleanURL(existingdownloadinfo->url, urlbuf, sizeof(urlbuf)));
+					Con_DPrintf("Can't download %s, already getting it from %s!\n", fn, CleanURL(existingdownloadinfo->url, urlbuf, sizeof(urlbuf)));
 
 					// however, if it was not for this map yet...
 					if(forthismap && !existingdownloadinfo->forthismap)
@@ -1045,7 +1045,7 @@ static qboolean Curl_Begin(const char *URL, const char *extraheaders, double max
 		// URL scheme (so one can't read local files using file://)
 		if(strncmp(URL, "http://", 7) && strncmp(URL, "ftp://", 6) && strncmp(URL, "https://", 8))
 		{
-			Con_Printf("Curl_Begin(\"%s\"): nasty URL scheme rejected\n", URL);
+			Con_DPrintf("Curl_Begin(\"%s\"): nasty URL scheme rejected\n", URL);
 			if (curl_mutex) Thread_UnlockMutex(curl_mutex);
 			return false;
 		}
@@ -1346,11 +1346,11 @@ static void Curl_Info_f(void)
 		for(di = downloads; di; di = di->next)
 		{
 			double speed, percent;
-			Con_Printf("  %s -> %s ",  CleanURL(di->url, urlbuf, sizeof(urlbuf)), di->filename);
+			Con_DPrintf("  %s -> %s ",  CleanURL(di->url, urlbuf, sizeof(urlbuf)), di->filename);
 			percent = 100.0 * Curl_GetDownloadAmount(di);
 			speed = Curl_GetDownloadSpeed(di);
 			if(percent >= 0)
-				Con_Printf("(%.1f%% @ %.1f KiB/s)\n", percent, speed / 1024.0);
+				Con_DPrintf("(%.1f%% @ %.1f KiB/s)\n", percent, speed / 1024.0);
 			else
 				Con_Print("(queued)\n");
 		}
@@ -1510,7 +1510,7 @@ static void Curl_Curl_f(void)
 		}
 		else if(*a == '-')
 		{
-			Con_Printf("curl: invalid option %s\n", a);
+			Con_DPrintf("curl: invalid option %s\n", a);
 			// but we ignore the option
 		}
 	}
@@ -1522,7 +1522,7 @@ needthefile:
 /*
 static void curl_curlcat_callback(int code, size_t length_received, unsigned char *buffer, void *cbdata)
 {
-	Con_Printf("Received %d bytes (status %d):\n%.*s\n", (int) length_received, code, (int) length_received, buffer);
+	Con_DPrintf("Received %d bytes (status %d):\n%.*s\n", (int) length_received, code, (int) length_received, buffer);
 	Z_Free(buffer);
 }
 
@@ -1829,5 +1829,5 @@ void Curl_SendRequirements(void)
 	if(strlen(sendbuffer) + 1 < sizeof(sendbuffer))
 		Host_ClientCommands("%s", sendbuffer);
 	else
-		Con_Printf("Could not initiate autodownload due to URL buffer overflow\n");
+		Con_DPrintf("Could not initiate autodownload due to URL buffer overflow\n");
 }

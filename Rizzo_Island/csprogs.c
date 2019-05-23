@@ -831,7 +831,7 @@ void CSQC_ReadEntities (void)
 					// the csqc side is possible for legitimate reasons (such
 					// as a repeat of the remove message), so no warning is
 					// needed
-					//Con_Printf("Bad csqc_server2csqcentitynumber map\n");	//[515]: never happens ?
+					//Con_DPrintf("Bad csqc_server2csqcentitynumber map\n");	//[515]: never happens ?
 				}
 			}
 			else
@@ -926,10 +926,10 @@ static void CLVM_count_edicts(prvm_prog_t *prog)
 			models++;
 	}
 
-	Con_Printf("num_edicts:%3i\n", prog->num_edicts);
-	Con_Printf("active    :%3i\n", active);
-	Con_Printf("view      :%3i\n", models);
-	Con_Printf("touch     :%3i\n", solid);
+	Con_DPrintf("num_edicts:%3i\n", prog->num_edicts);
+	Con_DPrintf("active    :%3i\n", active);
+	Con_DPrintf("view      :%3i\n", models);
+	Con_DPrintf("touch     :%3i\n", solid);
 }
 
 static qboolean CLVM_load_edict(prvm_prog_t *prog, prvm_edict_t *ent)
@@ -1030,7 +1030,7 @@ void CL_VM_Init (void)
 		{
 			if (cls.demoplayback)
 			{
-				Con_Printf("^1Warning: Your %s is not the same version as the demo was recorded with (CRC/size are %i/%i but should be %i/%i)\n", csqc_progname.string, csprogsdatacrc, (int)csprogsdatasize, requiredcrc, requiredsize);
+				Con_DPrintf("^1Warning: Your %s is not the same version as the demo was recorded with (CRC/size are %i/%i but should be %i/%i)\n", csqc_progname.string, csprogsdatacrc, (int)csprogsdatasize, requiredcrc, requiredsize);
 				// Mem_Free(csprogsdata);
 				// return;
 				// We WANT to continue here, and play the demo with different csprogs!
@@ -1039,7 +1039,7 @@ void CL_VM_Init (void)
 			else
 			{
 				Mem_Free(csprogsdata);
-				Con_Printf("^1Your %s is not the same version as the server (CRC is %i/%i but should be %i/%i)\n", csqc_progname.string, csprogsdatacrc, (int)csprogsdatasize, requiredcrc, requiredsize);
+				Con_DPrintf("^1Your %s is not the same version as the server (CRC is %i/%i but should be %i/%i)\n", csqc_progname.string, csprogsdatacrc, (int)csprogsdatasize, requiredcrc, requiredsize);
 				CL_Disconnect();
 				return;
 			}
@@ -1050,9 +1050,9 @@ void CL_VM_Init (void)
 		if (requiredcrc >= 0)
 		{
 			if (cls.demoplayback)
-				Con_Printf("CL_VM_Init: demo requires CSQC, but \"%s\" wasn't found\n", csqc_progname.string);
+				Con_DPrintf("CL_VM_Init: demo requires CSQC, but \"%s\" wasn't found\n", csqc_progname.string);
 			else
-				Con_Printf("CL_VM_Init: server requires CSQC, but \"%s\" wasn't found\n", csqc_progname.string);
+				Con_DPrintf("CL_VM_Init: server requires CSQC, but \"%s\" wasn't found\n", csqc_progname.string);
 			CL_Disconnect();
 		}
 		return;

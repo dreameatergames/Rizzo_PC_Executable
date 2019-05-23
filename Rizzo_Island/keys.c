@@ -117,7 +117,7 @@ static void Key_History_Push(void)
 	if(strcmp(key_line, "]rcon_password")) // putting these into the history just sucks
 	if(strncmp(key_line, "]rcon_password ", 15)) // putting these into the history just sucks
 		ConBuffer_AddLine(&history, key_line + 1, (int)strlen(key_line) - 1, 0);
-	Con_Printf("%s\n", key_line); // don't mark empty lines as history
+	Con_DPrintf("%s\n", key_line); // don't mark empty lines as history
 	history_line = -1;
 	if (history_matchfound)
 		history_matchfound = false;
@@ -234,7 +234,7 @@ static void Key_History_Find_Backwards(void)
 	for ( ; i >= 0; i--)
 		if (matchpattern_with_separator(ConBuffer_GetLine(&history, i), partial, true, "", false))
 		{
-			Con_Printf("^2%*i^7 %s\n", (int)digits, i+1, ConBuffer_GetLine(&history, i));
+			Con_DPrintf("^2%*i^7 %s\n", (int)digits, i+1, ConBuffer_GetLine(&history, i));
 			history_line = i;
 			history_matchfound = true;
 			return;
@@ -266,7 +266,7 @@ static void Key_History_Find_Forwards(void)
 	for ( ; i < CONBUFFER_LINES_COUNT(&history); i++)
 		if (matchpattern_with_separator(ConBuffer_GetLine(&history, i), partial, true, "", false))
 		{
-			Con_Printf("^2%*i^7 %s\n", (int)digits, i+1, ConBuffer_GetLine(&history, i));
+			Con_DPrintf("^2%*i^7 %s\n", (int)digits, i+1, ConBuffer_GetLine(&history, i));
 			history_line = i;
 			history_matchfound = true;
 			return;
@@ -279,7 +279,7 @@ static void Key_History_Find_All(void)
 	int i, count = 0;
 	char vabuf[1024];
 	size_t digits = strlen(va(vabuf, sizeof(vabuf), "%i", HIST_MAXLINES));
-	Con_Printf("History commands containing \"%s\":\n", key_line + 1);
+	Con_DPrintf("History commands containing \"%s\":\n", key_line + 1);
 
 	if (!*partial)
 		partial = "*";
@@ -289,10 +289,10 @@ static void Key_History_Find_All(void)
 	for (i=0; i<CONBUFFER_LINES_COUNT(&history); i++)
 		if (matchpattern_with_separator(ConBuffer_GetLine(&history, i), partial, true, "", false))
 		{
-			Con_Printf("%s%*i^7 %s\n", (i == history_line) ? "^2" : "^3", (int)digits, i+1, ConBuffer_GetLine(&history, i));
+			Con_DPrintf("%s%*i^7 %s\n", (i == history_line) ? "^2" : "^3", (int)digits, i+1, ConBuffer_GetLine(&history, i));
 			count++;
 		}
-	Con_Printf("%i result%s\n\n", count, (count != 1) ? "s" : "");
+	Con_DPrintf("%i result%s\n\n", count, (count != 1) ? "s" : "");
 }
 
 static void Key_History_f(void)
@@ -317,8 +317,8 @@ static void Key_History_f(void)
 	}
 
 	for ( ; i<CONBUFFER_LINES_COUNT(&history); i++)
-		Con_Printf("^3%*i^7 %s\n", (int)digits, i+1, ConBuffer_GetLine(&history, i));
-	Con_Printf("\n");
+		Con_DPrintf("^3%*i^7 %s\n", (int)digits, i+1, ConBuffer_GetLine(&history, i));
+	Con_DPrintf("\n");
 }
 
 static int	key_bmap, key_bmap2;
@@ -852,7 +852,7 @@ Key_Console (int key, int unicode)
 				key_line[key_linepos + chars_to_move] = 0;
 			}
 			else
-				Con_Printf("Couldn't append cvar value, edit line too long.\n");
+				Con_DPrintf("Couldn't append cvar value, edit line too long.\n");
 			return;
 		}
 		// Enhanced command completion
@@ -1374,18 +1374,18 @@ Key_In_Unbind_f (void)
 
 	m = strtol(Cmd_Argv (1), &errchar, 0);
 	if ((m < 0) || (m >= MAX_BINDMAPS) || (errchar && *errchar)) {
-		Con_Printf("%s isn't a valid bindmap\n", Cmd_Argv(1));
+		Con_DPrintf("%s isn't a valid bindmap\n", Cmd_Argv(1));
 		return;
 	}
 
 	b = Key_StringToKeynum (Cmd_Argv (2));
 	if (b == -1) {
-		Con_Printf("\"%s\" isn't a valid key\n", Cmd_Argv (2));
+		Con_DPrintf("\"%s\" isn't a valid key\n", Cmd_Argv (2));
 		return;
 	}
 
 	if(!Key_SetBinding (b, m, ""))
-		Con_Printf("Key_SetBinding failed for unknown reason\n");
+		Con_DPrintf("Key_SetBinding failed for unknown reason\n");
 }
 
 static void
@@ -1404,21 +1404,21 @@ Key_In_Bind_f (void)
 
 	m = strtol(Cmd_Argv (1), &errchar, 0);
 	if ((m < 0) || (m >= MAX_BINDMAPS) || (errchar && *errchar)) {
-		Con_Printf("%s isn't a valid bindmap\n", Cmd_Argv(1));
+		Con_DPrintf("%s isn't a valid bindmap\n", Cmd_Argv(1));
 		return;
 	}
 
 	b = Key_StringToKeynum (Cmd_Argv (2));
 	if (b == -1 || b >= MAX_KEYS) {
-		Con_Printf("\"%s\" isn't a valid key\n", Cmd_Argv (2));
+		Con_DPrintf("\"%s\" isn't a valid key\n", Cmd_Argv (2));
 		return;
 	}
 
 	if (c == 3) {
 		if (keybindings[m][b])
-			Con_Printf("\"%s\" = \"%s\"\n", Cmd_Argv (2), keybindings[m][b]);
+			Con_DPrintf("\"%s\" = \"%s\"\n", Cmd_Argv (2), keybindings[m][b]);
 		else
-			Con_Printf("\"%s\" is not bound\n", Cmd_Argv (2));
+			Con_DPrintf("\"%s\" is not bound\n", Cmd_Argv (2));
 		return;
 	}
 // copy the rest of the command line
@@ -1430,7 +1430,7 @@ Key_In_Bind_f (void)
 	}
 
 	if(!Key_SetBinding (b, m, cmd))
-		Con_Printf("Key_SetBinding failed for unknown reason\n");
+		Con_DPrintf("Key_SetBinding failed for unknown reason\n");
 }
 
 static void
@@ -1448,13 +1448,13 @@ Key_In_Bindmap_f (void)
 
 	m1 = strtol(Cmd_Argv (1), &errchar, 0);
 	if ((m1 < 0) || (m1 >= MAX_BINDMAPS) || (errchar && *errchar)) {
-		Con_Printf("%s isn't a valid bindmap\n", Cmd_Argv(1));
+		Con_DPrintf("%s isn't a valid bindmap\n", Cmd_Argv(1));
 		return;
 	}
 
 	m2 = strtol(Cmd_Argv (2), &errchar, 0);
 	if ((m2 < 0) || (m2 >= MAX_BINDMAPS) || (errchar && *errchar)) {
-		Con_Printf("%s isn't a valid bindmap\n", Cmd_Argv(2));
+		Con_DPrintf("%s isn't a valid bindmap\n", Cmd_Argv(2));
 		return;
 	}
 
@@ -1474,12 +1474,12 @@ Key_Unbind_f (void)
 
 	b = Key_StringToKeynum (Cmd_Argv (1));
 	if (b == -1) {
-		Con_Printf("\"%s\" isn't a valid key\n", Cmd_Argv (1));
+		Con_DPrintf("\"%s\" isn't a valid key\n", Cmd_Argv (1));
 		return;
 	}
 
 	if(!Key_SetBinding (b, 0, ""))
-		Con_Printf("Key_SetBinding failed for unknown reason\n");
+		Con_DPrintf("Key_SetBinding failed for unknown reason\n");
 }
 
 static void
@@ -1508,9 +1508,9 @@ Key_PrintBindList(int j)
 		{
 			Cmd_QuoteString(bindbuf, sizeof(bindbuf), p, "\"\\", false);
 			if (j == 0)
-				Con_Printf("^2%s ^7= \"%s\"\n", Key_KeynumToString (i, tinystr, sizeof(tinystr)), bindbuf);
+				Con_DPrintf("^2%s ^7= \"%s\"\n", Key_KeynumToString (i, tinystr, sizeof(tinystr)), bindbuf);
 			else
-				Con_Printf("^3bindmap %d: ^2%s ^7= \"%s\"\n", j, Key_KeynumToString (i, tinystr, sizeof(tinystr)), bindbuf);
+				Con_DPrintf("^3bindmap %d: ^2%s ^7= \"%s\"\n", j, Key_KeynumToString (i, tinystr, sizeof(tinystr)), bindbuf);
 		}
 	}
 }
@@ -1525,7 +1525,7 @@ Key_In_BindList_f (void)
 	{
 		m = strtol(Cmd_Argv(1), &errchar, 0);
 		if ((m < 0) || (m >= MAX_BINDMAPS) || (errchar && *errchar)) {
-			Con_Printf("%s isn't a valid bindmap\n", Cmd_Argv(1));
+			Con_DPrintf("%s isn't a valid bindmap\n", Cmd_Argv(1));
 			return;
 		}
 		Key_PrintBindList(m);
@@ -1557,15 +1557,15 @@ Key_Bind_f (void)
 	}
 	b = Key_StringToKeynum (Cmd_Argv (1));
 	if (b == -1 || b >= MAX_KEYS) {
-		Con_Printf("\"%s\" isn't a valid key\n", Cmd_Argv (1));
+		Con_DPrintf("\"%s\" isn't a valid key\n", Cmd_Argv (1));
 		return;
 	}
 
 	if (c == 2) {
 		if (keybindings[0][b])
-			Con_Printf("\"%s\" = \"%s\"\n", Cmd_Argv (1), keybindings[0][b]);
+			Con_DPrintf("\"%s\" = \"%s\"\n", Cmd_Argv (1), keybindings[0][b]);
 		else
-			Con_Printf("\"%s\" is not bound\n", Cmd_Argv (1));
+			Con_DPrintf("\"%s\" is not bound\n", Cmd_Argv (1));
 		return;
 	}
 // copy the rest of the command line
@@ -1577,7 +1577,7 @@ Key_Bind_f (void)
 	}
 
 	if(!Key_SetBinding (b, 0, cmd))
-		Con_Printf("Key_SetBinding failed for unknown reason\n");
+		Con_DPrintf("Key_SetBinding failed for unknown reason\n");
 }
 
 /*
@@ -1863,7 +1863,7 @@ Key_Event (int key, int ascii, qboolean down)
 				break;
 
 			default:
-				Con_Printf ("Key_Event: Bad key_dest\n");
+				Con_DPrintf ("Key_Event: Bad key_dest\n");
 		}
 		return;
 	}
@@ -1971,7 +1971,7 @@ Key_Event (int key, int ascii, qboolean down)
 			}
 			break;
 		default:
-			Con_Printf ("Key_Event: Bad key_dest\n");
+			Con_DPrintf ("Key_Event: Bad key_dest\n");
 	}
 }
 

@@ -1564,7 +1564,7 @@ static void R_ReplaceWorldTexture (void)
 	skinframe_t *skinframe;
 	if (!r_refdef.scene.worldmodel)
 	{
-		Con_Printf("There is no worldmodel\n");
+		Con_DPrintf("There is no worldmodel\n");
 		return;
 	}
 	m = r_refdef.scene.worldmodel;
@@ -1592,11 +1592,11 @@ static void R_ReplaceWorldTexture (void)
 			{
 //				t->skinframes[0] = skinframe;
 				t->currentskinframe = skinframe;
-				Con_Printf("%s replaced with %s\n", r, newt);
+				Con_DPrintf("%s replaced with %s\n", r, newt);
 			}
 			else
 			{
-				Con_Printf("%s was not found\n", newt);
+				Con_DPrintf("%s was not found\n", newt);
 				return;
 			}
 		}
@@ -1611,7 +1611,7 @@ static void R_ListWorldTextures (void)
 	int			i;
 	if (!r_refdef.scene.worldmodel)
 	{
-		Con_Printf("There is no worldmodel\n");
+		Con_DPrintf("There is no worldmodel\n");
 		return;
 	}
 	m = r_refdef.scene.worldmodel;
@@ -1619,7 +1619,7 @@ static void R_ListWorldTextures (void)
 	Con_Print("Worldmodel textures :\n");
 	for(i=0,t=m->data_textures;i<m->num_textures;i++,t++)
 		if (t->name[0] && strcasecmp(t->name, "NO TEXTURE FOUND"))
-			Con_Printf("%s\n", t->name);
+			Con_DPrintf("%s\n", t->name);
 }
 
 #if 0

@@ -466,7 +466,7 @@ void Mod_IDS2_Load(dp_model_t *mod, void *buffer, void *bufferend)
 			pinframe = &pinqsprite->frames[i];
 			if (!(skinframe = R_SkinFrame_LoadExternal(pinframe->name, texflags, false)))
 			{
-				Con_Printf("Mod_IDS2_Load: failed to load %s", pinframe->name);
+				Con_DPrintf("Mod_IDS2_Load: failed to load %s", pinframe->name);
 				skinframe = R_SkinFrame_LoadMissing();
 			}
 			Mod_SpriteSetupTexture(&loadmodel->data_textures[i], skinframe, fullbright, false);

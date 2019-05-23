@@ -49,7 +49,7 @@
 #include "netconn.h"
 #else
 #define Con_Print printf
-#define Con_Printf printf
+#define Con_DPrintf printf
 #define Z_Malloc malloc
 #define Z_Free free
 #endif
@@ -359,7 +359,7 @@ int LHNETADDRESS_FromString(lhnetaddress_t *vaddress, const char *string, int de
 				break;
 		}
 		LHNETADDRESS_ToString(vaddress, string2, sizeof(string2), 1);
-		Con_Printf("LHNETADDRESS_Resolve(\"%s\") returned %s address %s\n", string, protoname, string2);
+		Con_DPrintf("LHNETADDRESS_Resolve(\"%s\") returned %s address %s\n", string, protoname, string2);
 #endif
 		namecache[namecacheposition].address = *address;
 	}
@@ -969,9 +969,9 @@ lhnetsocket_t *LHNET_OpenSocket_Connectionless(lhnetaddress_t *address)
 								int rfc1149only = 0;
 								int rfc1149enabled = 0;
 								if(setsockopt(lhnetsocket->inetsocket, SOL_RFC1149, RFC1149_1149ONLY, &rfc1149only))
-									Con_Printf("LHNET_OpenSocket_Connectionless: warning: setsockopt(RFC1149_1149ONLY) returned error: %s\n", LHNETPRIVATE_StrError());
+									Con_DPrintf("LHNET_OpenSocket_Connectionless: warning: setsockopt(RFC1149_1149ONLY) returned error: %s\n", LHNETPRIVATE_StrError());
 								if(setsockopt(lhnetsocket->inetsocket, SOL_RFC1149, RFC1149_ENABLED, &rfc1149enabled))
-									Con_Printf("LHNET_OpenSocket_Connectionless: warning: setsockopt(RFC1149_ENABLED) returned error: %s\n", LHNETPRIVATE_StrError());
+									Con_DPrintf("LHNET_OpenSocket_Connectionless: warning: setsockopt(RFC1149_ENABLED) returned error: %s\n", LHNETPRIVATE_StrError());
 							}
 #endif
 
@@ -1029,19 +1029,19 @@ lhnetsocket_t *LHNET_OpenSocket_Connectionless(lhnetaddress_t *address)
 								return lhnetsocket;
 							}
 							else
-								Con_Printf("LHNET_OpenSocket_Connectionless: bind returned error: %s\n", LHNETPRIVATE_StrError());
+								Con_DPrintf("LHNET_OpenSocket_Connectionless: bind returned error: %s\n", LHNETPRIVATE_StrError());
 						}
 #ifdef IPV6_V6ONLY
 						else
-							Con_Printf("LHNET_OpenSocket_Connectionless: setsockopt(IPV6_V6ONLY) returned error: %s\n", LHNETPRIVATE_StrError());
+							Con_DPrintf("LHNET_OpenSocket_Connectionless: setsockopt(IPV6_V6ONLY) returned error: %s\n", LHNETPRIVATE_StrError());
 #endif
 					}
 					else
-						Con_Printf("LHNET_OpenSocket_Connectionless: ioctlsocket returned error: %s\n", LHNETPRIVATE_StrError());
+						Con_DPrintf("LHNET_OpenSocket_Connectionless: ioctlsocket returned error: %s\n", LHNETPRIVATE_StrError());
 					closesocket(lhnetsocket->inetsocket);
 				}
 				else
-					Con_Printf("LHNET_OpenSocket_Connectionless: socket returned error: %s\n", LHNETPRIVATE_StrError());
+					Con_DPrintf("LHNET_OpenSocket_Connectionless: socket returned error: %s\n", LHNETPRIVATE_StrError());
 #ifdef WIN32
 			}
 			else
@@ -1282,9 +1282,9 @@ int main(int argc, char **argv)
 	printf("calling LHNET_Read on the second socket to read the packet sent from the first socket\n");
 	test2 = LHNET_Read(sock2, buffer2, b2len - 1, &myaddy3);
 	if (test2 > 0)
-		Con_Printf("socket to socket test succeeded\n");
+		Con_DPrintf("socket to socket test succeeded\n");
 	else
-		Con_Printf("socket to socket test failed\n");
+		Con_DPrintf("socket to socket test failed\n");
 
 #ifdef WIN32
 	printf("press any key to exit\n");

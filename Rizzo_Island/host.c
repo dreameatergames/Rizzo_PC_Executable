@@ -130,15 +130,15 @@ void Host_Error (const char *error, ...)
 	dpvsnprintf (hosterrorstring1,sizeof(hosterrorstring1),error,argptr);
 	va_end (argptr);
 
-	Con_Printf("Host_Error: %s\n", hosterrorstring1);
+	Con_DPrintf("Host_Error: %s\n", hosterrorstring1);
 
 	// LordHavoc: if crashing very early, or currently shutting down, do
-	// Sys_Error instead
+	// Con_DPrintf instead
 	if (host_framecount < 3 || host_shuttingdown)
-		Sys_Error ("Host_Error: %s", hosterrorstring1);
+		Con_DPrintf ("Host_Error: %s", hosterrorstring1);
 
 	if (hosterror)
-		Sys_Error ("Host_Error: recursively entered (original error was: %s    new error is: %s)", hosterrorstring2, hosterrorstring1);
+		Con_DPrintf ("Host_Error: recursively entered (original error was: %s    new error is: %s)", hosterrorstring2, hosterrorstring1);
 	hosterror = true;
 
 	strlcpy(hosterrorstring2, hosterrorstring1, sizeof(hosterrorstring2));
@@ -165,7 +165,7 @@ void Host_Error (const char *error, ...)
 	SV_UnlockThreadMutex();
 
 	if (cls.state == ca_dedicated)
-		Sys_Error ("Host_Error: %s",hosterrorstring2);	// dedicated servers exit
+		Con_DPrintf ("Host_Error: %s",hosterrorstring2);	// dedicated servers exit
 
 	CL_Disconnect ();
 	cls.demonum = -1;
@@ -194,7 +194,7 @@ static void Host_ServerOptions (void)
 		if (i && i + 1 < com_argc && atoi (com_argv[i+1]) >= 1)
 			svs.maxclients = atoi (com_argv[i+1]);
 		if (COM_CheckParm ("-listen"))
-			Con_Printf ("Only one of -dedicated or -listen can be specified\n");
+			Con_DPrintf ("Only one of -dedicated or -listen can be specified\n");
 		// default sv_public on for dedicated servers (often hosted by serious administrators), off for listen servers (often hosted by clueless users)
 		Cvar_SetValue("sv_public", 1);
 	}
@@ -289,7 +289,7 @@ static void Host_SaveConfig_to(const char *file)
 		f = FS_OpenRealFile(file, "wb", false);
 		if (!f)
 		{
-			Con_Printf("Couldn't write %s.\n", file);
+			Con_DPrintf("Couldn't write %s.\n", file);
 			return;
 		}
 
@@ -309,7 +309,7 @@ void Host_SaveConfig_f(void)
 
 	if(Cmd_Argc() >= 2) {
 		file = Cmd_Argv(1);
-		Con_Printf("Saving to %s\n", file);
+		Con_DPrintf("Saving to %s\n", file);
 	}
 
 	Host_SaveConfig_to(file);
@@ -464,7 +464,7 @@ void SV_DropClient(qboolean crash)
 {
 	prvm_prog_t *prog = SVVM_prog;
 	int i;
-	Con_Printf("Client \"%s\" dropped\n", host_client->name);
+	Con_DPrintf("Client \"%s\" dropped\n", host_client->name);
 
 	SV_StopDemoRecording(host_client);
 
@@ -567,7 +567,7 @@ void SV_DropClient(qboolean crash)
 				break;
 		if (i == svs.maxclients)
 		{
-			Con_Printf("Loaded game, everyone rejoined - unpausing\n");
+			Con_DPrintf("Loaded game, everyone rejoined - unpausing\n");
 			sv.paused = sv.loadgame = false; // we're basically done with loading now
 		}
 	}
@@ -695,12 +695,12 @@ void Host_Main(void)
 		{
 			// warn if it's significant
 			if (deltacleantime < -0.01)
-				Con_Printf("Host_Mingled: time stepped backwards (went from %f to %f, difference %f)\n", olddirtytime, dirtytime, deltacleantime);
+				Con_DPrintf("Host_Mingled: time stepped backwards (went from %f to %f, difference %f)\n", olddirtytime, dirtytime, deltacleantime);
 			deltacleantime = 0;
 		}
 		else if (deltacleantime >= 1800)
 		{
-			Con_Printf("Host_Mingled: time stepped forward (went from %f to %f, difference %f)\n", olddirtytime, dirtytime, deltacleantime);
+			Con_DPrintf("Host_Mingled: time stepped forward (went from %f to %f, difference %f)\n", olddirtytime, dirtytime, deltacleantime);
 			deltacleantime = 0;
 		}
 		realtime += deltacleantime;
@@ -782,7 +782,7 @@ void Host_Main(void)
 //			R_TimeReport("console");
 		}
 
-		//Con_Printf("%6.0f %6.0f\n", cl_timer * 1000000.0, sv_timer * 1000000.0);
+		//Con_DPrintf("%6.0f %6.0f\n", cl_timer * 1000000.0, sv_timer * 1000000.0);
 
 		// if the accumulators haven't become positive yet, wait a while
 		if (cls.state == ca_dedicated)
@@ -1049,7 +1049,7 @@ void Host_Main(void)
 				time3 = Sys_DirtyTime();
 				pass2 = (int)((time2 - time1)*1000000);
 				pass3 = (int)((time3 - time2)*1000000);
-				Con_Printf("%6ius total %6ius server %6ius gfx %6ius snd\n",
+				Con_DPrintf("%6ius total %6ius server %6ius gfx %6ius snd\n",
 							pass1+pass2+pass3, pass1, pass2, pass3);
 			}
 		}
@@ -1132,11 +1132,11 @@ void Host_LockSession(void)
 		{
 			if(locksession.integer == 2)
 			{
-				Con_Printf("WARNING: session lock %s could not be acquired. Please run with -sessionid and an unique session name. Continuing anyway.\n", p);
+				Con_DPrintf("WARNING: session lock %s could not be acquired. Please run with -sessionid and an unique session name. Continuing anyway.\n", p);
 			}
 			else
 			{
-				Sys_Error("session lock %s could not be acquired. Please run with -sessionid and an unique session name.\n", p);
+				Con_DPrintf("session lock %s could not be acquired. Please run with -sessionid and an unique session name.\n", p);
 			}
 		}
 	}
@@ -1243,7 +1243,7 @@ static void Host_Init (void)
 	// construct a version string for the corner of the console
 	os = DP_OS_NAME;
 	dpsnprintf (engineversion, sizeof (engineversion), "%s %s %s", gamename, os, buildstring);
-	Con_Printf("%s\n", engineversion);
+	Con_DPrintf("%s\n", engineversion);
 
 	// initialize process nice level
 	Sys_InitProcessNice();
@@ -1387,7 +1387,7 @@ static void Host_Init (void)
 ===============
 Host_Shutdown
 
-FIXME: this is a callback from Sys_Quit and Sys_Error.  It would be better
+FIXME: this is a callback from Sys_Quit and Con_DPrintf.  It would be better
 to run quit through here before the final handoff to the sys code.
 ===============
 */

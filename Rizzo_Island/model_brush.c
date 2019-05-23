@@ -933,7 +933,7 @@ static void Mod_Q1BSP_TraceLine(struct model_s *model, const frameblend_t *frame
 	VectorCopy(end, rhc.end);
 	VectorSubtract(rhc.end, rhc.start, rhc.dist);
 #if COLLISIONPARANOID >= 2
-	Con_Printf("t(%f %f %f,%f %f %f)", rhc.start[0], rhc.start[1], rhc.start[2], rhc.end[0], rhc.end[1], rhc.end[2]);
+	Con_DPrintf("t(%f %f %f,%f %f %f)", rhc.start[0], rhc.start[1], rhc.start[2], rhc.end[0], rhc.end[1], rhc.end[2]);
 	Mod_Q1BSP_RecursiveHullCheck(&rhc, rhc.hull->firstclipnode, 0, 1, rhc.start, rhc.end);
 	{
 
@@ -952,7 +952,7 @@ static void Mod_Q1BSP_TraceLine(struct model_s *model, const frameblend_t *frame
 		Mod_Q1BSP_RecursiveHullCheckPoint(&rhc, rhc.hull->firstclipnode);
 		//Mod_Q1BSP_RecursiveHullCheck(&rhc, rhc.hull->firstclipnode, 0, 1, test, test);
 		if (!trace->startsolid && testtrace.startsolid)
-			Con_Printf(" - ended in solid!\n");
+			Con_DPrintf(" - ended in solid!\n");
 	}
 	Con_Print("\n");
 #else
@@ -1015,7 +1015,7 @@ static void Mod_Q1BSP_TraceBox(struct model_s *model, const frameblend_t *frameb
 	VectorMAMAM(1, end, 1, boxmins, -1, rhc.hull->clip_mins, rhc.end);
 	VectorSubtract(rhc.end, rhc.start, rhc.dist);
 #if COLLISIONPARANOID >= 2
-	Con_Printf("t(%f %f %f,%f %f %f,%i %f %f %f)", rhc.start[0], rhc.start[1], rhc.start[2], rhc.end[0], rhc.end[1], rhc.end[2], rhc.hull - model->brushq1.hulls, rhc.hull->clip_mins[0], rhc.hull->clip_mins[1], rhc.hull->clip_mins[2]);
+	Con_DPrintf("t(%f %f %f,%f %f %f,%i %f %f %f)", rhc.start[0], rhc.start[1], rhc.start[2], rhc.end[0], rhc.end[1], rhc.end[2], rhc.hull - model->brushq1.hulls, rhc.hull->clip_mins[0], rhc.hull->clip_mins[1], rhc.hull->clip_mins[2]);
 	Mod_Q1BSP_RecursiveHullCheck(&rhc, rhc.hull->firstclipnode, 0, 1, rhc.start, rhc.end);
 	{
 
@@ -1034,7 +1034,7 @@ static void Mod_Q1BSP_TraceBox(struct model_s *model, const frameblend_t *frameb
 		Mod_Q1BSP_RecursiveHullCheckPoint(&rhc, rhc.hull->firstclipnode);
 		//Mod_Q1BSP_RecursiveHullCheck(&rhc, rhc.hull->firstclipnode, 0, 1, test, test);
 		if (!trace->startsolid && testtrace.startsolid)
-			Con_Printf(" - ended in solid!\n");
+			Con_DPrintf(" - ended in solid!\n");
 	}
 	Con_Print("\n");
 #else
@@ -1115,7 +1115,7 @@ void Collision_ClipTrace_Box(trace_t *trace, const vec3_t cmins, const vec3_t cm
 	box_planes[4].dist = cmaxs[2] - mins[2];
 	box_planes[5].dist = cmins[2] - maxs[2];
 #if COLLISIONPARANOID >= 3
-	Con_Printf("box_planes %f:%f %f:%f %f:%f\ncbox %f %f %f:%f %f %f\nbox %f %f %f:%f %f %f\n", box_planes[0].dist, box_planes[1].dist, box_planes[2].dist, box_planes[3].dist, box_planes[4].dist, box_planes[5].dist, cmins[0], cmins[1], cmins[2], cmaxs[0], cmaxs[1], cmaxs[2], mins[0], mins[1], mins[2], maxs[0], maxs[1], maxs[2]);
+	Con_DPrintf("box_planes %f:%f %f:%f %f:%f\ncbox %f %f %f:%f %f %f\nbox %f %f %f:%f %f %f\n", box_planes[0].dist, box_planes[1].dist, box_planes[2].dist, box_planes[3].dist, box_planes[4].dist, box_planes[5].dist, cmins[0], cmins[1], cmins[2], cmaxs[0], cmaxs[1], cmaxs[2], mins[0], mins[1], mins[2], maxs[0], maxs[1], maxs[2]);
 #endif
 
 	if (box_hull.clipnodes == NULL)
@@ -1532,7 +1532,7 @@ static void Mod_Q1BSP_DecompressVis(const unsigned char *in, const unsigned char
 	{
 		if (in == inend)
 		{
-			Con_Printf("Mod_Q1BSP_DecompressVis: input underrun on model \"%s\" (decompressed %i of %i output bytes)\n", loadmodel->name, (int)(out - outstart), (int)(outend - outstart));
+			Con_DPrintf("Mod_Q1BSP_DecompressVis: input underrun on model \"%s\" (decompressed %i of %i output bytes)\n", loadmodel->name, (int)(out - outstart), (int)(outend - outstart));
 			return;
 		}
 		c = *in++;
@@ -1542,14 +1542,14 @@ static void Mod_Q1BSP_DecompressVis(const unsigned char *in, const unsigned char
 		{
 			if (in == inend)
 			{
-				Con_Printf("Mod_Q1BSP_DecompressVis: input underrun (during zero-run) on model \"%s\" (decompressed %i of %i output bytes)\n", loadmodel->name, (int)(out - outstart), (int)(outend - outstart));
+				Con_DPrintf("Mod_Q1BSP_DecompressVis: input underrun (during zero-run) on model \"%s\" (decompressed %i of %i output bytes)\n", loadmodel->name, (int)(out - outstart), (int)(outend - outstart));
 				return;
 			}
 			for (c = *in++;c > 0;c--)
 			{
 				if (out == outend)
 				{
-					Con_Printf("Mod_Q1BSP_DecompressVis: output overrun on model \"%s\" (decompressed %i of %i output bytes)\n", loadmodel->name, (int)(out - outstart), (int)(outend - outstart));
+					Con_DPrintf("Mod_Q1BSP_DecompressVis: output overrun on model \"%s\" (decompressed %i of %i output bytes)\n", loadmodel->name, (int)(out - outstart), (int)(outend - outstart));
 					return;
 				}
 				*out++ = 0;
@@ -1708,7 +1708,7 @@ static void Mod_Q1BSP_LoadTextures(sizebuf_t *sb)
 
 	if (!sb->cursize)
 	{
-		Con_Printf("%s: no miptex lump to load textures from\n", loadmodel->name);
+		Con_DPrintf("%s: no miptex lump to load textures from\n", loadmodel->name);
 		return;
 	}
 
@@ -1757,7 +1757,7 @@ static void Mod_Q1BSP_LoadTextures(sizebuf_t *sb)
 			// texture included
 			if (j < 40 || j + mtwidth * mtheight > miptexsb.cursize)
 			{
-				Con_Printf("%s: Texture \"%s\" is corrupt or incomplete\n", loadmodel->name, name);
+				Con_DPrintf("%s: Texture \"%s\" is corrupt or incomplete\n", loadmodel->name, name);
 				continue;
 			}
 			mtdata = miptexsb.data + j;
@@ -1919,7 +1919,7 @@ static void Mod_Q1BSP_LoadTextures(sizebuf_t *sb)
 		num = tx->name[1];
 		if ((num < '0' || num > '9') && (num < 'a' || num > 'j'))
 		{
-			Con_Printf("Bad animating texture %s\n", tx->name);
+			Con_DPrintf("Bad animating texture %s\n", tx->name);
 			continue;
 		}
 		if (tx->anim_total[0] || tx->anim_total[1])
@@ -1951,14 +1951,14 @@ static void Mod_Q1BSP_LoadTextures(sizebuf_t *sb)
 			if (altanims[j])
 				altmax = j + 1;
 		}
-		//Con_Printf("linking animation %s (%i:%i frames)\n\n", tx->name, max, altmax);
+		//Con_DPrintf("linking animation %s (%i:%i frames)\n\n", tx->name, max, altmax);
 
 		incomplete = false;
 		for (j = 0;j < max;j++)
 		{
 			if (!anims[j])
 			{
-				Con_Printf("Missing frame %i of %s\n", j, tx->name);
+				Con_DPrintf("Missing frame %i of %s\n", j, tx->name);
 				incomplete = true;
 			}
 		}
@@ -1966,7 +1966,7 @@ static void Mod_Q1BSP_LoadTextures(sizebuf_t *sb)
 		{
 			if (!altanims[j])
 			{
-				Con_Printf("Missing altframe %i of %s\n", j, tx->name);
+				Con_DPrintf("Missing altframe %i of %s\n", j, tx->name);
 				incomplete = true;
 			}
 		}
@@ -1976,7 +1976,7 @@ static void Mod_Q1BSP_LoadTextures(sizebuf_t *sb)
 		// If we have exactly one frame, something's wrong.
 		if (max + altmax <= 1)
 		{
-			Con_Printf("Texture %s is animated (leading +) but has only one frame\n", tx->name);
+			Con_DPrintf("Texture %s is animated (leading +) but has only one frame\n", tx->name);
 		}
 
 		if (altmax < 1)
@@ -1991,7 +1991,7 @@ static void Mod_Q1BSP_LoadTextures(sizebuf_t *sb)
 		if (max < 1)
 		{
 			// Warn.
-			Con_Printf("Missing frame 0 of %s\n", tx->name);
+			Con_DPrintf("Missing frame 0 of %s\n", tx->name);
 
 			// however, we can handle this by duplicating the alternate animation into the primary
 			max = altmax;
@@ -2065,7 +2065,7 @@ static void Mod_Q1BSP_LoadLighting(sizebuf_t *sb)
 				if (i == 1)
 				{
 					if (developer_loading.integer)
-						Con_Printf("loaded %s\n", litfilename);
+						Con_DPrintf("loaded %s\n", litfilename);
 					loadmodel->brushq1.lightdata = (unsigned char *)Mem_Alloc(loadmodel->mempool, filesize - 8);
 					memcpy(loadmodel->brushq1.lightdata, data + 8, filesize - 8);
 					Mem_Free(data);
@@ -2078,7 +2078,7 @@ static void Mod_Q1BSP_LoadLighting(sizebuf_t *sb)
 							if (i == 1)
 							{
 								if (developer_loading.integer)
-									Con_Printf("loaded %s\n", dlitfilename);
+									Con_DPrintf("loaded %s\n", dlitfilename);
 								loadmodel->brushq1.nmaplightdata = (unsigned char *)Mem_Alloc(loadmodel->mempool, filesize - 8);
 								memcpy(loadmodel->brushq1.nmaplightdata, data + 8, filesize - 8);
 								loadmodel->brushq3.deluxemapping_modelspace = false;
@@ -2091,12 +2091,12 @@ static void Mod_Q1BSP_LoadLighting(sizebuf_t *sb)
 					return;
 				}
 				else
-					Con_Printf("Unknown .lit file version (%d)\n", i);
+					Con_DPrintf("Unknown .lit file version (%d)\n", i);
 			}
 			else if (filesize == 8)
 				Con_Print("Empty .lit file, ignoring\n");
 			else
-				Con_Printf("Corrupt .lit file (file size %i bytes, should be %i bytes), ignoring\n", (int) filesize, (int) (8 + sb->cursize * 3));
+				Con_DPrintf("Corrupt .lit file (file size %i bytes, should be %i bytes), ignoring\n", (int) filesize, (int) (8 + sb->cursize * 3));
 			if (data)
 			{
 				Mem_Free(data);
@@ -2285,7 +2285,7 @@ static void Mod_Q1BSP_LoadEdges(sizebuf_t *sb)
 		}
 		if ((int)out->v[0] >= loadmodel->brushq1.numvertexes || (int)out->v[1] >= loadmodel->brushq1.numvertexes)
 		{
-			Con_Printf("Mod_Q1BSP_LoadEdges: %s has invalid vertex indices in edge %i (vertices %i %i >= numvertices %i)\n", loadmodel->name, i, out->v[0], out->v[1], loadmodel->brushq1.numvertexes);
+			Con_DPrintf("Mod_Q1BSP_LoadEdges: %s has invalid vertex indices in edge %i (vertices %i %i >= numvertices %i)\n", loadmodel->name, i, out->v[0], out->v[1], loadmodel->brushq1.numvertexes);
 			if(!loadmodel->brushq1.numvertexes)
 				Host_Error("Mod_Q1BSP_LoadEdges: %s has edges but no vertexes, cannot fix\n", loadmodel->name);
 				
@@ -2333,7 +2333,7 @@ static void Mod_Q1BSP_LoadTexinfo(sizebuf_t *sb)
 		if (loadmodel->data_textures)
 		{
 			if ((unsigned int) miptex >= (unsigned int) loadmodel->num_textures)
-				Con_Printf("error in model \"%s\": invalid miptex index %i(of %i)\n", loadmodel->name, miptex, loadmodel->num_textures);
+				Con_DPrintf("error in model \"%s\": invalid miptex index %i(of %i)\n", loadmodel->name, miptex, loadmodel->num_textures);
 			else
 				out->textureindex = miptex;
 		}
@@ -2889,7 +2889,7 @@ static void Mod_Q1BSP_LoadNodes(sizebuf_t *sb)
 					out->children[j] = loadmodel->brush.data_nodes + p;
 				else
 				{
-					Con_Printf("Mod_Q1BSP_LoadNodes: invalid node index %i (file has only %i nodes)\n", p, loadmodel->brush.num_nodes);
+					Con_DPrintf("Mod_Q1BSP_LoadNodes: invalid node index %i (file has only %i nodes)\n", p, loadmodel->brush.num_nodes);
 					// map it to the solid leaf
 					out->children[j] = (mnode_t *)loadmodel->brush.data_leafs;
 				}
@@ -2902,7 +2902,7 @@ static void Mod_Q1BSP_LoadNodes(sizebuf_t *sb)
 					out->children[j] = (mnode_t *)(loadmodel->brush.data_leafs + p);
 				else
 				{
-					Con_Printf("Mod_Q1BSP_LoadNodes: invalid leaf index %i (file has only %i leafs)\n", p, loadmodel->brush.num_leafs);
+					Con_DPrintf("Mod_Q1BSP_LoadNodes: invalid leaf index %i (file has only %i leafs)\n", p, loadmodel->brush.num_leafs);
 					// map it to the solid leaf
 					out->children[j] = (mnode_t *)loadmodel->brush.data_leafs;
 				}
@@ -2995,7 +2995,7 @@ static void Mod_Q1BSP_LoadLeafs(sizebuf_t *sb)
 		}
 		else
 		{
-			Con_Printf("Mod_Q1BSP_LoadLeafs: invalid leafsurface range %i:%i outside range %i:%i\n", firstmarksurface, firstmarksurface+nummarksurfaces, 0, loadmodel->brush.num_leafsurfaces);
+			Con_DPrintf("Mod_Q1BSP_LoadLeafs: invalid leafsurface range %i:%i outside range %i:%i\n", firstmarksurface, firstmarksurface+nummarksurfaces, 0, loadmodel->brush.num_leafsurfaces);
 			out->firstleafsurface = NULL;
 			out->numleafsurfaces = 0;
 		}
@@ -3224,7 +3224,7 @@ static void Mod_Q1BSP_LoadMapBrushes(void)
 					{
 						if (submodel > loadmodel->brush.numsubmodels)
 						{
-							Con_Printf("Mod_Q1BSP_LoadMapBrushes: .map has more submodels than .bsp!\n");
+							Con_DPrintf("Mod_Q1BSP_LoadMapBrushes: .map has more submodels than .bsp!\n");
 							model = NULL;
 						}
 						else
@@ -4134,7 +4134,7 @@ void Mod_Q1BSP_Load(dp_model_t *mod, void *buffer, void *bufferend)
 		else
 		{
 			// LordHavoc: empty submodel(lacrima.bsp has such a glitch)
-			Con_Printf("warning: empty submodel *%i in %s\n", i+1, loadmodel->name);
+			Con_DPrintf("warning: empty submodel *%i in %s\n", i+1, loadmodel->name);
 		}
 		//mod->brushq1.num_visleafs = bm->visleafs;
 
@@ -4271,7 +4271,7 @@ static void Mod_Q2BSP_LoadNodes(sizebuf_t *sb)
 		out->numsurfaces = (unsigned short)MSG_ReadLittleShort(sb);
 		if (out->firstsurface + out->numsurfaces > (unsigned int)loadmodel->num_surfaces)
 		{
-			Con_Printf("Mod_Q2BSP_LoadNodes: invalid surface index range %i+%i (file has only %i surfaces)\n", out->firstsurface, out->numsurfaces, loadmodel->num_surfaces);
+			Con_DPrintf("Mod_Q2BSP_LoadNodes: invalid surface index range %i+%i (file has only %i surfaces)\n", out->firstsurface, out->numsurfaces, loadmodel->num_surfaces);
 			out->firstsurface = 0;
 			out->numsurfaces = 0;
 		}
@@ -4284,7 +4284,7 @@ static void Mod_Q2BSP_LoadNodes(sizebuf_t *sb)
 					out->children[j] = loadmodel->brush.data_nodes + p;
 				else
 				{
-					Con_Printf("Mod_Q2BSP_LoadNodes: invalid node index %i (file has only %i nodes)\n", p, loadmodel->brush.num_nodes);
+					Con_DPrintf("Mod_Q2BSP_LoadNodes: invalid node index %i (file has only %i nodes)\n", p, loadmodel->brush.num_nodes);
 					// map it to the solid leaf
 					out->children[j] = (mnode_t *)loadmodel->brush.data_leafs;
 				}
@@ -4297,7 +4297,7 @@ static void Mod_Q2BSP_LoadNodes(sizebuf_t *sb)
 					out->children[j] = (mnode_t *)(loadmodel->brush.data_leafs + p);
 				else
 				{
-					Con_Printf("Mod_Q2BSP_LoadNodes: invalid leaf index %i (file has only %i leafs)\n", p, loadmodel->brush.num_leafs);
+					Con_DPrintf("Mod_Q2BSP_LoadNodes: invalid leaf index %i (file has only %i leafs)\n", p, loadmodel->brush.num_leafs);
 					// map it to the solid leaf
 					out->children[j] = (mnode_t *)loadmodel->brush.data_leafs;
 				}
@@ -4456,7 +4456,7 @@ static void Mod_Q2BSP_LoadTexinfo(sizebuf_t *sb)
 			}
 			else
 			{
-				Con_Printf("Mod_Q2BSP_LoadTexinfo: max textures reached (%i)\n", maxtextures);
+				Con_DPrintf("Mod_Q2BSP_LoadTexinfo: max textures reached (%i)\n", maxtextures);
 				j = 0; // use first texture and give up
 			}
 		}
@@ -4568,7 +4568,7 @@ static void Mod_Q2BSP_LoadLeafs(sizebuf_t *sb)
 		}
 		else
 		{
-			Con_Printf("Mod_Q2BSP_LoadLeafs: invalid leafsurface range %i:%i outside range %i:%i\n", firstmarksurface, firstmarksurface+nummarksurfaces, 0, loadmodel->brush.num_leafsurfaces);
+			Con_DPrintf("Mod_Q2BSP_LoadLeafs: invalid leafsurface range %i:%i outside range %i:%i\n", firstmarksurface, firstmarksurface+nummarksurfaces, 0, loadmodel->brush.num_leafsurfaces);
 			out->firstleafsurface = NULL;
 			out->numleafsurfaces = 0;
 		}
@@ -4580,7 +4580,7 @@ static void Mod_Q2BSP_LoadLeafs(sizebuf_t *sb)
 		}
 		else
 		{
-			Con_Printf("Mod_Q2BSP_LoadLeafs: invalid leafbrush range %i:%i outside range %i:%i\n", firstmarkbrush, firstmarkbrush+nummarkbrushes, 0, loadmodel->brush.num_leafbrushes);
+			Con_DPrintf("Mod_Q2BSP_LoadLeafs: invalid leafbrush range %i:%i outside range %i:%i\n", firstmarkbrush, firstmarkbrush+nummarkbrushes, 0, loadmodel->brush.num_leafbrushes);
 			out->firstleafbrush = NULL;
 			out->numleafbrushes = 0;
 		}
@@ -4635,7 +4635,7 @@ static void Mod_Q2BSP_LoadBrushSides(sizebuf_t *sb)
 		}
 		else
 		{
-			//Con_Printf("Mod_Q2BSP_LoadBrushSides: brushside %i has texinfo index %i < 0, changing to generic texture!\n", i, n);
+			//Con_DPrintf("Mod_Q2BSP_LoadBrushSides: brushside %i has texinfo index %i < 0, changing to generic texture!\n", i, n);
 			out->texture = &mod_q1bsp_texture_solid;
 		}
 	}
@@ -5115,7 +5115,7 @@ static void Mod_Q2BSP_Load(dp_model_t *mod, void *buffer, void *bufferend)
 		}
 		else
 		{
-			Con_Printf("warning: empty submodel *%i in %s\n", i+1, loadmodel->name);
+			Con_DPrintf("warning: empty submodel *%i in %s\n", i+1, loadmodel->name);
 		}
 		//mod->brushq1.num_visleafs = bm->visleafs;
 
@@ -5182,7 +5182,7 @@ static void Mod_Q3BSP_LoadEntities(lump_t *l)
 #else
 				VectorSet(v, 64, 64, 128);
 				if(sscanf(value, "%f %f %f", &v[0], &v[1], &v[2]) != 3)
-					Con_Printf("Mod_Q3BSP_LoadEntities: funny gridsize \"%s\" in %s, interpreting as \"%f %f %f\" to match q3map2's parsing\n", value, loadmodel->name, v[0], v[1], v[2]);
+					Con_DPrintf("Mod_Q3BSP_LoadEntities: funny gridsize \"%s\" in %s, interpreting as \"%f %f %f\" to match q3map2's parsing\n", value, loadmodel->name, v[0], v[1], v[2]);
 				if (v[0] != 0 && v[1] != 0 && v[2] != 0)
 					VectorCopy(v, loadmodel->brushq3.num_lightgrid_cellsize);
 #endif
@@ -5392,7 +5392,7 @@ static void Mod_Q3BSP_LoadEffects(lump_t *l)
 		n = LittleLong(in->brushindex);
 		if (n >= loadmodel->brush.num_brushes)
 		{
-			Con_Printf("Mod_Q3BSP_LoadEffects: invalid brushindex %i (%i brushes), setting to -1\n", n, loadmodel->brush.num_brushes);
+			Con_DPrintf("Mod_Q3BSP_LoadEffects: invalid brushindex %i (%i brushes), setting to -1\n", n, loadmodel->brush.num_brushes);
 			n = -1;
 		}
 		out->brushindex = n;
@@ -5482,7 +5482,7 @@ static void Mod_Q3BSP_LoadTriangles(lump_t *l)
 	if(!loadmodel->brushq3.num_vertices)
 	{
 		if (count)
-			Con_Printf("Mod_Q3BSP_LoadTriangles: %s has triangles but no vertexes, broken compiler, ignoring problem\n", loadmodel->name);
+			Con_DPrintf("Mod_Q3BSP_LoadTriangles: %s has triangles but no vertexes, broken compiler, ignoring problem\n", loadmodel->name);
 		loadmodel->brushq3.num_triangles = 0;
 		return;
 	}
@@ -5496,7 +5496,7 @@ static void Mod_Q3BSP_LoadTriangles(lump_t *l)
 		*out = LittleLong(*in);
 		if (*out < 0 || *out >= loadmodel->brushq3.num_vertices)
 		{
-			Con_Printf("Mod_Q3BSP_LoadTriangles: invalid vertexindex %i (%i vertices), setting to 0\n", *out, loadmodel->brushq3.num_vertices);
+			Con_DPrintf("Mod_Q3BSP_LoadTriangles: invalid vertexindex %i (%i vertices), setting to 0\n", *out, loadmodel->brushq3.num_vertices);
 			*out = 0;
 		}
 	}
@@ -5555,7 +5555,7 @@ static void Mod_Q3BSP_LoadLightmaps(lump_t *l, lump_t *faceslump)
 	{
 		// prefer internal LMs for compatibility (a BSP contains no info on whether external LMs exist)
 		if (developer_loading.integer)
-			Con_Printf("Using internal lightmaps\n");
+			Con_DPrintf("Using internal lightmaps\n");
 		input_pointer = (q3dlightmap_t *)(mod_base + l->fileofs);
 		if (l->filelen % sizeof(*input_pointer))
 			Host_Error("Mod_Q3BSP_LoadLightmaps: funny lump size in %s",loadmodel->name);
@@ -5568,7 +5568,7 @@ static void Mod_Q3BSP_LoadLightmaps(lump_t *l, lump_t *faceslump)
 		// no internal lightmaps
 		// try external lightmaps
 		if (developer_loading.integer)
-			Con_Printf("Using external lightmaps\n");
+			Con_DPrintf("Using external lightmaps\n");
 		FS_StripExtension(loadmodel->name, mapname, sizeof(mapname));
 		inpixels[0] = loadimagepixelsbgra(va(vabuf, sizeof(vabuf), "%s/lm_%04d", mapname, 0), false, false, false, NULL);
 		if(!inpixels[0])
@@ -5597,7 +5597,7 @@ static void Mod_Q3BSP_LoadLightmaps(lump_t *l, lump_t *faceslump)
 			{
 				Mem_Free(inpixels[count]);
 				inpixels[count] = NULL;
-				Con_Printf("Mod_Q3BSP_LoadLightmaps: mismatched lightmap size in %s - external lightmap %s/lm_%04d does not match earlier ones\n", loadmodel->name, mapname, count);
+				Con_DPrintf("Mod_Q3BSP_LoadLightmaps: mismatched lightmap size in %s - external lightmap %s/lm_%04d does not match earlier ones\n", loadmodel->name, mapname, count);
 				break;
 			}
 		}
@@ -5928,7 +5928,7 @@ static void Mod_Q3BSP_LoadFaces(lump_t *l)
 			else if (n >= loadmodel->brushq3.num_originallightmaps)
 			{
 				if(loadmodel->brushq3.num_originallightmaps != 0)
-					Con_Printf("Mod_Q3BSP_LoadFaces: face #%i (texture \"%s\"): invalid lightmapindex %i (%i lightmaps)\n", i, out->texture->name, n, loadmodel->brushq3.num_originallightmaps);
+					Con_DPrintf("Mod_Q3BSP_LoadFaces: face #%i (texture \"%s\"): invalid lightmapindex %i (%i lightmaps)\n", i, out->texture->name, n, loadmodel->brushq3.num_originallightmaps);
 				n = -1;
 			}
 			else
@@ -5946,17 +5946,17 @@ static void Mod_Q3BSP_LoadFaces(lump_t *l)
 		numtriangles = LittleLong(in->numelements) / 3;
 		if (numtriangles * 3 != LittleLong(in->numelements))
 		{
-			Con_Printf("Mod_Q3BSP_LoadFaces: face #%i (texture \"%s\"): numelements %i is not a multiple of 3\n", i, out->texture->name, LittleLong(in->numelements));
+			Con_DPrintf("Mod_Q3BSP_LoadFaces: face #%i (texture \"%s\"): numelements %i is not a multiple of 3\n", i, out->texture->name, LittleLong(in->numelements));
 			continue;
 		}
 		if (firstvertex < 0 || firstvertex + numvertices > loadmodel->brushq3.num_vertices)
 		{
-			Con_Printf("Mod_Q3BSP_LoadFaces: face #%i (texture \"%s\"): invalid vertex range %i : %i (%i vertices)\n", i, out->texture->name, firstvertex, firstvertex + numvertices, loadmodel->brushq3.num_vertices);
+			Con_DPrintf("Mod_Q3BSP_LoadFaces: face #%i (texture \"%s\"): invalid vertex range %i : %i (%i vertices)\n", i, out->texture->name, firstvertex, firstvertex + numvertices, loadmodel->brushq3.num_vertices);
 			continue;
 		}
 		if (firstelement < 0 || firstelement + numtriangles * 3 > loadmodel->brushq3.num_triangles * 3)
 		{
-			Con_Printf("Mod_Q3BSP_LoadFaces: face #%i (texture \"%s\"): invalid element range %i : %i (%i elements)\n", i, out->texture->name, firstelement, firstelement + numtriangles * 3, loadmodel->brushq3.num_triangles * 3);
+			Con_DPrintf("Mod_Q3BSP_LoadFaces: face #%i (texture \"%s\"): invalid element range %i : %i (%i elements)\n", i, out->texture->name, firstelement, firstelement + numtriangles * 3, loadmodel->brushq3.num_triangles * 3);
 			continue;
 		}
 		switch(type)
@@ -5970,7 +5970,7 @@ static void Mod_Q3BSP_LoadFaces(lump_t *l)
 			patchsize[1] = LittleLong(in->specific.patch.patchsize[1]);
 			if (numvertices != (patchsize[0] * patchsize[1]) || patchsize[0] < 3 || patchsize[1] < 3 || !(patchsize[0] & 1) || !(patchsize[1] & 1) || patchsize[0] * patchsize[1] >= min(r_subdivisions_maxvertices.integer, r_subdivisions_collision_maxvertices.integer))
 			{
-				Con_Printf("Mod_Q3BSP_LoadFaces: face #%i (texture \"%s\"): invalid patchsize %ix%i\n", i, out->texture->name, patchsize[0], patchsize[1]);
+				Con_DPrintf("Mod_Q3BSP_LoadFaces: face #%i (texture \"%s\"): invalid patchsize %ix%i\n", i, out->texture->name, patchsize[0], patchsize[1]);
 				continue;
 			}
 			originalvertex3f = loadmodel->brushq3.data_vertex3f + firstvertex * 3;
@@ -6140,7 +6140,7 @@ static void Mod_Q3BSP_LoadFaces(lump_t *l)
 				}
 			if(xtess == -1)
 			{
-				Con_Printf("ERROR: patch %d isn't preprocessed?!?\n", i);
+				Con_DPrintf("ERROR: patch %d isn't preprocessed?!?\n", i);
 				xtess = ytess = cxtess = cytess = 0;
 			}
 
@@ -6206,7 +6206,7 @@ static void Mod_Q3BSP_LoadFaces(lump_t *l)
 #if 1
 				if(nc != out->num_collisiontriangles)
 				{
-					Con_Printf("number of collision triangles differs between BIH and BSP. FAIL.\n");
+					Con_DPrintf("number of collision triangles differs between BIH and BSP. FAIL.\n");
 				}
 			}
 #endif
@@ -6227,10 +6227,10 @@ static void Mod_Q3BSP_LoadFaces(lump_t *l)
 				invalidelements++;
 		if (invalidelements)
 		{
-			Con_Printf("Mod_Q3BSP_LoadFaces: Warning: face #%i has %i invalid elements, type = %i, texture->name = \"%s\", texture->surfaceflags = %i, firstvertex = %i, numvertices = %i, firstelement = %i, numelements = %i, elements list:\n", i, invalidelements, type, out->texture->name, out->texture->surfaceflags, firstvertex, out->num_vertices, firstelement, out->num_triangles * 3);
+			Con_DPrintf("Mod_Q3BSP_LoadFaces: Warning: face #%i has %i invalid elements, type = %i, texture->name = \"%s\", texture->surfaceflags = %i, firstvertex = %i, numvertices = %i, firstelement = %i, numelements = %i, elements list:\n", i, invalidelements, type, out->texture->name, out->texture->surfaceflags, firstvertex, out->num_vertices, firstelement, out->num_triangles * 3);
 			for (j = 0;j < out->num_triangles * 3;j++)
 			{
-				Con_Printf(" %i", (loadmodel->surfmesh.data_element3i + 3 * out->num_firsttriangle)[j] - out->num_firstvertex);
+				Con_DPrintf(" %i", (loadmodel->surfmesh.data_element3i + 3 * out->num_firsttriangle)[j] - out->num_firstvertex);
 				if ((loadmodel->surfmesh.data_element3i + 3 * out->num_firsttriangle)[j] < out->num_firstvertex || (loadmodel->surfmesh.data_element3i + 3 * out->num_firsttriangle)[j] >= out->num_firstvertex + out->num_vertices)
 					(loadmodel->surfmesh.data_element3i + 3 * out->num_firsttriangle)[j] = out->num_firstvertex;
 			}
@@ -6292,12 +6292,12 @@ static void Mod_Q3BSP_LoadFaces(lump_t *l)
 			continue;
 		if(out->num_vertices == 0)
 		{
-			Con_Printf("Mod_Q3BSP_LoadFaces: surface %d (texture %s) has no vertices, ignoring\n", i, out->texture ? out->texture->name : "(none)");
+			Con_DPrintf("Mod_Q3BSP_LoadFaces: surface %d (texture %s) has no vertices, ignoring\n", i, out->texture ? out->texture->name : "(none)");
 			if(out->num_triangles == 0)
-				Con_Printf("Mod_Q3BSP_LoadFaces: surface %d (texture %s) has no triangles, ignoring\n", i, out->texture ? out->texture->name : "(none)");
+				Con_DPrintf("Mod_Q3BSP_LoadFaces: surface %d (texture %s) has no triangles, ignoring\n", i, out->texture ? out->texture->name : "(none)");
 		}
 		else if(out->num_triangles == 0)
-			Con_Printf("Mod_Q3BSP_LoadFaces: surface %d (texture %s, near %f %f %f) has no triangles, ignoring\n", i, out->texture ? out->texture->name : "(none)",
+			Con_DPrintf("Mod_Q3BSP_LoadFaces: surface %d (texture %s, near %f %f %f) has no triangles, ignoring\n", i, out->texture ? out->texture->name : "(none)",
 					(loadmodel->surfmesh.data_vertex3f + 3 * out->num_firstvertex)[0 * 3 + 0],
 					(loadmodel->surfmesh.data_vertex3f + 3 * out->num_firstvertex)[1 * 3 + 0],
 					(loadmodel->surfmesh.data_vertex3f + 3 * out->num_firstvertex)[2 * 3 + 0]);
@@ -6541,11 +6541,11 @@ static void Mod_Q3BSP_LoadLightGrid(lump_t *l)
 	{
 		if (l->filelen < count * (int)sizeof(*in))
 		{
-			Con_Printf("Mod_Q3BSP_LoadLightGrid: invalid lightgrid lump size %i bytes, should be %i bytes (%ix%ix%i)", l->filelen, (int)(count * sizeof(*in)), loadmodel->brushq3.num_lightgrid_isize[0], loadmodel->brushq3.num_lightgrid_isize[1], loadmodel->brushq3.num_lightgrid_isize[2]);
+			Con_DPrintf("Mod_Q3BSP_LoadLightGrid: invalid lightgrid lump size %i bytes, should be %i bytes (%ix%ix%i)", l->filelen, (int)(count * sizeof(*in)), loadmodel->brushq3.num_lightgrid_isize[0], loadmodel->brushq3.num_lightgrid_isize[1], loadmodel->brushq3.num_lightgrid_isize[2]);
 			return; // ignore the grid if we cannot understand it
 		}
 		if (l->filelen != count * (int)sizeof(*in))
-			Con_Printf("Mod_Q3BSP_LoadLightGrid: Warning: calculated lightgrid size %i bytes does not match lump size %i\n", (int)(count * sizeof(*in)), l->filelen);
+			Con_DPrintf("Mod_Q3BSP_LoadLightGrid: Warning: calculated lightgrid size %i bytes does not match lump size %i\n", (int)(count * sizeof(*in)), l->filelen);
 		out = (q3dlightgrid_t *)Mem_Alloc(loadmodel->mempool, count * sizeof(*out));
 		loadmodel->brushq3.data_lightgrid = out;
 		loadmodel->brushq3.num_lightgrid = count;
@@ -6666,14 +6666,14 @@ static void Mod_Q3BSP_LightPoint(dp_model_t *model, const vec3_t p, vec3_t ambie
 
 	Matrix4x4_Transform(&model->brushq3.num_lightgrid_indexfromworld, p, transformed);
 	//Matrix4x4_Print(&model->brushq3.num_lightgrid_indexfromworld);
-	//Con_Printf("%f %f %f transformed %f %f %f clamped ", p[0], p[1], p[2], transformed[0], transformed[1], transformed[2]);
+	//Con_DPrintf("%f %f %f transformed %f %f %f clamped ", p[0], p[1], p[2], transformed[0], transformed[1], transformed[2]);
 	transformed[0] = bound(0, transformed[0], model->brushq3.num_lightgrid_isize[0] - 1);
 	transformed[1] = bound(0, transformed[1], model->brushq3.num_lightgrid_isize[1] - 1);
 	transformed[2] = bound(0, transformed[2], model->brushq3.num_lightgrid_isize[2] - 1);
 	index[0] = (int)floor(transformed[0]);
 	index[1] = (int)floor(transformed[1]);
 	index[2] = (int)floor(transformed[2]);
-	//Con_Printf("%f %f %f index %i %i %i:\n", transformed[0], transformed[1], transformed[2], index[0], index[1], index[2]);
+	//Con_DPrintf("%f %f %f index %i %i %i:\n", transformed[0], transformed[1], transformed[2], index[0], index[1], index[2]);
 
 	// now lerp the values
 	VectorClear(diffusenormal);
@@ -6702,14 +6702,14 @@ static void Mod_Q3BSP_LightPoint(dp_model_t *model, const vec3_t p, vec3_t ambie
 				diffusenormal[0] += blend * (mod_md3_sin[64 + s->diffuseyaw] * mod_md3_sin[s->diffusepitch]);
 				diffusenormal[1] += blend * (mod_md3_sin[     s->diffuseyaw] * mod_md3_sin[s->diffusepitch]);
 				diffusenormal[2] += blend * (mod_md3_sin[64 + s->diffusepitch]);
-				//Con_Printf("blend %f: ambient %i %i %i, diffuse %i %i %i, diffusepitch %i diffuseyaw %i (%f %f, normal %f %f %f)\n", blend, s->ambientrgb[0], s->ambientrgb[1], s->ambientrgb[2], s->diffusergb[0], s->diffusergb[1], s->diffusergb[2], s->diffusepitch, s->diffuseyaw, pitch, yaw, (cos(yaw) * cospitch), (sin(yaw) * cospitch), (-sin(pitch)));
+				//Con_DPrintf("blend %f: ambient %i %i %i, diffuse %i %i %i, diffusepitch %i diffuseyaw %i (%f %f, normal %f %f %f)\n", blend, s->ambientrgb[0], s->ambientrgb[1], s->ambientrgb[2], s->diffusergb[0], s->diffusergb[1], s->diffusergb[2], s->diffusepitch, s->diffuseyaw, pitch, yaw, (cos(yaw) * cospitch), (sin(yaw) * cospitch), (-sin(pitch)));
 			}
 		}
 	}
 
 	// normalize the light direction before turning
 	VectorNormalize(diffusenormal);
-	//Con_Printf("result: ambient %f %f %f diffuse %f %f %f diffusenormal %f %f %f\n", ambientcolor[0], ambientcolor[1], ambientcolor[2], diffusecolor[0], diffusecolor[1], diffusecolor[2], diffusenormal[0], diffusenormal[1], diffusenormal[2]);
+	//Con_DPrintf("result: ambient %f %f %f diffuse %f %f %f diffusenormal %f %f %f\n", ambientcolor[0], ambientcolor[1], ambientcolor[2], diffusecolor[0], diffusecolor[1], diffusecolor[2], diffusenormal[0], diffusenormal[1], diffusenormal[2]);
 }
 
 static int Mod_Q3BSP_TraceLineOfSight_RecursiveNodeCheck(mnode_t *node, double p1[3], double p2[3])

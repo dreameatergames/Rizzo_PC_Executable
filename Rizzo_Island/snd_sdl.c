@@ -35,7 +35,7 @@ static void Buffer_Callback (void *userdata, Uint8 *stream, int len)
 
 	factor = snd_renderbuffer->format.channels * snd_renderbuffer->format.width;
 	if ((unsigned int)len % factor != 0)
-		Sys_Error("SDL sound: invalid buffer length passed to Buffer_Callback (%d bytes)\n", len);
+		Con_DPrintf("SDL sound: invalid buffer length passed to Buffer_Callback (%d bytes)\n", len);
 
 	RequestedFrames = (unsigned int)len / factor;
 
@@ -117,7 +117,7 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 	wantspec.channels = requested->channels;
 	wantspec.samples = CeilPowerOf2(buffersize);  // needs to be a power of 2 on some platforms.
 
-	Con_Printf("Wanted audio Specification:\n"
+	Con_DPrintf("Wanted audio Specification:\n"
 				"\tChannels  : %i\n"
 				"\tFormat    : 0x%X\n"
 				"\tFrequency : %i\n"
@@ -126,11 +126,11 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 
 	if( SDL_OpenAudio( &wantspec, &obtainspec ) )
 	{
-		Con_Printf( "Failed to open the audio device! (%s)\n", SDL_GetError() );
+		Con_DPrintf( "Failed to open the audio device! (%s)\n", SDL_GetError() );
 		return false;
 	}
 
-	Con_Printf("Obtained audio specification:\n"
+	Con_DPrintf("Obtained audio specification:\n"
 				"\tChannels  : %i\n"
 				"\tFormat    : 0x%X\n"
 				"\tFrequency : %i\n"

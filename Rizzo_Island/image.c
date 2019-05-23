@@ -230,7 +230,7 @@ static unsigned char* LoadPCX_BGRA (const unsigned char *f, int filesize, int *m
 	image_buffer = (unsigned char *)Mem_Alloc(tempmempool, image_width*image_height*4);
 	if (!image_buffer)
 	{
-		Con_Printf("LoadPCX: not enough memory for %i by %i image\n", image_width, image_height);
+		Con_DPrintf("LoadPCX: not enough memory for %i by %i image\n", image_width, image_height);
 		return NULL;
 	}
 	pbuf = image_buffer + image_width*image_height*3;
@@ -387,7 +387,7 @@ TargaHeader;
 
 static void PrintTargaHeader(TargaHeader *t)
 {
-	Con_Printf("TargaHeader:\nuint8 id_length = %i;\nuint8 colormap_type = %i;\nuint8 image_type = %i;\nuint16 colormap_index = %i;\nuint16 colormap_length = %i;\nuint8 colormap_size = %i;\nuint16 x_origin = %i;\nuint16 y_origin = %i;\nuint16 width = %i;\nuint16 height = %i;\nuint8 pixel_size = %i;\nuint8 attributes = %i;\n", t->id_length, t->colormap_type, t->image_type, t->colormap_index, t->colormap_length, t->colormap_size, t->x_origin, t->y_origin, t->width, t->height, t->pixel_size, t->attributes);
+	Con_DPrintf("TargaHeader:\nuint8 id_length = %i;\nuint8 colormap_type = %i;\nuint8 image_type = %i;\nuint16 colormap_index = %i;\nuint16 colormap_length = %i;\nuint8 colormap_size = %i;\nuint16 x_origin = %i;\nuint16 y_origin = %i;\nuint16 width = %i;\nuint16 height = %i;\nuint8 pixel_size = %i;\nuint8 attributes = %i;\n", t->id_length, t->colormap_type, t->image_type, t->colormap_index, t->colormap_length, t->colormap_size, t->x_origin, t->y_origin, t->width, t->height, t->pixel_size, t->attributes);
 }
 
 /*
@@ -514,7 +514,7 @@ unsigned char *LoadTGA_BGRA (const unsigned char *f, int filesize, int *miplevel
 		}
 		break;
 	default:
-		Con_Printf("LoadTGA: Only type 1, 2, 3, 9, 10, and 11 targa RGB images supported, image_type = %i\n", targa_header.image_type);
+		Con_DPrintf("LoadTGA: Only type 1, 2, 3, 9, 10, and 11 targa RGB images supported, image_type = %i\n", targa_header.image_type);
 		PrintTargaHeader(&targa_header);
 		return NULL;
 	}
@@ -536,7 +536,7 @@ unsigned char *LoadTGA_BGRA (const unsigned char *f, int filesize, int *miplevel
 	image_buffer = (unsigned char *)Mem_Alloc(tempmempool, image_width * image_height * 4);
 	if (!image_buffer)
 	{
-		Con_Printf("LoadTGA: not enough memory for %i by %i image\n", image_width, image_height);
+		Con_DPrintf("LoadTGA: not enough memory for %i by %i image\n", image_width, image_height);
 		return NULL;
 	}
 
@@ -626,7 +626,7 @@ unsigned char *LoadTGA_BGRA (const unsigned char *f, int filesize, int *miplevel
 			if (x != image_width)
 			{
 				// pixbufi is useless now
-				Con_Printf("LoadTGA: corrupt file\n");
+				Con_DPrintf("LoadTGA: corrupt file\n");
 				break;
 			}
 		}
@@ -681,7 +681,7 @@ unsigned char *LoadTGA_BGRA (const unsigned char *f, int filesize, int *miplevel
 				if (x != image_width)
 				{
 					// pixbufi is useless now
-					Con_Printf("LoadTGA: corrupt file\n");
+					Con_DPrintf("LoadTGA: corrupt file\n");
 					break;
 				}
 			}
@@ -734,7 +734,7 @@ unsigned char *LoadTGA_BGRA (const unsigned char *f, int filesize, int *miplevel
 				if (x != image_width)
 				{
 					// pixbufi is useless now
-					Con_Printf("LoadTGA: corrupt file\n");
+					Con_DPrintf("LoadTGA: corrupt file\n");
 					break;
 				}
 			}
@@ -774,7 +774,7 @@ static unsigned char *LoadWAL_BGRA (const unsigned char *f, int filesize, int *m
 	image_height = LittleLong(inwal->height);
 	if (image_width > 32768 || image_height > 32768 || image_width <= 0 || image_height <= 0)
 	{
-		Con_Printf("LoadWAL: invalid size %ix%i\n", image_width, image_height);
+		Con_DPrintf("LoadWAL: invalid size %ix%i\n", image_width, image_height);
 		return NULL;
 	}
 
@@ -787,7 +787,7 @@ static unsigned char *LoadWAL_BGRA (const unsigned char *f, int filesize, int *m
 	image_buffer = (unsigned char *)Mem_Alloc(tempmempool, image_width * image_height * 4);
 	if (!image_buffer)
 	{
-		Con_Printf("LoadWAL: not enough memory for %i by %i image\n", image_width, image_height);
+		Con_DPrintf("LoadWAL: not enough memory for %i by %i image\n", image_width, image_height);
 		return NULL;
 	}
 	Image_Copy8bitBGRA(f + LittleLong(inwal->offsets[0]), image_buffer, image_width * image_height, q2palette_bgra_complete);
@@ -1026,7 +1026,7 @@ unsigned char *loadimagepixelsbgra (const char *filename, qboolean complain, qbo
 						if(data2 && mymiplevel == mymiplevel2 && image_width == image_width_save && image_height == image_height_save)
 							Image_CopyAlphaFromBlueBGRA(data, data2, image_width, image_height);
 						else
-							Con_Printf("loadimagepixelsrgba: corrupt or invalid alpha image %s_alpha\n", basename);
+							Con_DPrintf("loadimagepixelsrgba: corrupt or invalid alpha image %s_alpha\n", basename);
 						image_width = image_width_save;
 						image_height = image_height_save;
 						if(data2)
@@ -1045,14 +1045,14 @@ unsigned char *loadimagepixelsbgra (const char *filename, qboolean complain, qbo
 					int n = fixtransparentpixels(data, image_width, image_height);
 					if(n)
 					{
-						Con_Printf("- had to fix %s (%d pixels changed)\n", name, n);
+						Con_DPrintf("- had to fix %s (%d pixels changed)\n", name, n);
 						if(r_fixtrans_auto.integer >= 2)
 						{
 							char outfilename[MAX_QPATH], buf[MAX_QPATH];
 							Image_StripImageExtension(name, buf, sizeof(buf));
 							dpsnprintf(outfilename, sizeof(outfilename), "fixtrans/%s.tga", buf);
 							Image_WriteTGABGRA(outfilename, image_width, image_height, data);
-							Con_Printf("- %s written.\n", outfilename);
+							Con_DPrintf("- %s written.\n", outfilename);
 						}
 					}
 				}
@@ -1066,11 +1066,11 @@ unsigned char *loadimagepixelsbgra (const char *filename, qboolean complain, qbo
 	}
 	if (complain)
 	{
-		Con_Printf("Couldn't load %s using ", filename);
+		Con_DPrintf("Couldn't load %s using ", filename);
 		for (format = firstformat;format->formatstring;format++)
 		{
 			dpsnprintf (name, sizeof(name), format->formatstring, basename);
-			Con_Printf(format == firstformat ? "\"%s\"" : (format[1].formatstring ? ", \"%s\"" : " or \"%s\".\n"), format->formatstring);
+			Con_DPrintf(format == firstformat ? "\"%s\"" : (format[1].formatstring ? ", \"%s\"" : " or \"%s\".\n"), format->formatstring);
 		}
 	}
 
@@ -1223,7 +1223,7 @@ void Image_FixTransparentPixels_f(void)
 	unsigned char *data;
 	if(Cmd_Argc() != 2)
 	{
-		Con_Printf("Usage: %s imagefile\n", Cmd_Argv(0));
+		Con_DPrintf("Usage: %s imagefile\n", Cmd_Argv(0));
 		return;
 	}
 	filename_pattern = Cmd_Argv(1);
@@ -1233,7 +1233,7 @@ void Image_FixTransparentPixels_f(void)
 	for(i = 0; i < search->numfilenames; ++i)
 	{
 		filename = search->filenames[i];
-		Con_Printf("Processing %s... ", filename);
+		Con_DPrintf("Processing %s... ", filename);
 		Image_StripImageExtension(filename, buf, sizeof(buf));
 		dpsnprintf(outfilename, sizeof(outfilename), "fixtrans/%s.tga", buf);
 		if(!(data = loadimagepixelsbgra(filename, true, false, false, NULL)))
@@ -1241,10 +1241,10 @@ void Image_FixTransparentPixels_f(void)
 		if((n = fixtransparentpixels(data, image_width, image_height)))
 		{
 			Image_WriteTGABGRA(outfilename, image_width, image_height, data);
-			Con_Printf("%s written (%d pixels changed).\n", outfilename, n);
+			Con_DPrintf("%s written (%d pixels changed).\n", outfilename, n);
 		}
 		else
-			Con_Printf("unchanged.\n");
+			Con_DPrintf("unchanged.\n");
 		Mem_Free(data);
 	}
 	FS_FreeSearch(search);
@@ -1517,7 +1517,7 @@ void Image_Resample32(const void *indata, int inwidth, int inheight, int indepth
 {
 	if (indepth != 1 || outdepth != 1)
 	{
-		Con_Printf ("Image_Resample: 3D resampling not supported\n");
+		Con_DPrintf ("Image_Resample: 3D resampling not supported\n");
 		return;
 	}
 	if (quality)
@@ -1533,7 +1533,7 @@ void Image_MipReduce32(const unsigned char *in, unsigned char *out, int *width, 
 	int x, y, nextrow;
 	if (*depth != 1 || destdepth != 1)
 	{
-		Con_Printf ("Image_Resample: 3D resampling not supported\n");
+		Con_DPrintf ("Image_Resample: 3D resampling not supported\n");
 		if (*width > destwidth)
 			*width >>= 1;
 		if (*height > destheight)
@@ -1603,7 +1603,7 @@ void Image_MipReduce32(const unsigned char *in, unsigned char *out, int *width, 
 			}
 		}
 		else
-			Con_Printf ("Image_MipReduce: desired size already achieved\n");
+			Con_DPrintf ("Image_MipReduce: desired size already achieved\n");
 	}
 }
 

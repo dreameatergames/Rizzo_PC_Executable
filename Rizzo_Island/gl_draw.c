@@ -363,7 +363,7 @@ cachepic_t *Draw_CachePic_Flags(const char *path, unsigned int cachepicflags)
 
 	if (numcachepics == MAX_CACHED_PICS)
 	{
-		Con_Printf ("Draw_CachePic: numcachepics == MAX_CACHED_PICS\n");
+		Con_DPrintf ("Draw_CachePic: numcachepics == MAX_CACHED_PICS\n");
 		// FIXME: support NULL in callers?
 		return cachepics; // return the first one
 	}
@@ -449,7 +449,7 @@ reload:
 	if ((!strncmp(pic->name, "gfx/", 4) || (gamemode == GAME_BLOODOMNICIDE && !strncmp(pic->name, "locale/", 6))) && (lmpdata = FS_LoadFile(lmpname, tempmempool, false, &lmpsize)))
 	{
 		if (developer_loading.integer)
-			Con_Printf("loading lump \"%s\"\n", pic->name);
+			Con_DPrintf("loading lump \"%s\"\n", pic->name);
 
 		if (lmpsize >= 9)
 		{
@@ -467,7 +467,7 @@ reload:
 	else if ((lmpdata = W_GetLumpName (pic->name + 4)))
 	{
 		if (developer_loading.integer)
-			Con_Printf("loading gfx.wad lump \"%s\"\n", pic->name + 4);
+			Con_DPrintf("loading gfx.wad lump \"%s\"\n", pic->name + 4);
 
 		if (!strcmp(pic->name, "gfx/conchars"))
 		{
@@ -592,7 +592,7 @@ cachepic_t *Draw_NewPic(const char *picname, int width, int height, int alpha, u
 	{
 		if (numcachepics == MAX_CACHED_PICS)
 		{
-			Con_Printf ("Draw_NewPic: numcachepics == MAX_CACHED_PICS\n");
+			Con_DPrintf ("Draw_NewPic: numcachepics == MAX_CACHED_PICS\n");
 			// FIXME: support NULL in callers?
 			return cachepics; // return the first one
 		}
@@ -750,7 +750,7 @@ void LoadFont(qboolean override, const char *name, dp_font_t *fnt, float scale, 
 					}
 					else
 					{
-						Con_Printf("Warning: skipped unknown font property %s\n", com_token);
+						Con_DPrintf("Warning: skipped unknown font property %s\n", com_token);
 						if(!COM_ParseToken_Simple(&p, false, false, true))
 							return;
 					}
@@ -810,7 +810,7 @@ dp_font_t *FindFont(const char *title, qboolean allocate_new)
 		oldsize = dp_fonts.maxsize;
 		dp_fonts.maxsize = dp_fonts.maxsize + FONTS_EXPAND;
 		if (developer_font.integer)
-			Con_Printf("FindFont: enlarging fonts buffer (%i -> %i)\n", oldsize, dp_fonts.maxsize);
+			Con_DPrintf("FindFont: enlarging fonts buffer (%i -> %i)\n", oldsize, dp_fonts.maxsize);
 		dp_fonts.f = (dp_font_t *)Mem_Realloc(fonts_mempool, dp_fonts.f, sizeof(dp_font_t) * dp_fonts.maxsize);
 		// relink ft2 structures
 		for(i = 0; i < oldsize; ++i)
@@ -859,11 +859,11 @@ static void LoadFont_f(void)
 
 	if(Cmd_Argc() < 2)
 	{
-		Con_Printf("Available font commands:\n");
+		Con_DPrintf("Available font commands:\n");
 		for(i = 0; i < dp_fonts.maxsize; ++i)
 			if (dp_fonts.f[i].title[0])
-				Con_Printf("  loadfont %s gfx/tgafile[...] [custom switches] [sizes...]\n", dp_fonts.f[i].title);
-		Con_Printf("A font can simply be gfx/tgafile, or alternatively you\n"
+				Con_DPrintf("  loadfont %s gfx/tgafile[...] [custom switches] [sizes...]\n", dp_fonts.f[i].title);
+		Con_DPrintf("A font can simply be gfx/tgafile, or alternatively you\n"
 			   "can specify multiple fonts and faces\n"
 			   "Like this: gfx/vera-sans:2,gfx/fallback:1\n"
 			   "to load face 2 of the font gfx/vera-sans and use face 1\n"
@@ -880,7 +880,7 @@ static void LoadFont_f(void)
 	f = FindFont(Cmd_Argv(1), true);
 	if(f == NULL)
 	{
-		Con_Printf("font function not found\n");
+		Con_DPrintf("font function not found\n");
 		return;
 	}
 
@@ -983,7 +983,7 @@ static void LoadFont_f(void)
 
 				if (sizes == MAX_FONT_SIZES)
 				{
-					Con_Printf("Warning: specified more than %i different font sizes, exceding ones are ignored\n", MAX_FONT_SIZES);
+					Con_DPrintf("Warning: specified more than %i different font sizes, exceding ones are ignored\n", MAX_FONT_SIZES);
 					sizes = -1;
 					continue;
 				}
@@ -1663,7 +1663,7 @@ float DrawQ_String_Scale(float startx, float starty, const char *text, size_t ma
 							{
 								colorindex = tempcolorindex | 0xf;
 								// ...done! now colorindex has rgba codes (1,rrrr,gggg,bbbb,aaaa)
-								//Con_Printf("^1colorindex:^7 %x\n", colorindex);
+								//Con_DPrintf("^1colorindex:^7 %x\n", colorindex);
 								DrawQ_GetTextColor(DrawQ_Color, colorindex, basered, basegreen, baseblue, basealpha, shadow != 0);
 								i+=4;
 								text+=4;

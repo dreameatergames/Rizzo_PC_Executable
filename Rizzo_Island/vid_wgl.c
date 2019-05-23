@@ -753,11 +753,11 @@ static void GL_CloseLibrary(void)
 
 static int GL_OpenLibrary(const char *name)
 {
-	Con_Printf("Loading OpenGL driver %s\n", name);
+	Con_DPrintf("Loading OpenGL driver %s\n", name);
 	GL_CloseLibrary();
 	if (!(gldll = LoadLibrary(name)))
 	{
-		Con_Printf("Unable to LoadLibrary %s\n", name);
+		Con_DPrintf("Unable to LoadLibrary %s\n", name);
 		return false;
 	}
 	strlcpy(gl_driver, name, sizeof(gl_driver));
@@ -867,7 +867,7 @@ void VID_Init(void)
 	wc.lpszClassName = "DarkPlacesWindowClass";
 
 	if (!RegisterClass (&wc))
-		Con_Printf ("Couldn't register window class\n");
+		Con_DPrintf ("Couldn't register window class\n");
 
 	memset(&initialdevmode, 0, sizeof(initialdevmode));
 	EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &initialdevmode);
@@ -930,7 +930,7 @@ qboolean VID_InitModeGL(viddef_mode_t *mode)
 	int fullscreen = mode->fullscreen;
 
 	if (vid_initialized)
-		Sys_Error("VID_InitMode called when video is already initialised");
+		Con_DPrintf("VID_InitMode called when video is already initialised");
 
 	// if stencil is enabled, ask for alpha too
 	if (bpp >= 32)
@@ -1015,7 +1015,7 @@ qboolean VID_InitModeGL(viddef_mode_t *mode)
 		gldrivername = com_argv[i + 1];
 	if (!GL_OpenLibrary(gldrivername))
 	{
-		Con_Printf("Unable to load GL driver %s\n", gldrivername);
+		Con_DPrintf("Unable to load GL driver %s\n", gldrivername);
 		return false;
 	}
 
@@ -1129,13 +1129,13 @@ qboolean VID_InitModeGL(viddef_mode_t *mode)
 		if (!foundmode)
 		{
 			VID_Shutdown();
-			Con_Printf("Unable to find the requested mode %dx%dx%dbpp\n", width, height, bpp);
+			Con_DPrintf("Unable to find the requested mode %dx%dx%dbpp\n", width, height, bpp);
 			return false;
 		}
 		else if(ChangeDisplaySettings (&gdevmode, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
 		{
 			VID_Shutdown();
-			Con_Printf("Unable to change to requested mode %dx%dx%dbpp\n", width, height, bpp);
+			Con_DPrintf("Unable to change to requested mode %dx%dx%dbpp\n", width, height, bpp);
 			return false;
 		}
 
@@ -1179,7 +1179,7 @@ qboolean VID_InitModeGL(viddef_mode_t *mode)
 		mainwindow = CreateWindowEx (ExWindowStyle, "DarkPlacesWindowClass", gamename, WindowStyle, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, NULL, NULL, global_hInstance, NULL);
 		if (!mainwindow)
 		{
-			Con_Printf("CreateWindowEx(%d, %s, %s, %d, %d, %d, %d, %d, %p, %p, %p, %p) failed\n", (int)ExWindowStyle, "DarkPlacesWindowClass", gamename, (int)WindowStyle, (int)(rect.left), (int)(rect.top), (int)(rect.right - rect.left), (int)(rect.bottom - rect.top), (void *)NULL, (void *)NULL, (void *)global_hInstance, (void *)NULL);
+			Con_DPrintf("CreateWindowEx(%d, %s, %s, %d, %d, %d, %d, %d, %p, %p, %p, %p) failed\n", (int)ExWindowStyle, "DarkPlacesWindowClass", gamename, (int)WindowStyle, (int)(rect.left), (int)(rect.top), (int)(rect.right - rect.left), (int)(rect.bottom - rect.top), (void *)NULL, (void *)NULL, (void *)global_hInstance, (void *)NULL);
 			VID_Shutdown();
 			return false;
 		}
@@ -1192,14 +1192,14 @@ qboolean VID_InitModeGL(viddef_mode_t *mode)
 		if (!pixelformat)
 		{
 			VID_Shutdown();
-			Con_Printf("ChoosePixelFormat(%p, %p) failed\n", (void *)baseDC, (void *)&pfd);
+			Con_DPrintf("ChoosePixelFormat(%p, %p) failed\n", (void *)baseDC, (void *)&pfd);
 			return false;
 		}
 
 		if (SetPixelFormat(baseDC, pixelformat, &pfd) == false)
 		{
 			VID_Shutdown();
-			Con_Printf("SetPixelFormat(%p, %d, %p) failed\n", (void *)baseDC, pixelformat, (void *)&pfd);
+			Con_DPrintf("SetPixelFormat(%p, %d, %p) failed\n", (void *)baseDC, pixelformat, (void *)&pfd);
 			return false;
 		}
 
@@ -1220,7 +1220,7 @@ qboolean VID_InitModeGL(viddef_mode_t *mode)
 		if (!qwglMakeCurrent(baseDC, baseRC))
 		{
 			VID_Shutdown();
-			Con_Printf("wglMakeCurrent(%p, %p) failed\n", (void *)baseDC, (void *)baseRC);
+			Con_DPrintf("wglMakeCurrent(%p, %p) failed\n", (void *)baseDC, (void *)baseRC);
 			return false;
 		}
 
@@ -1399,7 +1399,7 @@ qboolean VID_InitModeDX(viddef_mode_t *mode, int version)
 	int numdevices;
 
 	if (vid_initialized)
-		Sys_Error("VID_InitMode called when video is already initialised");
+		Con_DPrintf("VID_InitMode called when video is already initialised");
 
 	vid_isfullscreen = fullscreen != 0;
 	if (fullscreen)
@@ -1421,7 +1421,7 @@ qboolean VID_InitModeDX(viddef_mode_t *mode, int version)
 	mainwindow = CreateWindowEx (ExWindowStyle, "DarkPlacesWindowClass", gamename, WindowStyle, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, NULL, NULL, global_hInstance, NULL);
 	if (!mainwindow)
 	{
-		Con_Printf("CreateWindowEx(%d, %s, %s, %d, %d, %d, %d, %d, %p, %p, %p, %p) failed\n", (int)ExWindowStyle, "DarkPlacesWindowClass", gamename, (int)WindowStyle, (int)(rect.left), (int)(rect.top), (int)(rect.right - rect.left), (int)(rect.bottom - rect.top), (void *)NULL, (void *)NULL, global_hInstance, (void *)NULL);
+		Con_DPrintf("CreateWindowEx(%d, %s, %s, %d, %d, %d, %d, %d, %p, %p, %p, %p) failed\n", (int)ExWindowStyle, "DarkPlacesWindowClass", gamename, (int)WindowStyle, (int)(rect.left), (int)(rect.top), (int)(rect.right - rect.left), (int)(rect.bottom - rect.top), (void *)NULL, (void *)NULL, global_hInstance, (void *)NULL);
 		VID_Shutdown();
 		return false;
 	}
@@ -1430,7 +1430,7 @@ qboolean VID_InitModeDX(viddef_mode_t *mode, int version)
 
 	vid_d3d9 = Direct3DCreate9(D3D_SDK_VERSION);
 	if (!vid_d3d9)
-		Sys_Error("VID_InitMode: Direct3DCreate9 failed");
+		Con_DPrintf("VID_InitMode: Direct3DCreate9 failed");
 
 	numdevices = IDirect3D9_GetAdapterCount(vid_d3d9);
 	vid_d3d9dev = NULL;
@@ -1467,7 +1467,7 @@ qboolean VID_InitModeDX(viddef_mode_t *mode, int version)
 
 	IDirect3DDevice9_GetDeviceCaps(vid_d3d9dev, &vid_d3d9caps);
 
-	Con_Printf("Using D3D9 device: %s\n", d3d9adapteridentifier.Description);
+	Con_DPrintf("Using D3D9 device: %s\n", d3d9adapteridentifier.Description);
 	gl_extensions = "";
 	gl_platform = "D3D9";
 	gl_platformextensions = "";
@@ -1503,12 +1503,12 @@ qboolean VID_InitModeDX(viddef_mode_t *mode, int version)
 	gl_version = "";
 	gl_extensions = "";
 
-	Con_Printf("D3D9 adapter info:\n");
-	Con_Printf("Description: %s\n", d3d9adapteridentifier.Description);
-	Con_Printf("DeviceId: %x\n", (unsigned int)d3d9adapteridentifier.DeviceId);
-	Con_Printf("DeviceName: %p\n", d3d9adapteridentifier.DeviceName);
-	Con_Printf("Driver: %s\n", d3d9adapteridentifier.Driver);
-	Con_Printf("DriverVersion: %08x%08x\n", (unsigned int)d3d9adapteridentifier.DriverVersion.u.HighPart, (unsigned int)d3d9adapteridentifier.DriverVersion.u.LowPart);
+	Con_DPrintf("D3D9 adapter info:\n");
+	Con_DPrintf("Description: %s\n", d3d9adapteridentifier.Description);
+	Con_DPrintf("DeviceId: %x\n", (unsigned int)d3d9adapteridentifier.DeviceId);
+	Con_DPrintf("DeviceName: %p\n", d3d9adapteridentifier.DeviceName);
+	Con_DPrintf("Driver: %s\n", d3d9adapteridentifier.Driver);
+	Con_DPrintf("DriverVersion: %08x%08x\n", (unsigned int)d3d9adapteridentifier.DriverVersion.u.HighPart, (unsigned int)d3d9adapteridentifier.DriverVersion.u.LowPart);
 	Con_DPrintf("GL_EXTENSIONS: %s\n", gl_extensions);
 	Con_DPrintf("%s_EXTENSIONS: %s\n", gl_platform, gl_platformextensions);
 
@@ -1607,7 +1607,7 @@ qboolean VID_InitModeSOFT(viddef_mode_t *mode)
 	int fullscreen = mode->fullscreen;
 
 	if (vid_initialized)
-		Sys_Error("VID_InitMode called when video is already initialised");
+		Con_DPrintf("VID_InitMode called when video is already initialised");
 
 	memset(&gdevmode, 0, sizeof(gdevmode));
 
@@ -1711,13 +1711,13 @@ qboolean VID_InitModeSOFT(viddef_mode_t *mode)
 		if (!foundmode)
 		{
 			VID_Shutdown();
-			Con_Printf("Unable to find the requested mode %dx%dx%dbpp\n", width, height, bpp);
+			Con_DPrintf("Unable to find the requested mode %dx%dx%dbpp\n", width, height, bpp);
 			return false;
 		}
 		else if(ChangeDisplaySettings (&gdevmode, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
 		{
 			VID_Shutdown();
-			Con_Printf("Unable to change to requested mode %dx%dx%dbpp\n", width, height, bpp);
+			Con_DPrintf("Unable to change to requested mode %dx%dx%dbpp\n", width, height, bpp);
 			return false;
 		}
 
@@ -1758,7 +1758,7 @@ qboolean VID_InitModeSOFT(viddef_mode_t *mode)
 	mainwindow = CreateWindowEx (ExWindowStyle, "DarkPlacesWindowClass", gamename, WindowStyle, rect.left, rect.top, rect.right - rect.left, rect.bottom - rect.top, NULL, NULL, global_hInstance, NULL);
 	if (!mainwindow)
 	{
-		Con_Printf("CreateWindowEx(%d, %s, %s, %d, %d, %d, %d, %d, %p, %p, %p, %p) failed\n", (int)ExWindowStyle, "DarkPlacesWindowClass", gamename, (int)WindowStyle, (int)(rect.left), (int)(rect.top), (int)(rect.right - rect.left), (int)(rect.bottom - rect.top), (void *)NULL, (void *)NULL, (void *)global_hInstance, (void *)NULL);
+		Con_DPrintf("CreateWindowEx(%d, %s, %s, %d, %d, %d, %d, %d, %p, %p, %p, %p) failed\n", (int)ExWindowStyle, "DarkPlacesWindowClass", gamename, (int)WindowStyle, (int)(rect.left), (int)(rect.top), (int)(rect.right - rect.left), (int)(rect.bottom - rect.top), (void *)NULL, (void *)NULL, (void *)global_hInstance, (void *)NULL);
 		VID_Shutdown();
 		return false;
 	}
@@ -1778,7 +1778,7 @@ qboolean VID_InitModeSOFT(viddef_mode_t *mode)
 	vid_softdibhandle = CreateDIBSection(baseDC, &vid_softbmi, DIB_RGB_COLORS, (void **)&vid.softpixels, NULL, 0);
 	if (!vid_softdibhandle)
 	{
-		Con_Printf("CreateDIBSection failed\n");
+		Con_DPrintf("CreateDIBSection failed\n");
 		VID_Shutdown();
 		return false;
 	}
@@ -1787,7 +1787,7 @@ qboolean VID_InitModeSOFT(viddef_mode_t *mode)
 	vid_softhdc_backup = SelectObject(vid_softhdc, vid_softdibhandle);
 	if (!vid_softhdc_backup)
 	{
-		Con_Printf("SelectObject failed\n");
+		Con_DPrintf("SelectObject failed\n");
 		VID_Shutdown();
 		return false;
 	}
@@ -1797,7 +1797,7 @@ qboolean VID_InitModeSOFT(viddef_mode_t *mode)
 	vid.softdepthpixels = (unsigned int *)calloc(1, mode->width * mode->height * 4);
 	if (DPSOFTRAST_Init(mode->width, mode->height, vid_soft_threads.integer, vid_soft_interlace.integer, (unsigned int *)vid.softpixels, (unsigned int *)vid.softdepthpixels) < 0)
 	{
-		Con_Printf("Failed to initialize software rasterizer\n");
+		Con_DPrintf("Failed to initialize software rasterizer\n");
 		VID_Shutdown();
 		return false;
 	}

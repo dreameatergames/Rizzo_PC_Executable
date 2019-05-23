@@ -2519,7 +2519,7 @@ void M_Menu_Keys_f (void)
 
 		// Only sections? There may be a problem somewhere...
 		if (keys_cursor >= numcommands)
-			Sys_Error ("M_Init: The key binding list only contains sections");
+			Con_DPrintf ("M_Init: The key binding list only contains sections");
 	}
 }
 
@@ -4534,7 +4534,7 @@ static void ModList_Enable (void)
 	if ((cls.state == ca_connected && !cls.demoplayback) || sv.active)
 	{
 		// actually, changing during game would work fine, but would be stupid
-		Con_Printf("Can not change gamedir while client is connected or server is running!\n");
+		Con_DPrintf("Can not change gamedir while client is connected or server is running!\n");
 		return;
 	}
 
@@ -5162,14 +5162,14 @@ void MVM_error_cmd(const char *format, ...)
 	va_start (argptr, format);
 	dpvsnprintf (errorstring, sizeof(errorstring), format, argptr);
 	va_end (argptr);
-	Con_Printf( "Menu_Error: %s\n", errorstring );
+	Con_DPrintf( "Menu_Error: %s\n", errorstring );
 
 	if( !processingError ) {
 		processingError = true;
 		PRVM_Crash(prog);
 		processingError = false;
 	} else {
-		Con_Printf( "Menu_Error: Recursive call to MVM_error_cmd (from PRVM_Crash)!\n" );
+		Con_DPrintf( "Menu_Error: Recursive call to MVM_error_cmd (from PRVM_Crash)!\n" );
 	}
 
 	// fall back to the normal menu
@@ -5219,8 +5219,8 @@ static void MVM_count_edicts(prvm_prog_t *prog)
 		active++;
 	}
 
-	Con_Printf("num_edicts:%3i\n", prog->num_edicts);
-	Con_Printf("active    :%3i\n", active);
+	Con_DPrintf("num_edicts:%3i\n", prog->num_edicts);
+	Con_DPrintf("active    :%3i\n", active);
 }
 
 static qboolean MVM_load_edict(prvm_prog_t *prog, prvm_edict_t *ent)

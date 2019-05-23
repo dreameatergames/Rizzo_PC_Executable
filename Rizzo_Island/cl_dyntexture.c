@@ -23,7 +23,7 @@ static dyntexture_t * cl_finddyntexture( const char *name, qboolean warnonfailur
 	if( !name || !*name || strncmp( name, CLDYNTEXTUREPREFIX, sizeof( CLDYNTEXTUREPREFIX ) - 1 ) != 0 ) {
 		// TODO: print a warning or something
 		if (warnonfailure)
-			Con_Printf( "cl_finddyntexture: Bad dynamic texture name '%s'\n", name );
+			Con_DPrintf( "cl_finddyntexture: Bad dynamic texture name '%s'\n", name );
 		return NULL;
 	}
 
@@ -60,7 +60,7 @@ void CL_LinkDynTexture( const char *name, rtexture_t *texture ) {
 
 	dyntexture = cl_finddyntexture( name, true );
 	if( !dyntexture ) {
-		Con_Printf( "CL_LinkDynTexture: internal error in cl_finddyntexture!\n" );
+		Con_DPrintf( "CL_LinkDynTexture: internal error in cl_finddyntexture!\n" );
 		return;
 	}
 	// TODO: assert dyntexture != NULL!

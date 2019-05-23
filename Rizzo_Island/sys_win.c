@@ -64,7 +64,7 @@ void Sys_Error (const char *error, ...)
 	dpvsnprintf (text, sizeof (text), error, argptr);
 	va_end (argptr);
 
-	Con_Printf ("Quake Error: %s\n", text);
+	Con_DPrintf ("Quake Error: %s\n", text);
 
 	// close video so the message box is visible, unless we already tried that
 	if (!in_sys_error0 && cls.state != ca_dedicated)
@@ -136,7 +136,7 @@ char *Sys_ConsoleInput (void)
 		if (!GetNumberOfConsoleInputEvents (hinput, &numevents))
 		{
 			cls.state = ca_disconnected;
-			Sys_Error ("Error getting # of console events (error code %x)", (unsigned int)GetLastError());
+			Con_DPrintf ("Error getting # of console events (error code %x)", (unsigned int)GetLastError());
 		}
 
 		if (numevents <= 0)
@@ -145,13 +145,13 @@ char *Sys_ConsoleInput (void)
 		if (!ReadConsoleInput(hinput, recs, 1, &numread))
 		{
 			cls.state = ca_disconnected;
-			Sys_Error ("Error reading console input (error code %x)", (unsigned int)GetLastError());
+			Con_DPrintf ("Error reading console input (error code %x)", (unsigned int)GetLastError());
 		}
 
 		if (numread != 1)
 		{
 			cls.state = ca_disconnected;
-			Sys_Error ("Couldn't read console input (error code %x)", (unsigned int)GetLastError());
+			Con_DPrintf ("Couldn't read console input (error code %x)", (unsigned int)GetLastError());
 		}
 
 		if (recs[0].EventType == KEY_EVENT)
@@ -234,7 +234,7 @@ void Sys_InitConsole (void)
 	tevent = CreateEvent(NULL, false, false, NULL);
 
 	if (!tevent)
-		Sys_Error ("Couldn't create event");
+		Con_DPrintf ("Couldn't create event");
 #endif
 
 	houtput = GetStdHandle (STD_OUTPUT_HANDLE);
@@ -247,12 +247,12 @@ void Sys_InitConsole (void)
 		//if ((houtput == 0) || (houtput == INVALID_HANDLE_VALUE)) // LordHavoc: on Windows XP this is never 0 or invalid, but hinput is invalid
 		{
 			if (!AllocConsole ())
-				Sys_Error ("Couldn't create dedicated server console (error code %x)", (unsigned int)GetLastError());
+				Con_DPrintf ("Couldn't create dedicated server console (error code %x)", (unsigned int)GetLastError());
 			houtput = GetStdHandle (STD_OUTPUT_HANDLE);
 			hinput = GetStdHandle (STD_INPUT_HANDLE);
 		}
 		if ((houtput == 0) || (houtput == INVALID_HANDLE_VALUE))
-			Sys_Error ("Couldn't create dedicated server console");
+			Con_DPrintf ("Couldn't create dedicated server console");
 
 
 #ifdef QHOST
@@ -392,10 +392,10 @@ int main (int argc, const char* argv[])
 qboolean sys_supportsdlgetticks = false;
 unsigned int Sys_SDL_GetTicks (void)
 {
-	Sys_Error("Called Sys_SDL_GetTicks on non-SDL target");
+	Con_DPrintf("Called Sys_SDL_GetTicks on non-SDL target");
 	return 0;
 }
 void Sys_SDL_Delay (unsigned int milliseconds)
 {
-	Sys_Error("Called Sys_SDL_Delay on non-SDL target");
+	Con_DPrintf("Called Sys_SDL_Delay on non-SDL target");
 }

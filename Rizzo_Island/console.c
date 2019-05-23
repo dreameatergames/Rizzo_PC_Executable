@@ -786,7 +786,7 @@ static void Con_Maps_f (void)
 {
 	if (Cmd_Argc() > 2)
 	{
-		Con_Printf("usage: maps [mapnameprefix]\n");
+		Con_DPrintf("usage: maps [mapnameprefix]\n");
 		return;
 	}
 	else if (Cmd_Argc() == 2)
@@ -801,13 +801,13 @@ static void Con_ConDump_f (void)
 	qfile_t *file;
 	if (Cmd_Argc() != 2)
 	{
-		Con_Printf("usage: condump <filename>\n");
+		Con_DPrintf("usage: condump <filename>\n");
 		return;
 	}
 	file = FS_OpenRealFile(Cmd_Argv(1), "w", false);
 	if (!file)
 	{
-		Con_Printf("condump: unable to write file \"%s\"\n", Cmd_Argv(1));
+		Con_DPrintf("condump: unable to write file \"%s\"\n", Cmd_Argv(1));
 		return;
 	}
 	if (con_mutex) Thread_LockMutex(con_mutex);
@@ -1620,7 +1620,7 @@ static float Con_WordWidthFunc(void *passthrough, const char *w, size_t *length,
 	else
 	{
 		Sys_PrintfToTerminal("Con_WordWidthFunc: can't get here (maxWidth should never be %f)\n", maxWidth);
-		// Note: this is NOT a Con_Printf, as it could print recursively
+		// Note: this is NOT a Con_DPrintf, as it could print recursively
 		return 0;
 	}
 }
@@ -2093,7 +2093,7 @@ qboolean GetMapList (const char *s, char *completedname, int completednamebuffer
 	if(!t)
 		return false;
 	if (t->numfilenames > 1)
-		Con_Printf("^1 %i maps found :\n", t->numfilenames);
+		Con_DPrintf("^1 %i maps found :\n", t->numfilenames);
 	len = (unsigned char *)Z_Malloc(t->numfilenames);
 	min = 666;
 	for(max=i=0;i<t->numfilenames;i++)
@@ -2220,7 +2220,7 @@ qboolean GetMapList (const char *s, char *completedname, int completednamebuffer
 		if(f)
 			FS_Close(f);
 		*(t->filenames[i]+len[i]+5) = 0;
-		Con_Printf("%16s (%-8s) %s\n", t->filenames[i]+5, desc, message);
+		Con_DPrintf("%16s (%-8s) %s\n", t->filenames[i]+5, desc, message);
 	}
 	Con_Print("\n");
 	for(p=o;p<min;p++)
@@ -2391,7 +2391,7 @@ static int Nicks_CompleteCountPossible(char *line, int pos, char *s, qboolean is
 			continue;
 
 		SanitizeString(cl.scores[p].name, name);
-		//Con_Printf(" ^2Sanitized: ^7%s -> %s", cl.scores[p].name, name);
+		//Con_DPrintf(" ^2Sanitized: ^7%s -> %s", cl.scores[p].name, name);
 
 		if(!name[0])
 			continue;
@@ -2418,7 +2418,7 @@ static int Nicks_CompleteCountPossible(char *line, int pos, char *s, qboolean is
 		}
 		if(match < 0)
 			continue;
-		//Con_Printf("Possible match: %s|%s\n", cl.scores[p].name, name);
+		//Con_DPrintf("Possible match: %s|%s\n", cl.scores[p].name, name);
 		strlcpy(Nicks_list[count], cl.scores[p].name, sizeof(Nicks_list[count]));
 
 		// the sanitized list
@@ -2429,7 +2429,7 @@ static int Nicks_CompleteCountPossible(char *line, int pos, char *s, qboolean is
 		}
 
 		Nicks_offset[count] = s - (&line[match]);
-		//Con_Printf("offset for %s: %i\n", name, Nicks_offset[count]);
+		//Con_DPrintf("offset for %s: %i\n", name, Nicks_offset[count]);
 
 		++count;
 	}
@@ -2440,7 +2440,7 @@ static void Cmd_CompleteNicksPrint(int count)
 {
 	int i;
 	for(i = 0; i < count; ++i)
-		Con_Printf("%s\n", Nicks_list[i]);
+		Con_DPrintf("%s\n", Nicks_list[i]);
 }
 
 static void Nicks_CutMatchesNormal(int count)
@@ -2463,7 +2463,7 @@ static void Nicks_CutMatchesNormal(int count)
 			}
 	}
 	Nicks_sanlist[0][c+1] = 0;
-	//Con_Printf("List0: %s\n", Nicks_sanlist[0]);
+	//Con_DPrintf("List0: %s\n", Nicks_sanlist[0]);
 }
 
 static unsigned int Nicks_strcleanlen(const char *s)
@@ -2588,7 +2588,7 @@ static void Nicks_CutMatchesNoSpaces(int count)
 	// Just so you know, if cutmatchesnormal doesn't kill the first entry, then even the non-alnums fit
 	Nicks_CutMatchesNormal(count);
 	//if(!Nicks_sanlist[0][0])
-	//Con_Printf("TS: %s\n", tempstr);
+	//Con_DPrintf("TS: %s\n", tempstr);
 	if(Nicks_strcleanlen(Nicks_sanlist[0]) < strlen(tempstr))
 	{
 		// if the clean sanitized one is longer than the current one, use it, it has crap chars which definitely are in there
@@ -2711,7 +2711,7 @@ int Nicks_CompleteChatLine(char *buffer, size_t size, unsigned int pos)
 	{
 		int len;
 		char *msg;
-		Con_Printf("\n%i possible nicks:\n", n);
+		Con_DPrintf("\n%i possible nicks:\n", n);
 		Cmd_CompleteNicksPrint(n);
 
 		Nicks_CutMatches(n);
@@ -2887,14 +2887,14 @@ void Con_CompleteCommandLine (void)
 					else
 					{
 						stringlistsort(&resultbuf, true); // dirbuf is already sorted
-						Con_Printf("\n%i possible filenames\n", resultbuf.numstrings + dirbuf.numstrings);
+						Con_DPrintf("\n%i possible filenames\n", resultbuf.numstrings + dirbuf.numstrings);
 						for(i = 0; i < dirbuf.numstrings; ++i)
 						{
-							Con_Printf("^4%s^7/\n", dirbuf.strings[i]);
+							Con_DPrintf("^4%s^7/\n", dirbuf.strings[i]);
 						}
 						for(i = 0; i < resultbuf.numstrings; ++i)
 						{
-							Con_Printf("%s\n", resultbuf.strings[i]);
+							Con_DPrintf("%s\n", resultbuf.strings[i]);
 						}
 						matchchars = sizeof(t) - 1;
 						if(resultbuf.numstrings > 0)
@@ -2942,25 +2942,25 @@ void Con_CompleteCommandLine (void)
 	c = Cmd_CompleteCountPossible(s);
 	if (c)
 	{
-		Con_Printf("\n%i possible command%s\n", c, (c > 1) ? "s: " : ":");
+		Con_DPrintf("\n%i possible command%s\n", c, (c > 1) ? "s: " : ":");
 		Cmd_CompleteCommandPrint(s);
 	}
 	v = Cvar_CompleteCountPossible(s);
 	if (v)
 	{
-		Con_Printf("\n%i possible variable%s\n", v, (v > 1) ? "s: " : ":");
+		Con_DPrintf("\n%i possible variable%s\n", v, (v > 1) ? "s: " : ":");
 		Cvar_CompleteCvarPrint(s);
 	}
 	a = Cmd_CompleteAliasCountPossible(s);
 	if (a)
 	{
-		Con_Printf("\n%i possible alias%s\n", a, (a > 1) ? "es: " : ":");
+		Con_DPrintf("\n%i possible alias%s\n", a, (a > 1) ? "es: " : ":");
 		Cmd_CompleteAliasPrint(s);
 	}
 	n = Nicks_CompleteCountPossible(key_line, key_linepos, s, true);
 	if (n)
 	{
-		Con_Printf("\n%i possible nick%s\n", n, (n > 1) ? "s: " : ":");
+		Con_DPrintf("\n%i possible nick%s\n", n, (n > 1) ? "s: " : ":");
 		Cmd_CompleteNicksPrint(n);
 	}
 

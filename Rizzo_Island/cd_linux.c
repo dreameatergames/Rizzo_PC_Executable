@@ -130,7 +130,7 @@ int CDAudio_SysPlay (int track)
 	}
 	if (entry.cdte_ctrl == CDROM_DATA_TRACK)
 	{
-		Con_Printf("CDAudio: track %i is not audio\n", track);
+		Con_DPrintf("CDAudio: track %i is not audio\n", track);
 		return -1;
 	}
 
@@ -165,7 +165,7 @@ int CDAudio_SysStop (void)
 
 	if (ioctl(cdfile, CDROMSTOP) == -1)
 	{
-		Con_Printf("ioctl CDROMSTOP failed (%d)\n", errno);
+		Con_DPrintf("ioctl CDROMSTOP failed (%d)\n", errno);
 		return -1;
 	}
 
@@ -240,7 +240,7 @@ int CDAudio_SysStartup (void)
 {
 	if ((cdfile = open(cd_dev, O_RDONLY | O_NONBLOCK)) == -1)
 	{
-		Con_Printf("CDAudio_SysStartup: open of \"%s\" failed (%i)\n",
+		Con_DPrintf("CDAudio_SysStartup: open of \"%s\" failed (%i)\n",
 					cd_dev, errno);
 		cdfile = -1;
 		return -1;

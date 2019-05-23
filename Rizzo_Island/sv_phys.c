@@ -133,7 +133,7 @@ trace_t SV_TracePoint(const vec3_t start, int type, prvm_edict_t *passedict, int
 	VectorClear(clipmins2);
 	VectorClear(clipmaxs2);
 #if COLLISIONPARANOID >= 3
-	Con_Printf("move(%f %f %f)", clipstart[0], clipstart[1], clipstart[2]);
+	Con_DPrintf("move(%f %f %f)", clipstart[0], clipstart[1], clipstart[2]);
 #endif
 
 	// clip to world
@@ -183,7 +183,7 @@ trace_t SV_TracePoint(const vec3_t start, int type, prvm_edict_t *passedict, int
 	if (numtouchedicts > MAX_EDICTS)
 	{
 		// this never happens
-		Con_Printf("SV_EntitiesInBox returned %i edicts, max was %i\n", numtouchedicts, MAX_EDICTS);
+		Con_DPrintf("SV_EntitiesInBox returned %i edicts, max was %i\n", numtouchedicts, MAX_EDICTS);
 		numtouchedicts = MAX_EDICTS;
 	}
 	for (i = 0;i < numtouchedicts;i++)
@@ -282,7 +282,7 @@ trace_t SV_TraceLine(const vec3_t start, const vec3_t end, int type, prvm_edict_
 	VectorClear(clipmins2);
 	VectorClear(clipmaxs2);
 #if COLLISIONPARANOID >= 3
-	Con_Printf("move(%f %f %f,%f %f %f)", clipstart[0], clipstart[1], clipstart[2], clipend[0], clipend[1], clipend[2]);
+	Con_DPrintf("move(%f %f %f,%f %f %f)", clipstart[0], clipstart[1], clipstart[2], clipend[0], clipend[1], clipend[2]);
 #endif
 
 	// clip to world
@@ -332,7 +332,7 @@ trace_t SV_TraceLine(const vec3_t start, const vec3_t end, int type, prvm_edict_
 	if (numtouchedicts > MAX_EDICTS)
 	{
 		// this never happens
-		Con_Printf("SV_EntitiesInBox returned %i edicts, max was %i\n", numtouchedicts, MAX_EDICTS);
+		Con_DPrintf("SV_EntitiesInBox returned %i edicts, max was %i\n", numtouchedicts, MAX_EDICTS);
 		numtouchedicts = MAX_EDICTS;
 	}
 	for (i = 0;i < numtouchedicts;i++)
@@ -449,7 +449,7 @@ trace_t SV_TraceBox(const vec3_t start, const vec3_t mins, const vec3_t maxs, co
 	VectorCopy(mins, clipmins2);
 	VectorCopy(maxs, clipmaxs2);
 #if COLLISIONPARANOID >= 3
-	Con_Printf("move(%f %f %f,%f %f %f)", clipstart[0], clipstart[1], clipstart[2], clipend[0], clipend[1], clipend[2]);
+	Con_DPrintf("move(%f %f %f,%f %f %f)", clipstart[0], clipstart[1], clipstart[2], clipend[0], clipend[1], clipend[2]);
 #endif
 
 	// clip to world
@@ -510,7 +510,7 @@ trace_t SV_TraceBox(const vec3_t start, const vec3_t mins, const vec3_t maxs, co
 	if (numtouchedicts > MAX_EDICTS)
 	{
 		// this never happens
-		Con_Printf("SV_EntitiesInBox returned %i edicts, max was %i\n", numtouchedicts, MAX_EDICTS);
+		Con_DPrintf("SV_EntitiesInBox returned %i edicts, max was %i\n", numtouchedicts, MAX_EDICTS);
 		numtouchedicts = MAX_EDICTS;
 	}
 	for (i = 0;i < numtouchedicts;i++)
@@ -584,7 +584,7 @@ trace_t SV_TraceBox(const vec3_t start, const vec3_t mins, const vec3_t maxs, co
 #if COLLISIONPARANOID < 3
 		if (trace.startsolid || endstuck)
 #endif
-			Con_Printf("%s{e%i:%f %f %f:%f %f %f:%f:%f %f %f%s%s}\n", (trace.startsolid || endstuck) ? "^3" : "", passedict ? (int)(passedict - prog->edicts) : -1, PRVM_serveredictvector(passedict, origin)[0], PRVM_serveredictvector(passedict, origin)[1], PRVM_serveredictvector(passedict, origin)[2], end[0] - PRVM_serveredictvector(passedict, origin)[0], end[1] - PRVM_serveredictvector(passedict, origin)[1], end[2] - PRVM_serveredictvector(passedict, origin)[2], trace.fraction, trace.endpos[0] - PRVM_serveredictvector(passedict, origin)[0], trace.endpos[1] - PRVM_serveredictvector(passedict, origin)[1], trace.endpos[2] - PRVM_serveredictvector(passedict, origin)[2], trace.startsolid ? " startstuck" : "", endstuck ? " endstuck" : "");
+			Con_DPrintf("%s{e%i:%f %f %f:%f %f %f:%f:%f %f %f%s%s}\n", (trace.startsolid || endstuck) ? "^3" : "", passedict ? (int)(passedict - prog->edicts) : -1, PRVM_serveredictvector(passedict, origin)[0], PRVM_serveredictvector(passedict, origin)[1], PRVM_serveredictvector(passedict, origin)[2], end[0] - PRVM_serveredictvector(passedict, origin)[0], end[1] - PRVM_serveredictvector(passedict, origin)[1], end[2] - PRVM_serveredictvector(passedict, origin)[2], trace.fraction, trace.endpos[0] - PRVM_serveredictvector(passedict, origin)[0], trace.endpos[1] - PRVM_serveredictvector(passedict, origin)[1], trace.endpos[2] - PRVM_serveredictvector(passedict, origin)[2], trace.startsolid ? " startstuck" : "", endstuck ? " endstuck" : "");
 	}
 	return trace;
 }
@@ -619,7 +619,7 @@ int SV_PointSuperContents(const vec3_t point)
 	if (numtouchedicts > MAX_EDICTS)
 	{
 		// this never happens
-		Con_Printf("SV_EntitiesInBox returned %i edicts, max was %i\n", numtouchedicts, MAX_EDICTS);
+		Con_DPrintf("SV_EntitiesInBox returned %i edicts, max was %i\n", numtouchedicts, MAX_EDICTS);
 		numtouchedicts = MAX_EDICTS;
 	}
 	for (i = 0;i < numtouchedicts;i++)
@@ -728,7 +728,7 @@ void SV_LinkEdict_TouchAreaGrid(prvm_edict_t *ent)
 	if (numtouchedicts > MAX_EDICTS)
 	{
 		// this never happens
-		Con_Printf("SV_EntitiesInBox returned %i edicts, max was %i\n", numtouchedicts, MAX_EDICTS);
+		Con_DPrintf("SV_EntitiesInBox returned %i edicts, max was %i\n", numtouchedicts, MAX_EDICTS);
 		numtouchedicts = MAX_EDICTS;
 	}
 
@@ -799,7 +799,7 @@ void SV_LinkEdict (prvm_edict_t *ent)
 	modelindex = (int)PRVM_serveredictfloat(ent, modelindex);
 	if (modelindex < 0 || modelindex >= MAX_MODELS)
 	{
-		Con_Printf("edict %i: SOLID_BSP with invalid modelindex!\n", PRVM_NUM_FOR_EDICT(ent));
+		Con_DPrintf("edict %i: SOLID_BSP with invalid modelindex!\n", PRVM_NUM_FOR_EDICT(ent));
 		modelindex = 0;
 	}
 	model = SV_GetModelByIndex(modelindex);
@@ -955,7 +955,7 @@ static int SV_TestEntityPosition (prvm_edict_t *ent, vec3_t offset)
 		VectorCopy(trace.endpos, org);
 		trace = SV_TraceBox(org, entmins, entmaxs, org, MOVE_NOMONSTERS, ent, contents, 0, collision_extendmovelength.value);
 		if(trace.startsolid)
-			Con_Printf("SV_TestEntityPosition: trace.endpos detected to be in solid. NOT using it.\n");
+			Con_DPrintf("SV_TestEntityPosition: trace.endpos detected to be in solid. NOT using it.\n");
 		else
 			VectorCopy(org, PRVM_serveredictvector(ent, origin));
 #endif
@@ -1023,12 +1023,12 @@ void SV_CheckVelocity (prvm_edict_t *ent)
 	{
 		if (PRVM_IS_NAN(PRVM_serveredictvector(ent, velocity)[i]))
 		{
-			Con_Printf("Got a NaN velocity on entity #%i (%s)\n", PRVM_NUM_FOR_EDICT(ent), PRVM_GetString(prog, PRVM_serveredictstring(ent, classname)));
+			Con_DPrintf("Got a NaN velocity on entity #%i (%s)\n", PRVM_NUM_FOR_EDICT(ent), PRVM_GetString(prog, PRVM_serveredictstring(ent, classname)));
 			PRVM_serveredictvector(ent, velocity)[i] = 0;
 		}
 		if (PRVM_IS_NAN(PRVM_serveredictvector(ent, origin)[i]))
 		{
-			Con_Printf("Got a NaN origin on entity #%i (%s)\n", PRVM_NUM_FOR_EDICT(ent), PRVM_GetString(prog, PRVM_serveredictstring(ent, classname)));
+			Con_DPrintf("Got a NaN origin on entity #%i (%s)\n", PRVM_NUM_FOR_EDICT(ent), PRVM_GetString(prog, PRVM_serveredictstring(ent, classname)));
 			PRVM_serveredictvector(ent, origin)[i] = 0;
 		}
 	}
@@ -1245,7 +1245,7 @@ static int SV_FlyMove (prvm_edict_t *ent, float time, qboolean applygravity, flo
 
 				if (!trace.ent)
 				{
-					Con_Printf ("SV_FlyMove: !trace.ent");
+					Con_DPrintf ("SV_FlyMove: !trace.ent");
 					trace.ent = prog->edicts;
 				}
 
@@ -1261,7 +1261,7 @@ static int SV_FlyMove (prvm_edict_t *ent, float time, qboolean applygravity, flo
 			trace_t steptrace;
 			trace_t steptrace2;
 			trace_t steptrace3;
-			//Con_Printf("step %f %f %f : ", PRVM_serveredictvector(ent, origin)[0], PRVM_serveredictvector(ent, origin)[1], PRVM_serveredictvector(ent, origin)[2]);
+			//Con_DPrintf("step %f %f %f : ", PRVM_serveredictvector(ent, origin)[0], PRVM_serveredictvector(ent, origin)[1], PRVM_serveredictvector(ent, origin)[2]);
 			VectorSet(steppush, 0, 0, stepheight);
 			VectorCopy(PRVM_serveredictvector(ent, origin), org);
 			if(!SV_PushEntity(&steptrace, ent, steppush, false))
@@ -1269,24 +1269,24 @@ static int SV_FlyMove (prvm_edict_t *ent, float time, qboolean applygravity, flo
 				blocked |= 8;
 				break;
 			}
-			//Con_Printf("%f %f %f : ", PRVM_serveredictvector(ent, origin)[0], PRVM_serveredictvector(ent, origin)[1], PRVM_serveredictvector(ent, origin)[2]);
+			//Con_DPrintf("%f %f %f : ", PRVM_serveredictvector(ent, origin)[0], PRVM_serveredictvector(ent, origin)[1], PRVM_serveredictvector(ent, origin)[2]);
 			if(!SV_PushEntity(&steptrace2, ent, push, false))
 			{
 				blocked |= 8;
 				break;
 			}
-			//Con_Printf("%f %f %f : ", PRVM_serveredictvector(ent, origin)[0], PRVM_serveredictvector(ent, origin)[1], PRVM_serveredictvector(ent, origin)[2]);
+			//Con_DPrintf("%f %f %f : ", PRVM_serveredictvector(ent, origin)[0], PRVM_serveredictvector(ent, origin)[1], PRVM_serveredictvector(ent, origin)[2]);
 			VectorSet(steppush, 0, 0, org[2] - PRVM_serveredictvector(ent, origin)[2]);
 			if(!SV_PushEntity(&steptrace3, ent, steppush, false))
 			{
 				blocked |= 8;
 				break;
 			}
-			//Con_Printf("%f %f %f : ", PRVM_serveredictvector(ent, origin)[0], PRVM_serveredictvector(ent, origin)[1], PRVM_serveredictvector(ent, origin)[2]);
+			//Con_DPrintf("%f %f %f : ", PRVM_serveredictvector(ent, origin)[0], PRVM_serveredictvector(ent, origin)[1], PRVM_serveredictvector(ent, origin)[2]);
 			// accept the new position if it made some progress...
 			if (fabs(PRVM_serveredictvector(ent, origin)[0] - org[0]) >= 0.03125 || fabs(PRVM_serveredictvector(ent, origin)[1] - org[1]) >= 0.03125)
 			{
-				//Con_Printf("accepted (delta %f %f %f)\n", PRVM_serveredictvector(ent, origin)[0] - org[0], PRVM_serveredictvector(ent, origin)[1] - org[1], PRVM_serveredictvector(ent, origin)[2] - org[2]);
+				//Con_DPrintf("accepted (delta %f %f %f)\n", PRVM_serveredictvector(ent, origin)[0] - org[0], PRVM_serveredictvector(ent, origin)[1] - org[1], PRVM_serveredictvector(ent, origin)[2] - org[2]);
 				trace = steptrace2;
 				VectorCopy(PRVM_serveredictvector(ent, origin), trace.endpos);
 				time_left *= 1 - trace.fraction;
@@ -1295,7 +1295,7 @@ static int SV_FlyMove (prvm_edict_t *ent, float time, qboolean applygravity, flo
 			}
 			else
 			{
-				//Con_Printf("REJECTED (delta %f %f %f)\n", PRVM_serveredictvector(ent, origin)[0] - org[0], PRVM_serveredictvector(ent, origin)[1] - org[1], PRVM_serveredictvector(ent, origin)[2] - org[2]);
+				//Con_DPrintf("REJECTED (delta %f %f %f)\n", PRVM_serveredictvector(ent, origin)[0] - org[0], PRVM_serveredictvector(ent, origin)[1] - org[1], PRVM_serveredictvector(ent, origin)[2] - org[2]);
 				VectorCopy(org, PRVM_serveredictvector(ent, origin));
 			}
 		}
@@ -1386,7 +1386,7 @@ static int SV_FlyMove (prvm_edict_t *ent, float time, qboolean applygravity, flo
 		}
 	}
 
-	//Con_Printf("entity %i final: blocked %i velocity %f %f %f\n", ent - prog->edicts, blocked, PRVM_serveredictvector(ent, velocity)[0], PRVM_serveredictvector(ent, velocity)[1], PRVM_serveredictvector(ent, velocity)[2]);
+	//Con_DPrintf("entity %i final: blocked %i velocity %f %f %f\n", ent - prog->edicts, blocked, PRVM_serveredictvector(ent, velocity)[0], PRVM_serveredictvector(ent, velocity)[1], PRVM_serveredictvector(ent, velocity)[2]);
 
 	/*
 	if ((blocked & 1) == 0 && bumpcount > 1)
@@ -1499,7 +1499,7 @@ static qboolean SV_NudgeOutOfSolid_PivotIsKnownGood(prvm_edict_t *ent, vec3_t pi
 		}
 		/*
 		if(subbump > 0)
-			Con_Printf("subbump: %d\n", subbump);
+			Con_DPrintf("subbump: %d\n", subbump);
 		*/
 
 		if(dir)
@@ -1617,7 +1617,7 @@ static qboolean SV_PushEntity (trace_t *trace, prvm_edict_t *ent, vec3_t push, q
 	if(!trace->startsolid)
 	if(SV_TraceBox(PRVM_serveredictvector(ent, origin), PRVM_serveredictvector(ent, mins), PRVM_serveredictvector(ent, maxs), PRVM_serveredictvector(ent, origin), type, ent, SV_GenericHitSuperContentsMask(ent), 0).startsolid)
 	{
-		Con_Printf("something eeeeevil happened\n");
+		Con_DPrintf("something eeeeevil happened\n");
 	}
 #endif
 
@@ -1639,7 +1639,7 @@ static qboolean SV_PushEntity (trace_t *trace, prvm_edict_t *ent, vec3_t push, q
 	}
 	else
 	{
-		Con_Printf("The edict mark had been overwritten! Please debug this.\n");
+		Con_DPrintf("The edict mark had been overwritten! Please debug this.\n");
 		return true;
 	}
 }
@@ -1695,13 +1695,13 @@ static void SV_PushMove (prvm_edict_t *pusher, float movetime)
 		SV_LinkEdict(pusher);
 		return;
 	default:
-		Con_Printf("SV_PushMove: entity #%i, unrecognized solid type %f\n", PRVM_NUM_FOR_EDICT(pusher), PRVM_serveredictfloat(pusher, solid));
+		Con_DPrintf("SV_PushMove: entity #%i, unrecognized solid type %f\n", PRVM_NUM_FOR_EDICT(pusher), PRVM_serveredictfloat(pusher, solid));
 		return;
 	}
 	index = (int) PRVM_serveredictfloat(pusher, modelindex);
 	if (index < 1 || index >= MAX_MODELS)
 	{
-		Con_Printf("SV_PushMove: entity #%i has an invalid modelindex %f\n", PRVM_NUM_FOR_EDICT(pusher), PRVM_serveredictfloat(pusher, modelindex));
+		Con_DPrintf("SV_PushMove: entity #%i has an invalid modelindex %f\n", PRVM_NUM_FOR_EDICT(pusher), PRVM_serveredictfloat(pusher, modelindex));
 		return;
 	}
 	pushermodel = SV_GetModelByIndex(index);
@@ -1811,7 +1811,7 @@ static void SV_PushMove (prvm_edict_t *pusher, float movetime)
 		if (pusherowner == PRVM_EDICT_TO_PROG(check))
 			continue;
 
-		//Con_Printf("%i %s ", PRVM_NUM_FOR_EDICT(check), PRVM_GetString(PRVM_serveredictstring(check, classname)));
+		//Con_DPrintf("%i %s ", PRVM_NUM_FOR_EDICT(check), PRVM_GetString(PRVM_serveredictstring(check, classname)));
 
 		// tell any MOVETYPE_STEP entity that it may need to check for water transitions
 		check->priv.server->waterposition_forceupdate = true;
@@ -1832,7 +1832,7 @@ static void SV_PushMove (prvm_edict_t *pusher, float movetime)
 			//trace = SV_TraceBox(PRVM_serveredictvector(check, origin), PRVM_serveredictvector(check, mins), PRVM_serveredictvector(check, maxs), PRVM_serveredictvector(check, origin), MOVE_NOMONSTERS, check, checkcontents);
 			if (!trace.startsolid)
 			{
-				//Con_Printf("- not in solid\n");
+				//Con_DPrintf("- not in solid\n");
 				continue;
 			}
 		}
@@ -1854,7 +1854,7 @@ static void SV_PushMove (prvm_edict_t *pusher, float movetime)
 		else
 			VectorCopy (move1, move);
 
-		//Con_Printf("- pushing %f %f %f\n", move[0], move[1], move[2]);
+		//Con_DPrintf("- pushing %f %f %f\n", move[0], move[1], move[2]);
 
 		VectorCopy (PRVM_serveredictvector(check, origin), check->priv.server->moved_from);
 		VectorCopy (PRVM_serveredictvector(check, angles), check->priv.server->moved_fromangles);
@@ -1881,7 +1881,7 @@ static void SV_PushMove (prvm_edict_t *pusher, float movetime)
 		// FIXME: turn players specially
 		PRVM_serveredictvector(check, angles)[1] += trace.fraction * moveangle[1];
 		PRVM_serveredictfloat(pusher, solid) = savesolid; // was SOLID_BSP
-		//Con_Printf("%s:%d frac %f startsolid %d bmodelstartsolid %d allsolid %d\n", __FILE__, __LINE__, trace.fraction, trace.startsolid, trace.bmodelstartsolid, trace.allsolid);
+		//Con_DPrintf("%s:%d frac %f startsolid %d bmodelstartsolid %d allsolid %d\n", __FILE__, __LINE__, trace.fraction, trace.startsolid, trace.bmodelstartsolid, trace.allsolid);
 
 		// this trace.fraction < 1 check causes items to fall off of pushers
 		// if they pass under or through a wall
@@ -2087,7 +2087,7 @@ qboolean SV_UnstickEntity (prvm_edict_t *ent)
 				Con_DPrintf("Stuck entity %i (classname \"%s\").\n", (int)PRVM_EDICT_TO_PROG(ent), PRVM_GetString(prog, PRVM_serveredictstring(ent, classname)));
 			return false;
 		default:
-			Con_Printf("SV_UnstickEntityReturnOffset returned a value outside its enum.\n");
+			Con_DPrintf("SV_UnstickEntityReturnOffset returned a value outside its enum.\n");
 			return false;
 	}
 }
@@ -2125,7 +2125,7 @@ static void SV_CheckStuck (prvm_edict_t *ent)
 				Con_DPrintf("Stuck player entity %i (classname \"%s\").\n", (int)PRVM_EDICT_TO_PROG(ent), PRVM_GetString(prog, PRVM_serveredictstring(ent, classname)));
 			break;
 		default:
-			Con_Printf("SV_UnstickEntityReturnOffset returned a value outside its enum.\n");
+			Con_DPrintf("SV_UnstickEntityReturnOffset returned a value outside its enum.\n");
 	}
 }
 
@@ -2413,7 +2413,7 @@ static void SV_WalkMove (prvm_edict_t *ent)
 		 && fabs(originalmove_origin[1] - PRVM_serveredictvector(ent, origin)[1]) < 0.03125
 		 && fabs(originalmove_origin[0] - PRVM_serveredictvector(ent, origin)[0]) < 0.03125)
 		{
-			//Con_Printf("wall\n");
+			//Con_DPrintf("wall\n");
 			// stepping up didn't make any progress, revert to original move
 			VectorCopy(originalmove_origin, PRVM_serveredictvector(ent, origin));
 			VectorCopy(originalmove_velocity, PRVM_serveredictvector(ent, velocity));
@@ -2425,7 +2425,7 @@ static void SV_WalkMove (prvm_edict_t *ent)
 			return;
 		}
 
-		//Con_Printf("step - ");
+		//Con_DPrintf("step - ");
 
 		// extra friction based on view angle
 		if (clip & 2 && sv_wallfriction.integer)
@@ -2452,7 +2452,7 @@ static void SV_WalkMove (prvm_edict_t *ent)
 		// LordHavoc: disabled this check so you can walk on monsters/players
 		//if (PRVM_serveredictfloat(ent, solid) == SOLID_BSP)
 		{
-			//Con_Printf("onground\n");
+			//Con_DPrintf("onground\n");
 			PRVM_serveredictfloat(ent, flags) =	(int)PRVM_serveredictfloat(ent, flags) | FL_ONGROUND;
 			PRVM_serveredictedict(ent, groundentity) = PRVM_EDICT_TO_PROG(downtrace.ent);
 		}
@@ -2460,7 +2460,7 @@ static void SV_WalkMove (prvm_edict_t *ent)
 	}
 	else
 	{
-		//Con_Printf("slope\n");
+		//Con_DPrintf("slope\n");
 		// if the push down didn't end up on good ground, use the move without
 		// the step up.  This happens near wall / slope combinations, and can
 		// cause the player to hop up higher on a slope too steep to climb
@@ -2885,7 +2885,7 @@ static void SV_Physics_Entity (prvm_edict_t *ent)
 	default:
 		if((int) PRVM_serveredictfloat(ent, movetype) >= MOVETYPE_USER_FIRST && (int) PRVM_serveredictfloat(ent, movetype) <= MOVETYPE_USER_LAST)
 			break;
-		Con_Printf ("SV_Physics: bad movetype %i\n", (int)PRVM_serveredictfloat(ent, movetype));
+		Con_DPrintf ("SV_Physics: bad movetype %i\n", (int)PRVM_serveredictfloat(ent, movetype));
 		break;
 	}
 }
@@ -2903,7 +2903,7 @@ static void SV_Physics_ClientEntity_NoThink (prvm_edict_t *ent)
 	case MOVETYPE_PUSH:
 	case MOVETYPE_FAKEPUSH:
 		// push physics relies heavily on think times and calls, and so cannot be predicted currently
-		Con_Printf ("SV_Physics_ClientEntity_NoThink: bad movetype %i\n", (int)PRVM_serveredictfloat(ent, movetype));
+		Con_DPrintf ("SV_Physics_ClientEntity_NoThink: bad movetype %i\n", (int)PRVM_serveredictfloat(ent, movetype));
 		break;
 	case MOVETYPE_NONE:
 		break;
@@ -2935,7 +2935,7 @@ static void SV_Physics_ClientEntity_NoThink (prvm_edict_t *ent)
 	default:
 		if((int) PRVM_serveredictfloat(ent, movetype) >= MOVETYPE_USER_FIRST && (int) PRVM_serveredictfloat(ent, movetype) <= MOVETYPE_USER_LAST)
 			break;
-		Con_Printf ("SV_Physics_ClientEntity_NoThink: bad movetype %i\n", (int)PRVM_serveredictfloat(ent, movetype));
+		Con_DPrintf ("SV_Physics_ClientEntity_NoThink: bad movetype %i\n", (int)PRVM_serveredictfloat(ent, movetype));
 		break;
 	}
 }
@@ -3125,7 +3125,7 @@ static void SV_Physics_ClientEntity(prvm_edict_t *ent)
 	default:
 		if((int) PRVM_serveredictfloat(ent, movetype) >= MOVETYPE_USER_FIRST && (int) PRVM_serveredictfloat(ent, movetype) <= MOVETYPE_USER_LAST)
 			break;
-		Con_Printf ("SV_Physics_ClientEntity: bad movetype %i\n", (int)PRVM_serveredictfloat(ent, movetype));
+		Con_DPrintf ("SV_Physics_ClientEntity: bad movetype %i\n", (int)PRVM_serveredictfloat(ent, movetype));
 		break;
 	}
 

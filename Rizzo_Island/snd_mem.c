@@ -166,7 +166,7 @@ qboolean Snd_AppendToSndBuffer (snd_buffer_t* sb, const unsigned char *samples, 
 		// Check that we can handle one second of that sound
 		if (format->speed * format->channels > (1 << INTEGER_BITS))
 		{
-			Con_Printf ("ResampleSfx: sound quality too high for resampling (%uHz, %u channel(s))\n",
+			Con_DPrintf ("ResampleSfx: sound quality too high for resampling (%uHz, %u channel(s))\n",
 					   format->speed, format->channels);
 			return 0;
 		}
@@ -323,7 +323,7 @@ qboolean S_LoadSound (sfx_t *sfx, qboolean complain)
 	sfx->volume_peak = 0.0;
 
 	if (developer_loading.integer)
-		Con_Printf("loading sound %s\n", sfx->name);
+		Con_DPrintf("loading sound %s\n", sfx->name);
 
 	SCR_PushLoadingScreen(true, sfx->name, 1);
 

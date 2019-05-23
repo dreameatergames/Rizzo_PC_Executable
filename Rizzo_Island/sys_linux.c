@@ -39,7 +39,7 @@ void Sys_Error (const char *error, ...)
 	dpvsnprintf (string, sizeof (string), error, argptr);
 	va_end (argptr);
 
-	Con_Printf ("Quake Error: %s\n", string);
+	Con_DPrintf ("Quake Error: %s\n", string);
 
 	Host_Shutdown ();
 	exit (1);
@@ -175,10 +175,10 @@ int main (int argc, char **argv)
 qboolean sys_supportsdlgetticks = false;
 unsigned int Sys_SDL_GetTicks (void)
 {
-	Sys_Error("Called Sys_SDL_GetTicks on non-SDL target");
+	Con_DPrintf("Called Sys_SDL_GetTicks on non-SDL target");
 	return 0;
 }
 void Sys_SDL_Delay (unsigned int milliseconds)
 {
-	Sys_Error("Called Sys_SDL_Delay on non-SDL target");
+	Con_DPrintf("Called Sys_SDL_Delay on non-SDL target");
 }

@@ -996,7 +996,7 @@ static r_glsl_permutation_t *R_GLSL_FindPermutation(unsigned int mode, unsigned 
 		if (p->mode == mode && p->permutation == permutation)
 		{
 			//if (hashdepth > 10)
-			//	Con_Printf("R_GLSL_FindPermutation: Warning: %i:%i has hashdepth %i\n", mode, permutation, hashdepth);
+			//	Con_DPrintf("R_GLSL_FindPermutation: Warning: %i:%i has hashdepth %i\n", mode, permutation, hashdepth);
 			return p;
 		}
 		//hashdepth++;
@@ -1007,7 +1007,7 @@ static r_glsl_permutation_t *R_GLSL_FindPermutation(unsigned int mode, unsigned 
 	p->hashnext = r_glsl_permutationhash[mode][hashindex];
 	r_glsl_permutationhash[mode][hashindex] = p;
 	//if (hashdepth > 10)
-	//	Con_Printf("R_GLSL_FindPermutation: Warning: %i:%i has hashdepth %i\n", mode, permutation, hashdepth);
+	//	Con_DPrintf("R_GLSL_FindPermutation: Warning: %i:%i has hashdepth %i\n", mode, permutation, hashdepth);
 	return p;
 }
 
@@ -1203,11 +1203,11 @@ static void R_GLSL_CompilePermutation(r_glsl_permutation_t *p, unsigned int mode
 			GLenum uniformtype = 0;
 			memset(uniformname, 0, sizeof(uniformname));
 			qglGetProgramiv(p->program, GL_ACTIVE_UNIFORMS, &numactiveuniforms);
-			Con_Printf("Shader has %i uniforms\n", numactiveuniforms);
+			Con_DPrintf("Shader has %i uniforms\n", numactiveuniforms);
 			for (activeuniformindex = 0;activeuniformindex < numactiveuniforms;activeuniformindex++)
 			{
 				qglGetActiveUniform(p->program, activeuniformindex, sizeof(uniformname) - 1, &uniformnamelength, &uniformsize, &uniformtype, uniformname);
-				Con_Printf("Uniform %i name \"%s\" size %i type %i\n", (int)activeuniformindex, uniformname, (int)uniformsize, (int)uniformtype);
+				Con_DPrintf("Uniform %i name \"%s\" size %i type %i\n", (int)activeuniformindex, uniformname, (int)uniformsize, (int)uniformtype);
 			}
 		}
 #endif
@@ -1378,7 +1378,7 @@ static void R_GLSL_CompilePermutation(r_glsl_permutation_t *p, unsigned int mode
 		Con_DPrintf("^5GLSL shader %s compiled (%i textures).\n", permutationname, sampler);
 	}
 	else
-		Con_Printf("^1GLSL shader %s failed!  some features may not work properly.\n", permutationname);
+		Con_DPrintf("^1GLSL shader %s failed!  some features may not work properly.\n", permutationname);
 
 	// free the strings
 	if (sourcestring)
@@ -1417,7 +1417,7 @@ static void R_SetupShader_SetPermutationGLSL(unsigned int mode, unsigned int per
 				}
 				if (i >= SHADERPERMUTATION_COUNT)
 				{
-					//Con_Printf("Could not find a working OpenGL 2.0 shader for permutation %s %s\n", shadermodeinfo[mode].filename, shadermodeinfo[mode].pretext);
+					//Con_DPrintf("Could not find a working OpenGL 2.0 shader for permutation %s %s\n", shadermodeinfo[mode].filename, shadermodeinfo[mode].pretext);
 					r_glsl_permutation = R_GLSL_FindPermutation(mode, permutation);
 					qglUseProgram(0);CHECKGLERROR
 					return; // no bit left to clear, entire mode is broken
@@ -1544,7 +1544,7 @@ static r_hlsl_permutation_t *R_HLSL_FindPermutation(unsigned int mode, unsigned 
 		if (p->mode == mode && p->permutation == permutation)
 		{
 			//if (hashdepth > 10)
-			//	Con_Printf("R_HLSL_FindPermutation: Warning: %i:%i has hashdepth %i\n", mode, permutation, hashdepth);
+			//	Con_DPrintf("R_HLSL_FindPermutation: Warning: %i:%i has hashdepth %i\n", mode, permutation, hashdepth);
 			return p;
 		}
 		//hashdepth++;
@@ -1555,7 +1555,7 @@ static r_hlsl_permutation_t *R_HLSL_FindPermutation(unsigned int mode, unsigned 
 	p->hashnext = r_hlsl_permutationhash[mode][hashindex];
 	r_hlsl_permutationhash[mode][hashindex] = p;
 	//if (hashdepth > 10)
-	//	Con_Printf("R_HLSL_FindPermutation: Warning: %i:%i has hashdepth %i\n", mode, permutation, hashdepth);
+	//	Con_DPrintf("R_HLSL_FindPermutation: Warning: %i:%i has hashdepth %i\n", mode, permutation, hashdepth);
 	return p;
 }
 
@@ -1830,7 +1830,7 @@ static void R_HLSL_CompilePermutation(r_hlsl_permutation_t *p, unsigned int mode
 	if ((p->vertexshader || !vertstring[0]) && (p->pixelshader || !fragstring[0]))
 		Con_DPrintf("^5HLSL shader %s compiled.\n", permutationname);
 	else
-		Con_Printf("^1HLSL shader %s failed!  some features may not work properly.\n", permutationname);
+		Con_DPrintf("^1HLSL shader %s failed!  some features may not work properly.\n", permutationname);
 
 	// free the strings
 	if (vertstring)
@@ -1886,7 +1886,7 @@ void R_SetupShader_SetPermutationHLSL(unsigned int mode, unsigned int permutatio
 				}
 				if (i >= SHADERPERMUTATION_COUNT)
 				{
-					//Con_Printf("Could not find a working HLSL shader for permutation %s %s\n", shadermodeinfo[mode].filename, shadermodeinfo[mode].pretext);
+					//Con_DPrintf("Could not find a working HLSL shader for permutation %s %s\n", shadermodeinfo[mode].filename, shadermodeinfo[mode].pretext);
 					r_hlsl_permutation = R_HLSL_FindPermutation(mode, permutation);
 					return; // no bit left to clear, entire mode is broken
 				}
@@ -2000,10 +2000,10 @@ static void R_GLSL_DumpShader_f(void)
 				FS_Print(file, "*/\n");
 				FS_Print(file, text);
 				FS_Close(file);
-				Con_Printf("%s written\n", modeinfo[mode].filename);
+				Con_DPrintf("%s written\n", modeinfo[mode].filename);
 			}
 			else
-				Con_Printf("failed to write to %s\n", modeinfo[mode].filename);
+				Con_DPrintf("failed to write to %s\n", modeinfo[mode].filename);
 		}
 	}
 }
@@ -3428,7 +3428,7 @@ skinframe_t *R_SkinFrame_LoadExternal(const char *name, int textureflags, qboole
 	// FIXME handle miplevel
 
 	if (developer_loading.integer)
-		Con_Printf("loading skin \"%s\"\n", name);
+		Con_DPrintf("loading skin \"%s\"\n", name);
 
 	// we've got some pixels to store, so really allocate this new texture now
 	if (!skinframe)
@@ -3454,7 +3454,7 @@ skinframe_t *R_SkinFrame_LoadExternal(const char *name, int textureflags, qboole
 		VectorCopy(ddsavgcolor, skinframe->avgcolor);
 		if (r_loadfog && skinframe->hasalpha)
 			skinframe->fog = R_LoadTextureDDSFile(r_main_texturepool, va(vabuf, sizeof(vabuf), "dds/%s_mask.dds", skinframe->basename), false, textureflags | TEXF_ALPHA, NULL, NULL, miplevel, true);
-		//Con_Printf("Texture %s has average colors %f %f %f alpha %f\n", name, skinframe->avgcolor[0], skinframe->avgcolor[1], skinframe->avgcolor[2], skinframe->avgcolor[3]);
+		//Con_DPrintf("Texture %s has average colors %f %f %f alpha %f\n", name, skinframe->avgcolor[0], skinframe->avgcolor[1], skinframe->avgcolor[2], skinframe->avgcolor[3]);
 	}
 	else
 	{
@@ -3488,7 +3488,7 @@ skinframe_t *R_SkinFrame_LoadExternal(const char *name, int textureflags, qboole
 		}
 		R_SKINFRAME_LOAD_AVERAGE_COLORS(basepixels_width * basepixels_height, basepixels[4 * pix + comp]);
 #ifndef USE_GLES2
-		//Con_Printf("Texture %s has average colors %f %f %f alpha %f\n", name, skinframe->avgcolor[0], skinframe->avgcolor[1], skinframe->avgcolor[2], skinframe->avgcolor[3]);
+		//Con_DPrintf("Texture %s has average colors %f %f %f alpha %f\n", name, skinframe->avgcolor[0], skinframe->avgcolor[1], skinframe->avgcolor[2], skinframe->avgcolor[3]);
 		if (r_savedds && qglGetCompressedTexImageARB && skinframe->base)
 			R_SaveTextureDDSFile(skinframe->base, va(vabuf, sizeof(vabuf), "dds/%s.dds", skinframe->basename), r_texture_dds_save.integer < 2, skinframe->hasalpha);
 		if (r_savedds && qglGetCompressedTexImageARB && skinframe->fog)
@@ -3640,7 +3640,7 @@ skinframe_t *R_SkinFrame_LoadInternalBGRA(const char *name, int textureflags, co
 		return NULL;
 
 	if (developer_loading.integer)
-		Con_Printf("loading 32bit skin \"%s\"\n", name);
+		Con_DPrintf("loading 32bit skin \"%s\"\n", name);
 
 	if (r_loadnormalmap && r_shadow_bumpscale_basetexture.value > 0)
 	{
@@ -3673,7 +3673,7 @@ skinframe_t *R_SkinFrame_LoadInternalBGRA(const char *name, int textureflags, co
 	}
 
 	R_SKINFRAME_LOAD_AVERAGE_COLORS(width * height, skindata[4 * pix + comp]);
-	//Con_Printf("Texture %s has average colors %f %f %f alpha %f\n", name, skinframe->avgcolor[0], skinframe->avgcolor[1], skinframe->avgcolor[2], skinframe->avgcolor[3]);
+	//Con_DPrintf("Texture %s has average colors %f %f %f alpha %f\n", name, skinframe->avgcolor[0], skinframe->avgcolor[1], skinframe->avgcolor[2], skinframe->avgcolor[3]);
 
 	return skinframe;
 }
@@ -3710,7 +3710,7 @@ skinframe_t *R_SkinFrame_LoadInternalQuake(const char *name, int textureflags, i
 		return NULL;
 
 	if (developer_loading.integer)
-		Con_Printf("loading quake skin \"%s\"\n", name);
+		Con_DPrintf("loading quake skin \"%s\"\n", name);
 
 	// we actually don't upload anything until the first use, because mdl skins frequently go unused, and are almost never used in both modes (colormapped and non-colormapped)
 	skinframe->qpixels = (unsigned char *)Mem_Alloc(r_main_mempool, width*height); // FIXME LEAK
@@ -3733,7 +3733,7 @@ skinframe_t *R_SkinFrame_LoadInternalQuake(const char *name, int textureflags, i
 	skinframe->qgenerateglow = loadglowtexture && (featuresmask & PALETTEFEATURE_GLOW);
 
 	R_SKINFRAME_LOAD_AVERAGE_COLORS(width * height, ((unsigned char *)palette_bgra_complete)[skindata[pix]*4 + comp]);
-	//Con_Printf("Texture %s has average colors %f %f %f alpha %f\n", name, skinframe->avgcolor[0], skinframe->avgcolor[1], skinframe->avgcolor[2], skinframe->avgcolor[3]);
+	//Con_DPrintf("Texture %s has average colors %f %f %f alpha %f\n", name, skinframe->avgcolor[0], skinframe->avgcolor[1], skinframe->avgcolor[2], skinframe->avgcolor[3]);
 
 	return skinframe;
 }
@@ -3843,7 +3843,7 @@ skinframe_t *R_SkinFrame_LoadInternal8bit(const char *name, int textureflags, co
 		return NULL;
 
 	if (developer_loading.integer)
-		Con_Printf("loading embedded 8bit image \"%s\"\n", name);
+		Con_DPrintf("loading embedded 8bit image \"%s\"\n", name);
 
 	skinframe->base = skinframe->merged = R_LoadTexture2D(r_main_texturepool, skinframe->basename, width, height, skindata, TEXTYPE_PALETTE, textureflags, -1, palette);
 	if (textureflags & TEXF_ALPHA)
@@ -3861,7 +3861,7 @@ skinframe_t *R_SkinFrame_LoadInternal8bit(const char *name, int textureflags, co
 	}
 
 	R_SKINFRAME_LOAD_AVERAGE_COLORS(width * height, ((unsigned char *)palette)[skindata[pix]*4 + comp]);
-	//Con_Printf("Texture %s has average colors %f %f %f alpha %f\n", name, skinframe->avgcolor[0], skinframe->avgcolor[1], skinframe->avgcolor[2], skinframe->avgcolor[3]);
+	//Con_DPrintf("Texture %s has average colors %f %f %f alpha %f\n", name, skinframe->avgcolor[0], skinframe->avgcolor[1], skinframe->avgcolor[2], skinframe->avgcolor[3]);
 
 	return skinframe;
 }
@@ -3967,7 +3967,7 @@ static rtexture_t *R_LoadCubemap(const char *basename)
 						Image_CopyMux(cubemappixels+i*cubemapsize*cubemapsize*4, image_buffer, cubemapsize, cubemapsize, suffix[j][i].flipx, suffix[j][i].flipy, suffix[j][i].flipdiagonal, 4, 4, componentorder);
 				}
 				else
-					Con_Printf("Cubemap image \"%s\" (%ix%i) is not square, OpenGL requires square cubemaps.\n", name, image_width, image_height);
+					Con_DPrintf("Cubemap image \"%s\" (%ix%i) is not square, OpenGL requires square cubemaps.\n", name, image_width, image_height);
 				// free the image
 				Mem_Free(image_buffer);
 			}
@@ -3977,7 +3977,7 @@ static rtexture_t *R_LoadCubemap(const char *basename)
 	if (cubemappixels)
 	{
 		if (developer_loading.integer)
-			Con_Printf("loading cubemap \"%s\"\n", basename);
+			Con_DPrintf("loading cubemap \"%s\"\n", basename);
 
 		cubemaptexture = R_LoadTextureCubeMap(r_main_texturepool, basename, cubemapsize, cubemappixels, vid.sRGB3D ? TEXTYPE_SRGB_BGRA : TEXTYPE_BGRA, (gl_texturecompression_lightcubemaps.integer && gl_texturecompression.integer ? TEXF_COMPRESS : 0) | TEXF_FORCELINEAR | TEXF_CLAMP, -1, NULL);
 		Mem_Free(cubemappixels);
@@ -3987,10 +3987,10 @@ static rtexture_t *R_LoadCubemap(const char *basename)
 		Con_DPrintf("failed to load cubemap \"%s\"\n", basename);
 		if (developer_loading.integer)
 		{
-			Con_Printf("(tried tried images ");
+			Con_DPrintf("(tried tried images ");
 			for (j = 0;j < 3;j++)
 				for (i = 0;i < 6;i++)
-					Con_Printf("%s\"%s%s.tga\"", j + i > 0 ? ", " : "", basename, suffix[j][i].suffix);
+					Con_DPrintf("%s\"%s%s.tga\"", j + i > 0 ? ", " : "", basename, suffix[j][i].suffix);
 			Con_Print(" and was unable to find any of them).\n");
 		}
 	}
@@ -4517,9 +4517,9 @@ void GL_Init (void)
 	if (!gl_platformextensions)
 		gl_platformextensions = "";
 
-	Con_Printf("GL_VENDOR: %s\n", gl_vendor);
-	Con_Printf("GL_RENDERER: %s\n", gl_renderer);
-	Con_Printf("GL_VERSION: %s\n", gl_version);
+	Con_DPrintf("GL_VENDOR: %s\n", gl_vendor);
+	Con_DPrintf("GL_RENDERER: %s\n", gl_renderer);
+	Con_DPrintf("GL_VERSION: %s\n", gl_version);
 	Con_DPrintf("GL_EXTENSIONS: %s\n", gl_extensions);
 	Con_DPrintf("%s_EXTENSIONS: %s\n", gl_platform, gl_platformextensions);
 
@@ -4887,7 +4887,7 @@ r_meshbuffer_t *R_BufferData_Store(size_t datasize, const void *data, r_bufferda
 
 	// if the resize did not give us enough memory, fail
 	if (!r_bufferdata_buffer[r_bufferdata_cycle][type] || r_bufferdata_buffer[r_bufferdata_cycle][type]->current + padsize > r_bufferdata_buffer[r_bufferdata_cycle][type]->size)
-		Sys_Error("R_BufferData_Store: failed to create a new buffer of sufficient size\n");
+		Con_DPrintf("R_BufferData_Store: failed to create a new buffer of sufficient size\n");
 
 	mem = r_bufferdata_buffer[r_bufferdata_cycle][type];
 	offset = (int)mem->current;
@@ -5361,10 +5361,10 @@ static void R_DrawModels(void)
 		{
 			vec3_t f, l, u, o;
 			Matrix4x4_ToVectors(&ent->matrix, f, l, u, o);
-			Con_Printf("R_DrawModels\n");
-			Con_Printf("model %s O %f %f %f F %f %f %f L %f %f %f U %f %f %f\n", ent->model->name, o[0], o[1], o[2], f[0], f[1], f[2], l[0], l[1], l[2], u[0], u[1], u[2]);
-			Con_Printf("group: %i %f %i %f %i %f %i %f\n", ent->framegroupblend[0].frame, ent->framegroupblend[0].lerp, ent->framegroupblend[1].frame, ent->framegroupblend[1].lerp, ent->framegroupblend[2].frame, ent->framegroupblend[2].lerp, ent->framegroupblend[3].frame, ent->framegroupblend[3].lerp);
-			Con_Printf("blend: %i %f %i %f %i %f %i %f %i %f %i %f %i %f %i %f\n", ent->frameblend[0].subframe, ent->frameblend[0].lerp, ent->frameblend[1].subframe, ent->frameblend[1].lerp, ent->frameblend[2].subframe, ent->frameblend[2].lerp, ent->frameblend[3].subframe, ent->frameblend[3].lerp, ent->frameblend[4].subframe, ent->frameblend[4].lerp, ent->frameblend[5].subframe, ent->frameblend[5].lerp, ent->frameblend[6].subframe, ent->frameblend[6].lerp, ent->frameblend[7].subframe, ent->frameblend[7].lerp);
+			Con_DPrintf("R_DrawModels\n");
+			Con_DPrintf("model %s O %f %f %f F %f %f %f L %f %f %f U %f %f %f\n", ent->model->name, o[0], o[1], o[2], f[0], f[1], f[2], l[0], l[1], l[2], u[0], u[1], u[2]);
+			Con_DPrintf("group: %i %f %i %f %i %f %i %f\n", ent->framegroupblend[0].frame, ent->framegroupblend[0].lerp, ent->framegroupblend[1].frame, ent->framegroupblend[1].lerp, ent->framegroupblend[2].frame, ent->framegroupblend[2].lerp, ent->framegroupblend[3].frame, ent->framegroupblend[3].lerp);
+			Con_DPrintf("blend: %i %f %i %f %i %f %i %f %i %f %i %f %i %f %i %f\n", ent->frameblend[0].subframe, ent->frameblend[0].lerp, ent->frameblend[1].subframe, ent->frameblend[1].lerp, ent->frameblend[2].subframe, ent->frameblend[2].lerp, ent->frameblend[3].subframe, ent->frameblend[3].lerp, ent->frameblend[4].subframe, ent->frameblend[4].lerp, ent->frameblend[5].subframe, ent->frameblend[5].lerp, ent->frameblend[6].subframe, ent->frameblend[6].lerp, ent->frameblend[7].subframe, ent->frameblend[7].lerp);
 		}
 		*/
 		if (ent->model && ent->model->Draw != NULL)
@@ -6365,7 +6365,7 @@ error:
 	r_refdef.view = originalview;
 	r_fb.water.renderingscene = false;
 	Cvar_SetValueQuick(&r_water, 0);
-	Con_Printf("R_Water_ProcessPlanes: Error: texture creation failed!  Turned off r_water.\n");
+	Con_DPrintf("R_Water_ProcessPlanes: Error: texture creation failed!  Turned off r_water.\n");
 finish:
 	// lowquality hack, restore cvars
 	if (qualityreduction > 0)
@@ -6820,7 +6820,7 @@ static void R_BlendView(int fbo, rtexture_t *depthtexture, rtexture_t *colortext
 				// enforce minimum amount of blur 
 				blur_factor = blur_average * (1 - r_motionblur_minblur.value) + r_motionblur_minblur.value;
 
-				//Con_Printf("motionblur: direct factor: %f, averaged factor: %f, velocity: %f, mouse accel: %f \n", blur_factor, blur_average, blur_velocity, blur_mouseaccel);
+				//Con_DPrintf("motionblur: direct factor: %f, averaged factor: %f, velocity: %f, mouse accel: %f \n", blur_factor, blur_average, blur_velocity, blur_mouseaccel);
 
 				// calculate values into a standard alpha
 				cl.motionbluralpha = 1 - exp(-
@@ -8158,7 +8158,7 @@ static void R_LoadQWSkin(r_qwskincache_t *cache, const char *skinname)
 	strlcpy(cache->name, skinname, sizeof(cache->name));
 	dpsnprintf(name, sizeof(name), "skins/%s.pcx", cache->name);
 	if (developer_loading.integer)
-		Con_Printf("loading %s\n", name);
+		Con_DPrintf("loading %s\n", name);
 	skinframe = R_SkinFrame_Find(name, textureflags, 0, 0, 0, false);
 	if (!skinframe || !skinframe->base)
 	{
@@ -10344,7 +10344,7 @@ void RSurf_DrawBatch(void)
 				if (c >= rsurface.modelsurfaces[j].num_firstvertex && c < (rsurface.modelsurfaces[j].num_firstvertex + rsurface.modelsurfaces[j].num_vertices))
 				{
 					if (rsurface.modelsurfaces[j].texture != rsurface.texture)
-						Sys_Error("RSurf_DrawBatch: index %i uses different texture (%s) than surface %i which it belongs to (which uses %s)\n", c, rsurface.texture->name, j, rsurface.modelsurfaces[j].texture->name);
+						Con_DPrintf("RSurf_DrawBatch: index %i uses different texture (%s) than surface %i which it belongs to (which uses %s)\n", c, rsurface.texture->name, j, rsurface.modelsurfaces[j].texture->name);
 					break;
 				}
 			}
@@ -10791,7 +10791,7 @@ static void R_DrawTextureSurfaceList_GL20(int texturenumsurfaces, const msurface
 			if(startplaneindex < 0)
 			{
 				// this happens if the plane e.g. got backface culled and thus didn't get a water plane. We can just ignore this.
-				// Con_Printf("No matching water plane for surface with material flags 0x%08x - PLEASE DEBUG THIS\n", rsurface.texture->currentmaterialflags);
+				// Con_DPrintf("No matching water plane for surface with material flags 0x%08x - PLEASE DEBUG THIS\n", rsurface.texture->currentmaterialflags);
 				end = start + 1;
 				continue;
 			}
@@ -10924,7 +10924,7 @@ static void R_DrawTextureSurfaceList_GL13(int texturenumsurfaces, const msurface
 			RSurf_DrawBatch();
 			break;
 		default:
-			Con_Printf("R_DrawTextureSurfaceList: unknown layer type %i\n", layer->type);
+			Con_DPrintf("R_DrawTextureSurfaceList: unknown layer type %i\n", layer->type);
 		}
 	}
 	if (rsurface.texture->currentmaterialflags & MATERIALFLAG_ALPHATEST)
@@ -11029,7 +11029,7 @@ static void R_DrawTextureSurfaceList_GL11(int texturenumsurfaces, const msurface
 			RSurf_DrawBatch();
 			break;
 		default:
-			Con_Printf("R_DrawTextureSurfaceList: unknown layer type %i\n", layer->type);
+			Con_DPrintf("R_DrawTextureSurfaceList: unknown layer type %i\n", layer->type);
 		}
 	}
 	if (rsurface.texture->currentmaterialflags & MATERIALFLAG_ALPHATEST)

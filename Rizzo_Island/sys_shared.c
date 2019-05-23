@@ -304,7 +304,7 @@ double Sys_DirtyTime(void)
 		double old_benchmark_time = benchmark_time;
 		benchmark_time += 1;
 		if(benchmark_time == old_benchmark_time)
-			Sys_Error("sys_usenoclockbutbenchmark cannot run any longer, sorry");
+			Con_DPrintf("sys_usenoclockbutbenchmark cannot run any longer, sorry");
 		return benchmark_time * 0.000001;
 	}
 #if HAVE_QUERYPERFORMANCECOUNTER
@@ -337,7 +337,7 @@ double Sys_DirtyTime(void)
 		}
 		else
 		{
-			Con_Printf("No hardware timer available\n");
+			Con_DPrintf("No hardware timer available\n");
 			// fall back to other clock sources
 			Cvar_SetValueQuick(&sys_usequeryperformancecounter, false);
 		}
@@ -390,7 +390,7 @@ double Sys_DirtyTime(void)
 	}
 #else
 	// fallback for using the SDL timer if no other timer is available
-	// this calls Sys_Error() if not linking against SDL
+	// this calls Con_DPrintf() if not linking against SDL
 	return (double) Sys_SDL_GetTicks() / 1000.0;
 #endif
 }
@@ -405,7 +405,7 @@ void Sys_Sleep(int microseconds)
 			double old_benchmark_time = benchmark_time;
 			benchmark_time += microseconds;
 			if(benchmark_time == old_benchmark_time)
-				Sys_Error("sys_usenoclockbutbenchmark cannot run any longer, sorry");
+				Con_DPrintf("sys_usenoclockbutbenchmark cannot run any longer, sorry");
 		}
 		return;
 	}
@@ -601,17 +601,17 @@ void Sys_InitProcessNice (void)
 	nicelevel = getpriority(PRIO_PROCESS, 0);
 	if(errno)
 	{
-		Con_Printf("Kernel does not support reading process priority - cannot use niceness\n");
+		Con_DPrintf("Kernel does not support reading process priority - cannot use niceness\n");
 		return;
 	}
 	if(getrlimit(RLIMIT_NICE, &lim))
 	{
-		Con_Printf("Kernel does not support lowering nice level again - cannot use niceness\n");
+		Con_DPrintf("Kernel does not support lowering nice level again - cannot use niceness\n");
 		return;
 	}
 	if(lim.rlim_cur != RLIM_INFINITY && nicelevel < (int) (20 - lim.rlim_cur))
 	{
-		Con_Printf("Current nice level is below the soft limit - cannot use niceness\n");
+		Con_DPrintf("Current nice level is below the soft limit - cannot use niceness\n");
 		return;
 	}
 	nicepossible = true;
@@ -625,7 +625,7 @@ void Sys_MakeProcessNice (void)
 		return;
 	Con_DPrintf("Process is becoming 'nice'...\n");
 	if(setpriority(PRIO_PROCESS, 0, 19))
-		Con_Printf("Failed to raise nice level to %d\n", 19);
+		Con_DPrintf("Failed to raise nice level to %d\n", 19);
 	isnice = true;
 }
 void Sys_MakeProcessMean (void)
@@ -636,7 +636,7 @@ void Sys_MakeProcessMean (void)
 		return;
 	Con_DPrintf("Process is becoming 'mean'...\n");
 	if(setpriority(PRIO_PROCESS, 0, nicelevel))
-		Con_Printf("Failed to lower nice level to %d\n", nicelevel);
+		Con_DPrintf("Failed to lower nice level to %d\n", nicelevel);
 	isnice = false;
 }
 #else

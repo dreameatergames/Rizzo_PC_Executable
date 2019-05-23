@@ -172,9 +172,9 @@ int Portal_CheckPolygon(dp_model_t *model, vec3_t eye, float *polypoints, int nu
 	returnvalue = Portal_RecursiveFlowSearch(eyeleaf, eye, 0, numpoints);
 
 	if (ranoutofportalplanes)
-		Con_Printf("Portal_RecursiveFlowSearch: ran out of %d plane stack when recursing through portals\n", MAXRECURSIVEPORTALPLANES);
+		Con_DPrintf("Portal_RecursiveFlowSearch: ran out of %d plane stack when recursing through portals\n", MAXRECURSIVEPORTALPLANES);
 	if (ranoutofportals)
-		Con_Printf("Portal_RecursiveFlowSearch: ran out of %d portal stack when recursing through portals\n", MAXRECURSIVEPORTALS);
+		Con_DPrintf("Portal_RecursiveFlowSearch: ran out of %d portal stack when recursing through portals\n", MAXRECURSIVEPORTALS);
 
 	return returnvalue;
 }
@@ -469,9 +469,9 @@ void Portal_Visibility(dp_model_t *model, const vec3_t eye, int *leaflist, unsig
 	Portal_RecursiveFindLeafForFlow(&info, model->brush.data_nodes);
 
 	if (ranoutofportalplanes)
-		Con_Printf("Portal_RecursiveFlow: ran out of %d plane stack when recursing through portals\n", MAXRECURSIVEPORTALPLANES);
+		Con_DPrintf("Portal_RecursiveFlow: ran out of %d plane stack when recursing through portals\n", MAXRECURSIVEPORTALPLANES);
 	if (ranoutofportals)
-		Con_Printf("Portal_RecursiveFlow: ran out of %d portal stack when recursing through portals\n", MAXRECURSIVEPORTALS);
+		Con_DPrintf("Portal_RecursiveFlow: ran out of %d portal stack when recursing through portals\n", MAXRECURSIVEPORTALS);
 	if (numsurfacespointer)
 		*numsurfacespointer = info.numsurfaces;
 	if (numleafspointer)

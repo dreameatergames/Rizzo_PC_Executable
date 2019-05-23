@@ -7,7 +7,7 @@
 	if(developer_networkentities.integer >= 2) \
 	{ \
 		prvm_edict_t *edict = prog->edicts + num; \
-		Con_Printf("sent entity update of size %u for %d classname %s flags %d\n", (msg->cursize - entityprofiling_startsize), num, PRVM_serveredictstring(edict, classname) ? PRVM_GetString(prog, PRVM_serveredictstring(edict, classname)) : "(no classname)", flags); \
+		Con_DPrintf("sent entity update of size %u for %d classname %s flags %d\n", (msg->cursize - entityprofiling_startsize), num, PRVM_serveredictstring(edict, classname) ? PRVM_GetString(prog, PRVM_serveredictstring(edict, classname)) : "(no classname)", flags); \
 	}
 
 // CSQC entity scope values. Bitflags!
@@ -362,7 +362,7 @@ void EntityFrameCSQC_LostFrame(client_t *client, int framenum)
 		else if(d->framenum < framenum)
 		{
 			// a frame in the past... should never happen
-			Con_Printf("CSQC entity DB encountered a frame from the past when recovering from PL...?\n");
+			Con_DPrintf("CSQC entity DB encountered a frame from the past when recovering from PL...?\n");
 		}
 		else if(d->framenum == framenum)
 		{
@@ -423,7 +423,7 @@ static void EntityFrameCSQC_DeallocFrame(client_t *client, int framenum)
 		client->csqcentityframehistory_next = ringlast;
 	}
 	else
-		Con_Printf("Trying to dealloc the wrong entity frame\n");
+		Con_DPrintf("Trying to dealloc the wrong entity frame\n");
 }
 
 //[515]: we use only one array per-client for SendEntity feature
@@ -1192,50 +1192,50 @@ void EntityState_ReadFields(entity_state_t *e, unsigned int bits)
 
 	if (developer_networkentities.integer >= 2)
 	{
-		Con_Printf("ReadFields e%i", e->number);
+		Con_DPrintf("ReadFields e%i", e->number);
 
 		if (bits & E_ORIGIN1)
-			Con_Printf(" E_ORIGIN1 %f", e->origin[0]);
+			Con_DPrintf(" E_ORIGIN1 %f", e->origin[0]);
 		if (bits & E_ORIGIN2)
-			Con_Printf(" E_ORIGIN2 %f", e->origin[1]);
+			Con_DPrintf(" E_ORIGIN2 %f", e->origin[1]);
 		if (bits & E_ORIGIN3)
-			Con_Printf(" E_ORIGIN3 %f", e->origin[2]);
+			Con_DPrintf(" E_ORIGIN3 %f", e->origin[2]);
 		if (bits & E_ANGLE1)
-			Con_Printf(" E_ANGLE1 %f", e->angles[0]);
+			Con_DPrintf(" E_ANGLE1 %f", e->angles[0]);
 		if (bits & E_ANGLE2)
-			Con_Printf(" E_ANGLE2 %f", e->angles[1]);
+			Con_DPrintf(" E_ANGLE2 %f", e->angles[1]);
 		if (bits & E_ANGLE3)
-			Con_Printf(" E_ANGLE3 %f", e->angles[2]);
+			Con_DPrintf(" E_ANGLE3 %f", e->angles[2]);
 		if (bits & (E_MODEL1 | E_MODEL2))
-			Con_Printf(" E_MODEL %i", e->modelindex);
+			Con_DPrintf(" E_MODEL %i", e->modelindex);
 
 		if (bits & (E_FRAME1 | E_FRAME2))
-			Con_Printf(" E_FRAME %i", e->frame);
+			Con_DPrintf(" E_FRAME %i", e->frame);
 		if (bits & (E_EFFECTS1 | E_EFFECTS2))
-			Con_Printf(" E_EFFECTS %i", e->effects);
+			Con_DPrintf(" E_EFFECTS %i", e->effects);
 		if (bits & E_ALPHA)
-			Con_Printf(" E_ALPHA %f", e->alpha / 255.0f);
+			Con_DPrintf(" E_ALPHA %f", e->alpha / 255.0f);
 		if (bits & E_SCALE)
-			Con_Printf(" E_SCALE %f", e->scale / 16.0f);
+			Con_DPrintf(" E_SCALE %f", e->scale / 16.0f);
 		if (bits & E_COLORMAP)
-			Con_Printf(" E_COLORMAP %i", e->colormap);
+			Con_DPrintf(" E_COLORMAP %i", e->colormap);
 		if (bits & E_SKIN)
-			Con_Printf(" E_SKIN %i", e->skin);
+			Con_DPrintf(" E_SKIN %i", e->skin);
 
 		if (bits & E_GLOWSIZE)
-			Con_Printf(" E_GLOWSIZE %i", e->glowsize * 4);
+			Con_DPrintf(" E_GLOWSIZE %i", e->glowsize * 4);
 		if (bits & E_GLOWCOLOR)
-			Con_Printf(" E_GLOWCOLOR %i", e->glowcolor);
+			Con_DPrintf(" E_GLOWCOLOR %i", e->glowcolor);
 
 		if (bits & E_LIGHT)
-			Con_Printf(" E_LIGHT %i:%i:%i:%i", e->light[0], e->light[1], e->light[2], e->light[3]);
+			Con_DPrintf(" E_LIGHT %i:%i:%i:%i", e->light[0], e->light[1], e->light[2], e->light[3]);
 		if (bits & E_LIGHTPFLAGS)
-			Con_Printf(" E_LIGHTPFLAGS %i", e->lightpflags);
+			Con_DPrintf(" E_LIGHTPFLAGS %i", e->lightpflags);
 
 		if (bits & E_TAGATTACHMENT)
-			Con_Printf(" E_TAGATTACHMENT e%i:%i", e->tagentity, e->tagindex);
+			Con_DPrintf(" E_TAGATTACHMENT e%i:%i", e->tagentity, e->tagindex);
 		if (bits & E_LIGHTSTYLE)
-			Con_Printf(" E_LIGHTSTYLE %i", e->lightstyle);
+			Con_DPrintf(" E_LIGHTSTYLE %i", e->lightstyle);
 		Con_Print("\n");
 	}
 }
@@ -1530,7 +1530,7 @@ void EntityFrame_CL_ReadFrame(void)
 			if (old < oldend && old->number == number)
 				old++;
 			else
-				Con_Printf("EntityFrame_Read: REMOVE on unused entity %i\n", number);
+				Con_DPrintf("EntityFrame_Read: REMOVE on unused entity %i\n", number);
 		}
 		else
 		{
@@ -1727,9 +1727,9 @@ int EntityFrame4_AckFrame(entityframe4_database_t *d, int framenum, int servermo
 							if (commit->entity[j].active != s->active)
 							{
 								if (commit->entity[j].active == ACTIVE_NETWORK)
-									Con_Printf("commit entity %i has become active (modelindex %i)\n", commit->entity[j].number, commit->entity[j].modelindex);
+									Con_DPrintf("commit entity %i has become active (modelindex %i)\n", commit->entity[j].number, commit->entity[j].modelindex);
 								else
-									Con_Printf("commit entity %i has become inactive (modelindex %i)\n", commit->entity[j].number, commit->entity[j].modelindex);
+									Con_DPrintf("commit entity %i has become inactive (modelindex %i)\n", commit->entity[j].number, commit->entity[j].modelindex);
 							}
 							*s = commit->entity[j];
 						}
@@ -1744,10 +1744,10 @@ int EntityFrame4_AckFrame(entityframe4_database_t *d, int framenum, int servermo
 	}
 	if (developer_networkentities.integer >= 1)
 	{
-		Con_Printf("ack ref:%i database updated to: ref:%i commits:", framenum, d->referenceframenum);
+		Con_DPrintf("ack ref:%i database updated to: ref:%i commits:", framenum, d->referenceframenum);
 		for (i = 0;i < MAX_ENTITY_HISTORY;i++)
 			if (d->commit[i].numentities)
-				Con_Printf(" %i", d->commit[i].framenum);
+				Con_DPrintf(" %i", d->commit[i].framenum);
 		Con_Print("\n");
 	}
 	return found;
@@ -1770,10 +1770,10 @@ void EntityFrame4_CL_ReadFrame(void)
 	enumber = (unsigned short) MSG_ReadShort(&cl_message);
 	if (developer_networkentities.integer >= 10)
 	{
-		Con_Printf("recv svc_entities num:%i ref:%i database: ref:%i commits:", framenum, referenceframenum, d->referenceframenum);
+		Con_DPrintf("recv svc_entities num:%i ref:%i database: ref:%i commits:", framenum, referenceframenum, d->referenceframenum);
 		for (i = 0;i < MAX_ENTITY_HISTORY;i++)
 			if (d->commit[i].numentities)
-				Con_Printf(" %i", d->commit[i].framenum);
+				Con_DPrintf(" %i", d->commit[i].framenum);
 		Con_Print("\n");
 	}
 	if (!EntityFrame4_AckFrame(d, referenceframenum, false))
@@ -1793,7 +1793,7 @@ void EntityFrame4_CL_ReadFrame(void)
 	}
 	if (d->currentcommit == NULL)
 	{
-		Con_Printf("EntityFrame4_CL_ReadFrame: error while decoding frame %i: database full, reading but not storing this update\n", framenum);
+		Con_DPrintf("EntityFrame4_CL_ReadFrame: error while decoding frame %i: database full, reading but not storing this update\n", framenum);
 		skip = true;
 	}
 	done = false;
@@ -1845,20 +1845,20 @@ void EntityFrame4_CL_ReadFrame(void)
 				{
 					// simply removed
 					if (developer_networkentities.integer >= 2)
-						Con_Printf("entity %i: remove\n", enumber);
+						Con_DPrintf("entity %i: remove\n", enumber);
 					*s = defaultstate;
 				}
 				else
 				{
 					// read the changes
 					if (developer_networkentities.integer >= 2)
-						Con_Printf("entity %i: update\n", enumber);
+						Con_DPrintf("entity %i: update\n", enumber);
 					s->active = ACTIVE_NETWORK;
 					EntityState_ReadFields(s, EntityState_ReadExtendBits());
 				}
 			}
 			else if (developer_networkentities.integer >= 4)
-				Con_Printf("entity %i: copy\n", enumber);
+				Con_DPrintf("entity %i: copy\n", enumber);
 			// set the cl.entities_active flag
 			cl.entities_active[enumber] = (s->active == ACTIVE_NETWORK);
 			// set the update time
@@ -1875,9 +1875,9 @@ void EntityFrame4_CL_ReadFrame(void)
 			if (developer_networkentities.integer >= 2 && cl.entities[enumber].state_current.active != cl.entities[enumber].state_previous.active)
 			{
 				if (cl.entities[enumber].state_current.active == ACTIVE_NETWORK)
-					Con_Printf("entity #%i has become active\n", enumber);
+					Con_DPrintf("entity #%i has become active\n", enumber);
 				else if (cl.entities[enumber].state_previous.active)
-					Con_Printf("entity #%i has become inactive\n", enumber);
+					Con_DPrintf("entity #%i has become inactive\n", enumber);
 			}
 		}
 	}
@@ -1922,10 +1922,10 @@ qboolean EntityFrame4_WriteFrame(sizebuf_t *msg, int maxsize, entityframe4_datab
 	MSG_WriteLong(msg, d->currentcommit->framenum);
 	if (developer_networkentities.integer >= 10)
 	{
-		Con_Printf("send svc_entities num:%i ref:%i (database: ref:%i commits:", d->currentcommit->framenum, d->referenceframenum, d->referenceframenum);
+		Con_DPrintf("send svc_entities num:%i ref:%i (database: ref:%i commits:", d->currentcommit->framenum, d->referenceframenum, d->referenceframenum);
 		for (i = 0;i < MAX_ENTITY_HISTORY;i++)
 			if (d->commit[i].numentities)
-				Con_Printf(" %i", d->commit[i].framenum);
+				Con_DPrintf(" %i", d->commit[i].framenum);
 		Con_Print(")\n");
 	}
 	if (d->currententitynumber >= prog->max_edicts)
@@ -2569,23 +2569,23 @@ static void EntityState5_ReadUpdate(entity_state_t *s, int number)
 	bytes = cl_message.readcount - startoffset;
 	if (developer_networkentities.integer >= 2)
 	{
-		Con_Printf("ReadFields e%i (%i bytes)", number, bytes);
+		Con_DPrintf("ReadFields e%i (%i bytes)", number, bytes);
 
 		if (bits & E5_ORIGIN)
-			Con_Printf(" E5_ORIGIN %f %f %f", s->origin[0], s->origin[1], s->origin[2]);
+			Con_DPrintf(" E5_ORIGIN %f %f %f", s->origin[0], s->origin[1], s->origin[2]);
 		if (bits & E5_ANGLES)
-			Con_Printf(" E5_ANGLES %f %f %f", s->angles[0], s->angles[1], s->angles[2]);
+			Con_DPrintf(" E5_ANGLES %f %f %f", s->angles[0], s->angles[1], s->angles[2]);
 		if (bits & E5_MODEL)
-			Con_Printf(" E5_MODEL %i", s->modelindex);
+			Con_DPrintf(" E5_MODEL %i", s->modelindex);
 		if (bits & E5_FRAME)
-			Con_Printf(" E5_FRAME %i", s->frame);
+			Con_DPrintf(" E5_FRAME %i", s->frame);
 		if (bits & E5_SKIN)
-			Con_Printf(" E5_SKIN %i", s->skin);
+			Con_DPrintf(" E5_SKIN %i", s->skin);
 		if (bits & E5_EFFECTS)
-			Con_Printf(" E5_EFFECTS %i", s->effects);
+			Con_DPrintf(" E5_EFFECTS %i", s->effects);
 		if (bits & E5_FLAGS)
 		{
-			Con_Printf(" E5_FLAGS %i (", s->flags);
+			Con_DPrintf(" E5_FLAGS %i (", s->flags);
 			if (s->flags & RENDER_STEP)
 				Con_Print(" STEP");
 			if (s->flags & RENDER_GLOWTRAIL)
@@ -2607,25 +2607,25 @@ static void EntityState5_ReadUpdate(entity_state_t *s, int number)
 			Con_Print(")");
 		}
 		if (bits & E5_ALPHA)
-			Con_Printf(" E5_ALPHA %f", s->alpha / 255.0f);
+			Con_DPrintf(" E5_ALPHA %f", s->alpha / 255.0f);
 		if (bits & E5_SCALE)
-			Con_Printf(" E5_SCALE %f", s->scale / 16.0f);
+			Con_DPrintf(" E5_SCALE %f", s->scale / 16.0f);
 		if (bits & E5_COLORMAP)
-			Con_Printf(" E5_COLORMAP %i", s->colormap);
+			Con_DPrintf(" E5_COLORMAP %i", s->colormap);
 		if (bits & E5_ATTACHMENT)
-			Con_Printf(" E5_ATTACHMENT e%i:%i", s->tagentity, s->tagindex);
+			Con_DPrintf(" E5_ATTACHMENT e%i:%i", s->tagentity, s->tagindex);
 		if (bits & E5_LIGHT)
-			Con_Printf(" E5_LIGHT %i:%i:%i:%i %i:%i", s->light[0], s->light[1], s->light[2], s->light[3], s->lightstyle, s->lightpflags);
+			Con_DPrintf(" E5_LIGHT %i:%i:%i:%i %i:%i", s->light[0], s->light[1], s->light[2], s->light[3], s->lightstyle, s->lightpflags);
 		if (bits & E5_GLOW)
-			Con_Printf(" E5_GLOW %i:%i", s->glowsize * 4, s->glowcolor);
+			Con_DPrintf(" E5_GLOW %i:%i", s->glowsize * 4, s->glowcolor);
 		if (bits & E5_COLORMOD)
-			Con_Printf(" E5_COLORMOD %f:%f:%f", s->colormod[0] / 32.0f, s->colormod[1] / 32.0f, s->colormod[2] / 32.0f);
+			Con_DPrintf(" E5_COLORMOD %f:%f:%f", s->colormod[0] / 32.0f, s->colormod[1] / 32.0f, s->colormod[2] / 32.0f);
 		if (bits & E5_GLOWMOD)
-			Con_Printf(" E5_GLOWMOD %f:%f:%f", s->glowmod[0] / 32.0f, s->glowmod[1] / 32.0f, s->glowmod[2] / 32.0f);
+			Con_DPrintf(" E5_GLOWMOD %f:%f:%f", s->glowmod[0] / 32.0f, s->glowmod[1] / 32.0f, s->glowmod[2] / 32.0f);
 		if (bits & E5_COMPLEXANIMATION)
-			Con_Printf(" E5_COMPLEXANIMATION");
+			Con_DPrintf(" E5_COMPLEXANIMATION");
 		if (bits & E5_TRAILEFFECTNUM)
-			Con_Printf(" E5_TRAILEFFECTNUM %i", s->traileffectnum);
+			Con_DPrintf(" E5_TRAILEFFECTNUM %i", s->traileffectnum);
 		Con_Print("\n");
 	}
 }
@@ -2748,9 +2748,9 @@ void EntityFrame5_CL_ReadFrame(void)
 		if (developer_networkentities.integer >= 2 && cl.entities[enumber].state_current.active != cl.entities[enumber].state_previous.active)
 		{
 			if (cl.entities[enumber].state_current.active == ACTIVE_NETWORK)
-				Con_Printf("entity #%i has become active\n", enumber);
+				Con_DPrintf("entity #%i has become active\n", enumber);
 			else if (cl.entities[enumber].state_previous.active)
-				Con_Printf("entity #%i has become inactive\n", enumber);
+				Con_DPrintf("entity #%i has become inactive\n", enumber);
 		}
 	}
 }
@@ -2990,7 +2990,7 @@ qboolean EntityFrame5_WriteFrame(sizebuf_t *msg, int maxsize, entityframe5_datab
 
 	// write state updates
 	if (developer_networkentities.integer >= 10)
-		Con_Printf("send: svc_entities %i\n", framenum);
+		Con_DPrintf("send: svc_entities %i\n", framenum);
 	d->latestframenum = framenum;
 	MSG_WriteByte(msg, svc_entities);
 	MSG_WriteLong(msg, framenum);
@@ -3234,31 +3234,31 @@ static void EntityStateQW_ReadEntityUpdate(entity_state_t *s, int bits)
 
 	if (developer_networkentities.integer >= 2)
 	{
-		Con_Printf("ReadFields e%i", s->number);
+		Con_DPrintf("ReadFields e%i", s->number);
 		if (bits & QW_U_MODEL)
-			Con_Printf(" U_MODEL %i", s->modelindex);
+			Con_DPrintf(" U_MODEL %i", s->modelindex);
 		if (bits & QW_U_FRAME)
-			Con_Printf(" U_FRAME %i", s->frame);
+			Con_DPrintf(" U_FRAME %i", s->frame);
 		if (bits & QW_U_COLORMAP)
-			Con_Printf(" U_COLORMAP %i", s->colormap);
+			Con_DPrintf(" U_COLORMAP %i", s->colormap);
 		if (bits & QW_U_SKIN)
-			Con_Printf(" U_SKIN %i", s->skin);
+			Con_DPrintf(" U_SKIN %i", s->skin);
 		if (bits & QW_U_EFFECTS)
-			Con_Printf(" U_EFFECTS %i", qweffects);
+			Con_DPrintf(" U_EFFECTS %i", qweffects);
 		if (bits & QW_U_ORIGIN1)
-			Con_Printf(" U_ORIGIN1 %f", s->origin[0]);
+			Con_DPrintf(" U_ORIGIN1 %f", s->origin[0]);
 		if (bits & QW_U_ANGLE1)
-			Con_Printf(" U_ANGLE1 %f", s->angles[0]);
+			Con_DPrintf(" U_ANGLE1 %f", s->angles[0]);
 		if (bits & QW_U_ORIGIN2)
-			Con_Printf(" U_ORIGIN2 %f", s->origin[1]);
+			Con_DPrintf(" U_ORIGIN2 %f", s->origin[1]);
 		if (bits & QW_U_ANGLE2)
-			Con_Printf(" U_ANGLE2 %f", s->angles[1]);
+			Con_DPrintf(" U_ANGLE2 %f", s->angles[1]);
 		if (bits & QW_U_ORIGIN3)
-			Con_Printf(" U_ORIGIN3 %f", s->origin[2]);
+			Con_DPrintf(" U_ORIGIN3 %f", s->origin[2]);
 		if (bits & QW_U_ANGLE3)
-			Con_Printf(" U_ANGLE3 %f", s->angles[2]);
+			Con_DPrintf(" U_ANGLE3 %f", s->angles[2]);
 		if (bits & QW_U_SOLID)
-			Con_Printf(" U_SOLID");
+			Con_DPrintf(" U_SOLID");
 		Con_Print("\n");
 	}
 }
@@ -3337,7 +3337,7 @@ void EntityFrameQW_CL_ReadFrame(qboolean delta)
 		while (newnum > oldnum) // delta only
 		{
 			if (developer_networkentities.integer >= 2)
-				Con_Printf("copy %i\n", oldnum);
+				Con_DPrintf("copy %i\n", oldnum);
 			// copy one of the old entities
 			if (newsnap->num_entities >= QW_MAX_PACKET_ENTITIES)
 				Host_Error("EntityFrameQW_CL_ReadFrame: newsnap->num_entities == MAX_PACKETENTITIES");
@@ -3352,11 +3352,11 @@ void EntityFrameQW_CL_ReadFrame(qboolean delta)
 		if (developer_networkentities.integer >= 2)
 		{
 			if (word & QW_U_REMOVE)
-				Con_Printf("remove %i\n", newnum);
+				Con_DPrintf("remove %i\n", newnum);
 			else if (newnum == oldnum)
-				Con_Printf("delta %i\n", newnum);
+				Con_DPrintf("delta %i\n", newnum);
 			else
-				Con_Printf("baseline %i\n", newnum);
+				Con_DPrintf("baseline %i\n", newnum);
 		}
 
 		if (word & QW_U_REMOVE)
@@ -3364,7 +3364,7 @@ void EntityFrameQW_CL_ReadFrame(qboolean delta)
 			if (newnum != oldnum && !delta && !invalid)
 			{
 				cl.qw_validsequence = 0;
-				Con_Printf("WARNING: U_REMOVE %i on full update\n", newnum);
+				Con_DPrintf("WARNING: U_REMOVE %i on full update\n", newnum);
 			}
 		}
 		else

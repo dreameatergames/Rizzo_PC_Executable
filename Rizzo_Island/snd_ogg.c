@@ -472,8 +472,8 @@ static void OGG_GetSamplesFloat (channel_t *ch, sfx_t *sfx, int firstsampleframe
 		ret = qov_pcm_seek(&per_ch->vf, (ogg_int64_t)firstsampleframe);
 		if (ret != 0)
 		{
-			// LordHavoc: we can't Con_Printf here, not thread safe...
-			//Con_Printf("OGG_FetchSound: qov_pcm_seek(..., %d) returned %d\n", firstsampleframe, ret);
+			// LordHavoc: we can't Con_DPrintf here, not thread safe...
+			//Con_DPrintf("OGG_FetchSound: qov_pcm_seek(..., %d) returned %d\n", firstsampleframe, ret);
 			return;
 		}
 	}
@@ -625,7 +625,7 @@ qboolean OGG_LoadVorbisFile(const char *filename, sfx_t *sfx)
 		return false;
 
 	if (developer_loading.integer >= 2)
-		Con_Printf("Loading Ogg Vorbis file \"%s\"\n", filename);
+		Con_DPrintf("Loading Ogg Vorbis file \"%s\"\n", filename);
 
 	// Open it with the VorbisFile API
 	ov_decode.buffer = data;
@@ -633,7 +633,7 @@ qboolean OGG_LoadVorbisFile(const char *filename, sfx_t *sfx)
 	ov_decode.buffsize = filesize;
 	if (qov_open_callbacks(&ov_decode, &vf, NULL, 0, callbacks) < 0)
 	{
-		Con_Printf("error while opening Ogg Vorbis file \"%s\"\n", filename);
+		Con_DPrintf("error while opening Ogg Vorbis file \"%s\"\n", filename);
 		Mem_Free(data);
 		return false;
 	}
@@ -642,7 +642,7 @@ qboolean OGG_LoadVorbisFile(const char *filename, sfx_t *sfx)
 	vi = qov_info(&vf, -1);
 	if (vi->channels < 1 || vi->channels > 2)
 	{
-		Con_Printf("%s has an unsupported number of channels (%i)\n",
+		Con_DPrintf("%s has an unsupported number of channels (%i)\n",
 					sfx->name, vi->channels);
 		qov_clear (&vf);
 		Mem_Free(data);
@@ -660,7 +660,7 @@ qboolean OGG_LoadVorbisFile(const char *filename, sfx_t *sfx)
 		// large sounds use the OGG fetcher to decode the file on demand (but the entire file is held in memory)
 		ogg_stream_persfx_t* per_sfx;
 		if (developer_loading.integer >= 2)
-			Con_Printf("Ogg sound file \"%s\" will be streamed\n", filename);
+			Con_DPrintf("Ogg sound file \"%s\" will be streamed\n", filename);
 		per_sfx = (ogg_stream_persfx_t *)Mem_Alloc(snd_mempool, sizeof(*per_sfx));
 		sfx->memsize += sizeof (*per_sfx);
 		per_sfx->file = data;
@@ -682,7 +682,7 @@ qboolean OGG_LoadVorbisFile(const char *filename, sfx_t *sfx)
 		int bs;
 		long ret;
 		if (developer_loading.integer >= 2)
-			Con_Printf ("Ogg sound file \"%s\" will be cached\n", filename);
+			Con_DPrintf ("Ogg sound file \"%s\" will be cached\n", filename);
 		len = sfx->total_length * sfx->format.channels * sfx->format.width;
 		sfx->flags &= ~SFXFLAG_STREAMED;
 		sfx->memsize += len;
@@ -704,14 +704,14 @@ qboolean OGG_LoadVorbisFile(const char *filename, sfx_t *sfx)
 		sfx->volume_mult = min(1.0f / peak, exp(gaindb * 0.05f * log(10.0f)));
 		sfx->volume_peak = peak;
 		if (developer_loading.integer >= 2)
-			Con_Printf ("Ogg sound file \"%s\" uses ReplayGain (gain %f, peak %f)\n", filename, sfx->volume_mult, sfx->volume_peak);
+			Con_DPrintf ("Ogg sound file \"%s\" uses ReplayGain (gain %f, peak %f)\n", filename, sfx->volume_mult, sfx->volume_peak);
 	}
 	else if(gaindb != 0)
 	{
 		sfx->volume_mult = min(1.0f / peak, exp(gaindb * 0.05f * log(10.0f)));
 		sfx->volume_peak = 1.0; // if peak is not defined, we won't trust it
 		if (developer_loading.integer >= 2)
-			Con_Printf ("Ogg sound file \"%s\" uses ReplayGain (gain %f, peak not defined and assumed to be %f)\n", filename, sfx->volume_mult, sfx->volume_peak);
+			Con_DPrintf ("Ogg sound file \"%s\" uses ReplayGain (gain %f, peak not defined and assumed to be %f)\n", filename, sfx->volume_mult, sfx->volume_peak);
 	}
 
 	return true;

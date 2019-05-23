@@ -539,7 +539,7 @@ qboolean Crypto_FinishInstance(crypto_t *out, crypto_t *crypto)
 	// no check needed here (returned pointers are only used in prefilled fields)
 	if(!crypto || !crypto->authenticated)
 	{
-		Con_Printf("Passed an invalid crypto connect instance\n");
+		Con_DPrintf("Passed an invalid crypto connect instance\n");
 		memset(out, 0, sizeof(*out));
 		return false;
 	}
@@ -688,11 +688,11 @@ static void Crypto_StoreHostKey(lhnetaddress_t *peeraddress, const char *keystri
 		if(complain)
 		{
 			if(hk->keyid != keyid || memcmp(hk->idfp, idfp, FP64_SIZE+1))
-				Con_Printf("Server %s tried to change the host key to a value not in the host cache. Connecting to it will fail. To accept the new host key, do crypto_hostkey_clear %s\n", buf, buf);
+				Con_DPrintf("Server %s tried to change the host key to a value not in the host cache. Connecting to it will fail. To accept the new host key, do crypto_hostkey_clear %s\n", buf, buf);
 			if(hk->aeslevel > aeslevel)
-				Con_Printf("Server %s tried to reduce encryption status, not accepted. Connecting to it will fail. To accept, do crypto_hostkey_clear %s\n", buf, buf);
+				Con_DPrintf("Server %s tried to reduce encryption status, not accepted. Connecting to it will fail. To accept, do crypto_hostkey_clear %s\n", buf, buf);
 			if(hk->issigned > issigned)
-				Con_Printf("Server %s tried to reduce signature status, not accepted. Connecting to it will fail. To accept, do crypto_hostkey_clear %s\n", buf, buf);
+				Con_DPrintf("Server %s tried to reduce signature status, not accepted. Connecting to it will fail. To accept, do crypto_hostkey_clear %s\n", buf, buf);
 		}
 		hk->aeslevel = max(aeslevel, hk->aeslevel);
 		hk->issigned = issigned;
@@ -864,7 +864,7 @@ void Crypto_LoadKeys(void)
 			len2 = FP64_SIZE;
 			if(qd0_blind_id_fingerprint64_public_key(pubkeys[i], pubkeys_fp64[i], &len2)) // keeps final NUL
 			{
-				Con_Printf("Loaded public key key_%d.d0pk (fingerprint: %s)\n", i, pubkeys_fp64[i]);
+				Con_DPrintf("Loaded public key key_%d.d0pk (fingerprint: %s)\n", i, pubkeys_fp64[i]);
 				len = Crypto_LoadFile(va(vabuf, sizeof(vabuf), "key_%d.d0si%s", i, sessionid.string), buf, sizeof(buf), true);
 				if(len)
 				{
@@ -875,7 +875,7 @@ void Crypto_LoadKeys(void)
 						{
 							D0_BOOL status = 0;
 
-							Con_Printf("Loaded private ID key_%d.d0si%s for key_%d.d0pk (public key fingerprint: %s)\n", i, sessionid.string, i, pubkeys_priv_fp64[i]);
+							Con_DPrintf("Loaded private ID key_%d.d0si%s for key_%d.d0pk (public key fingerprint: %s)\n", i, sessionid.string, i, pubkeys_priv_fp64[i]);
 
 							// verify the key we just loaded (just in case)
 							if(qd0_blind_id_verify_private_id(pubkeys[i]) && qd0_blind_id_verify_public_id(pubkeys[i], &status))
@@ -885,20 +885,20 @@ void Crypto_LoadKeys(void)
 
 								// verify the key we just got (just in case)
 								if(!status)
-									Con_Printf("NOTE: this ID has not yet been signed!\n");
+									Con_DPrintf("NOTE: this ID has not yet been signed!\n");
 
 								Crypto_SavePubKeyTextFile(i);
 							}
 							else
 							{
-								Con_Printf("d0_blind_id_verify_private_id failed, this is not a valid key!\n");
+								Con_DPrintf("d0_blind_id_verify_private_id failed, this is not a valid key!\n");
 								qd0_blind_id_free(pubkeys[i]);
 								pubkeys[i] = NULL;
 							}
 						}
 						else
 						{
-							Con_Printf("d0_blind_id_fingerprint64_public_id failed\n");
+							Con_DPrintf("d0_blind_id_fingerprint64_public_id failed\n");
 							qd0_blind_id_free(pubkeys[i]);
 							pubkeys[i] = NULL;
 						}
@@ -1063,7 +1063,7 @@ void Crypto_Init(void)
 	{
 		Crypto_Rijndael_CloseLibrary();
 		Crypto_CloseLibrary();
-		Con_Printf("libd0_blind_id initialization FAILED, cryptography support has been disabled\n");
+		Con_DPrintf("libd0_blind_id initialization FAILED, cryptography support has been disabled\n");
 		return;
 	}
 
@@ -1104,14 +1104,14 @@ static void Crypto_KeyGen_Finished(int code, size_t length_received, unsigned ch
 
 	if(keygen_i < 0)
 	{
-		Con_Printf("Unexpected response from keygen server:\n");
+		Con_DPrintf("Unexpected response from keygen server:\n");
 		Com_HexDumpToConsole(buffer, (int)length_received);
 		SV_UnlockThreadMutex();
 		return;
 	}
 	if(keygen_i >= MAX_PUBKEYS || !pubkeys[keygen_i])
 	{
-		Con_Printf("overflow of keygen_i\n");
+		Con_DPrintf("overflow of keygen_i\n");
 		keygen_i = -1;
 		SV_UnlockThreadMutex();
 		return;
@@ -1120,11 +1120,11 @@ static void Crypto_KeyGen_Finished(int code, size_t length_received, unsigned ch
 	{
 		if(length_received >= 5 && Crypto_LittleLong((const char *) buffer) == FOURCC_D0ER)
 		{
-			Con_Printf("Error response from keygen server: %.*s\n", (int)(length_received - 5), buffer + 5);
+			Con_DPrintf("Error response from keygen server: %.*s\n", (int)(length_received - 5), buffer + 5);
 		}
 		else
 		{
-			Con_Printf("Invalid response from keygen server:\n");
+			Con_DPrintf("Invalid response from keygen server:\n");
 			Com_HexDumpToConsole(buffer, (int)length_received);
 		}
 		keygen_i = -1;
@@ -1133,7 +1133,7 @@ static void Crypto_KeyGen_Finished(int code, size_t length_received, unsigned ch
 	}
 	if(!qd0_blind_id_finish_private_id_request(pubkeys[keygen_i], p[0], l[0]))
 	{
-		Con_Printf("d0_blind_id_finish_private_id_request failed\n");
+		Con_DPrintf("d0_blind_id_finish_private_id_request failed\n");
 		keygen_i = -1;
 		SV_UnlockThreadMutex();
 		return;
@@ -1142,7 +1142,7 @@ static void Crypto_KeyGen_Finished(int code, size_t length_received, unsigned ch
 	// verify the key we just got (just in case)
 	if(!qd0_blind_id_verify_public_id(pubkeys[keygen_i], &status) || !status)
 	{
-		Con_Printf("d0_blind_id_verify_public_id failed\n");
+		Con_DPrintf("d0_blind_id_verify_public_id failed\n");
 		keygen_i = -1;
 		SV_UnlockThreadMutex();
 		return;
@@ -1150,7 +1150,7 @@ static void Crypto_KeyGen_Finished(int code, size_t length_received, unsigned ch
 
 	// we have a valid key now!
 	// make the rest of crypto.c know that
-	Con_Printf("Received signature for private ID key_%d.d0pk (public key fingerprint: %s)\n", keygen_i, pubkeys_priv_fp64[keygen_i]);
+	Con_DPrintf("Received signature for private ID key_%d.d0pk (public key fingerprint: %s)\n", keygen_i, pubkeys_priv_fp64[keygen_i]);
 	pubkeys_havesig[keygen_i] = true;
 
 	// write the key to disk
@@ -1158,14 +1158,14 @@ static void Crypto_KeyGen_Finished(int code, size_t length_received, unsigned ch
 	l[0] = sizeof(buf);
 	if(!qd0_blind_id_write_private_id(pubkeys[keygen_i], buf, &l[0]))
 	{
-		Con_Printf("d0_blind_id_write_private_id failed\n");
+		Con_DPrintf("d0_blind_id_write_private_id failed\n");
 		keygen_i = -1;
 		SV_UnlockThreadMutex();
 		return;
 	}
 	if(!(buf2size = Crypto_UnParsePack(buf2, sizeof(buf2), FOURCC_D0SI, p, l, 1)))
 	{
-		Con_Printf("Crypto_UnParsePack failed\n");
+		Con_DPrintf("Crypto_UnParsePack failed\n");
 		keygen_i = -1;
 		SV_UnlockThreadMutex();
 		return;
@@ -1175,7 +1175,7 @@ static void Crypto_KeyGen_Finished(int code, size_t length_received, unsigned ch
 	f = FS_SysOpen(va(vabuf, sizeof(vabuf), "%skey_%d.d0si%s", *fs_userdir ? fs_userdir : fs_basedir, keygen_i, sessionid.string), "wb", false);
 	if(!f)
 	{
-		Con_Printf("Cannot open key_%d.d0si%s\n", keygen_i, sessionid.string);
+		Con_DPrintf("Cannot open key_%d.d0si%s\n", keygen_i, sessionid.string);
 		keygen_i = -1;
 		SV_UnlockThreadMutex();
 		return;
@@ -1185,7 +1185,7 @@ static void Crypto_KeyGen_Finished(int code, size_t length_received, unsigned ch
 
 	Crypto_SavePubKeyTextFile(keygen_i);
 
-	Con_Printf("Saved to key_%d.d0si%s\n", keygen_i, sessionid.string);
+	Con_DPrintf("Saved to key_%d.d0si%s\n", keygen_i, sessionid.string);
 
 	Crypto_BuildIdString();
 
@@ -1213,7 +1213,7 @@ static void Crypto_KeyGen_f(void)
 	}
 	if(Cmd_Argc() != 3)
 	{
-		Con_Printf("usage:\n%s id url\n", Cmd_Argv(0));
+		Con_DPrintf("usage:\n%s id url\n", Cmd_Argv(0));
 		return;
 	}
 	SV_LockThreadMutex();
@@ -1221,13 +1221,13 @@ static void Crypto_KeyGen_f(void)
 	i = atoi(Cmd_Argv(1));
 	if(!pubkeys[i])
 	{
-		Con_Printf("there is no public key %d\n", i);
+		Con_DPrintf("there is no public key %d\n", i);
 		SV_UnlockThreadMutex();
 		return;
 	}
 	if(keygen_i >= 0)
 	{
-		Con_Printf("there is already a keygen run on the way\n");
+		Con_DPrintf("there is already a keygen run on the way\n");
 		SV_UnlockThreadMutex();
 		return;
 	}
@@ -1238,20 +1238,20 @@ static void Crypto_KeyGen_f(void)
 	{
 		if(pubkeys_havesig[keygen_i])
 		{
-			Con_Printf("there is already a signed private key for %d\n", i);
+			Con_DPrintf("there is already a signed private key for %d\n", i);
 			keygen_i = -1;
 			SV_UnlockThreadMutex();
 			return;
 		}
 		// if we get here, we only need a signature, no new keygen run needed
-		Con_Printf("Only need a signature for an existing key...\n");
+		Con_DPrintf("Only need a signature for an existing key...\n");
 	}
 	else
 	{
 		// we also need a new ID itself
 		if(!qd0_blind_id_generate_private_id_start(pubkeys[keygen_i]))
 		{
-			Con_Printf("d0_blind_id_start failed\n");
+			Con_DPrintf("d0_blind_id_start failed\n");
 			keygen_i = -1;
 			SV_UnlockThreadMutex();
 			return;
@@ -1259,7 +1259,7 @@ static void Crypto_KeyGen_f(void)
 		// verify the key we just got (just in case)
 		if(!qd0_blind_id_verify_private_id(pubkeys[keygen_i]))
 		{
-			Con_Printf("d0_blind_id_verify_private_id failed\n");
+			Con_DPrintf("d0_blind_id_verify_private_id failed\n");
 			keygen_i = -1;
 			SV_UnlockThreadMutex();
 			return;
@@ -1269,7 +1269,7 @@ static void Crypto_KeyGen_f(void)
 		len2 = FP64_SIZE;
 		if(qd0_blind_id_fingerprint64_public_id(pubkeys[keygen_i], pubkeys_priv_fp64[keygen_i], &len2)) // keeps final NUL
 		{
-			Con_Printf("Generated private ID key_%d.d0pk (public key fingerprint: %s)\n", keygen_i, pubkeys_priv_fp64[keygen_i]);
+			Con_DPrintf("Generated private ID key_%d.d0pk (public key fingerprint: %s)\n", keygen_i, pubkeys_priv_fp64[keygen_i]);
 			pubkeys_havepriv[keygen_i] = true;
 			strlcat(crypto_idstring_buf, va(vabuf, sizeof(vabuf), " %s@%s", pubkeys_priv_fp64[keygen_i], pubkeys_fp64[keygen_i]), sizeof(crypto_idstring_buf));
 			crypto_idstring = crypto_idstring_buf;
@@ -1280,14 +1280,14 @@ static void Crypto_KeyGen_f(void)
 		l[0] = sizeof(buf);
 		if(!qd0_blind_id_write_private_id(pubkeys[keygen_i], buf, &l[0]))
 		{
-			Con_Printf("d0_blind_id_write_private_id failed\n");
+			Con_DPrintf("d0_blind_id_write_private_id failed\n");
 			keygen_i = -1;
 			SV_UnlockThreadMutex();
 			return;
 		}
 		if(!(buf2size = Crypto_UnParsePack(buf2, sizeof(buf2), FOURCC_D0SI, p, l, 1)))
 		{
-			Con_Printf("Crypto_UnParsePack failed\n");
+			Con_DPrintf("Crypto_UnParsePack failed\n");
 			keygen_i = -1;
 			SV_UnlockThreadMutex();
 			return;
@@ -1297,7 +1297,7 @@ static void Crypto_KeyGen_f(void)
 		f = FS_SysOpen(va(vabuf, sizeof(vabuf), "%skey_%d.d0si%s", *fs_userdir ? fs_userdir : fs_basedir, keygen_i, sessionid.string), "wb", false);
 		if(!f)
 		{
-			Con_Printf("Cannot open key_%d.d0si%s\n", keygen_i, sessionid.string);
+			Con_DPrintf("Cannot open key_%d.d0si%s\n", keygen_i, sessionid.string);
 			keygen_i = -1;
 			SV_UnlockThreadMutex();
 			return;
@@ -1307,13 +1307,13 @@ static void Crypto_KeyGen_f(void)
 
 		Crypto_SavePubKeyTextFile(keygen_i);
 
-		Con_Printf("Saved unsigned key to key_%d.d0si%s\n", keygen_i, sessionid.string);
+		Con_DPrintf("Saved unsigned key to key_%d.d0si%s\n", keygen_i, sessionid.string);
 	}
 	p[0] = buf;
 	l[0] = sizeof(buf);
 	if(!qd0_blind_id_generate_private_id_request(pubkeys[keygen_i], buf, &l[0]))
 	{
-		Con_Printf("d0_blind_id_generate_private_id_request failed\n");
+		Con_DPrintf("d0_blind_id_generate_private_id_request failed\n");
 		keygen_i = -1;
 		SV_UnlockThreadMutex();
 		return;
@@ -1322,14 +1322,14 @@ static void Crypto_KeyGen_f(void)
 	memcpy(buf2, Cmd_Argv(2), buf2pos);
 	if(!(buf2l = Crypto_UnParsePack(buf2 + buf2pos, sizeof(buf2) - buf2pos - 1, FOURCC_D0IQ, p, l, 1)))
 	{
-		Con_Printf("Crypto_UnParsePack failed\n");
+		Con_DPrintf("Crypto_UnParsePack failed\n");
 		keygen_i = -1;
 		SV_UnlockThreadMutex();
 		return;
 	}
 	if(!(buf2l = base64_encode((unsigned char *) (buf2 + buf2pos), buf2l, sizeof(buf2) - buf2pos - 1)))
 	{
-		Con_Printf("base64_encode failed\n");
+		Con_DPrintf("base64_encode failed\n");
 		keygen_i = -1;
 		SV_UnlockThreadMutex();
 		return;
@@ -1338,12 +1338,12 @@ static void Crypto_KeyGen_f(void)
 	buf2[buf2l] = 0;
 	if(!Curl_Begin_ToMemory(buf2, 0, (unsigned char *) keygen_buf, sizeof(keygen_buf), Crypto_KeyGen_Finished, NULL))
 	{
-		Con_Printf("curl failed\n");
+		Con_DPrintf("curl failed\n");
 		keygen_i = -1;
 		SV_UnlockThreadMutex();
 		return;
 	}
-	Con_Printf("Signature generation in progress...\n");
+	Con_DPrintf("Signature generation in progress...\n");
 	SV_UnlockThreadMutex();
 }
 // end
@@ -1368,12 +1368,12 @@ static void Crypto_Keys_f(void)
 	{
 		if(pubkeys[i])
 		{
-			Con_Printf("%2d: public key key_%d.d0pk (fingerprint: %s)\n", i, i, pubkeys_fp64[i]);
+			Con_DPrintf("%2d: public key key_%d.d0pk (fingerprint: %s)\n", i, i, pubkeys_fp64[i]);
 			if(pubkeys_havepriv[i])
 			{
-				Con_Printf("    private ID key_%d.d0si%s (public key fingerprint: %s)\n", i, sessionid.string, pubkeys_priv_fp64[i]);
+				Con_DPrintf("    private ID key_%d.d0si%s (public key fingerprint: %s)\n", i, sessionid.string, pubkeys_priv_fp64[i]);
 				if(!pubkeys_havesig[i])
-					Con_Printf("    NOTE: this ID has not yet been signed!\n");
+					Con_DPrintf("    NOTE: this ID has not yet been signed!\n");
 			}
 		}
 	}
@@ -1395,7 +1395,7 @@ static void Crypto_HostKeys_f(void)
 		for(hk = crypto_storedhostkey_hashtable[i]; hk; hk = hk->next)
 		{
 			LHNETADDRESS_ToString(&hk->addr, buf, sizeof(buf), 1);
-			Con_Printf("%d %s@%.*s %s\n",
+			Con_DPrintf("%d %s@%.*s %s\n",
 					hk->aeslevel,
 					hk->idfp,
 					crypto_keyfp_recommended_length, pubkeys_fp64[hk->keyid],
@@ -1420,7 +1420,7 @@ static void Crypto_HostKey_Clear_f(void)
 		LHNETADDRESS_FromString(&addr, Cmd_Argv(i), 26000);
 		if(Crypto_ClearHostKey(&addr))
 		{
-			Con_Printf("cleared host key for %s\n", Cmd_Argv(i));
+			Con_DPrintf("cleared host key for %s\n", Cmd_Argv(i));
 		}
 	}
 }
@@ -1520,7 +1520,7 @@ const void *Crypto_EncryptPacket(crypto_t *crypto, const void *data_src, size_t 
 			}
 			if(len_src + 32 > len || !HMAC_SHA256_32BYTES(h, (const unsigned char *) data_src, (int)len_src, crypto->dhkey, DHKEY_SIZE))
 			{
-				Con_Printf("Crypto_EncryptPacket failed (not enough space: %d bytes in, %d bytes out)\n", (int) len_src, (int) len);
+				Con_DPrintf("Crypto_EncryptPacket failed (not enough space: %d bytes in, %d bytes out)\n", (int) len_src, (int) len);
 				return NULL;
 			}
 			*len_dst = ((len_src + 15) / 16) * 16 + 16; // add 16 for HMAC, then round to 16-size for AES
@@ -1534,7 +1534,7 @@ const void *Crypto_EncryptPacket(crypto_t *crypto, const void *data_src, size_t 
 			// HMAC packet = 16 bytes HMAC-SHA-256 (truncated to 128 bits), data
 			if(len_src + 16 > len || !HMAC_SHA256_32BYTES(h, (const unsigned char *) data_src, (int)len_src, crypto->dhkey, DHKEY_SIZE))
 			{
-				Con_Printf("Crypto_EncryptPacket failed (not enough space: %d bytes in, %d bytes out)\n", (int) len_src, (int) len);
+				Con_DPrintf("Crypto_EncryptPacket failed (not enough space: %d bytes in, %d bytes out)\n", (int) len_src, (int) len);
 				return NULL;
 			}
 			*len_dst = len_src + 16;
@@ -1579,25 +1579,25 @@ const void *Crypto_DecryptPacket(crypto_t *crypto, const void *data_src, size_t 
 		{
 			if(len_src < 16 || ((len_src - 16) % 16))
 			{
-				Con_Printf("Crypto_DecryptPacket failed (not enough space: %d bytes in, %d bytes out)\n", (int) len_src, (int) len);
+				Con_DPrintf("Crypto_DecryptPacket failed (not enough space: %d bytes in, %d bytes out)\n", (int) len_src, (int) len);
 				return NULL;
 			}
 			*len_dst = len_src - ((unsigned char *) data_src)[0];
 			if(len < *len_dst || *len_dst > len_src - 16)
 			{
-				Con_Printf("Crypto_DecryptPacket failed (not enough space: %d bytes in, %d->%d bytes out)\n", (int) len_src, (int) *len_dst, (int) len);
+				Con_DPrintf("Crypto_DecryptPacket failed (not enough space: %d bytes in, %d->%d bytes out)\n", (int) len_src, (int) *len_dst, (int) len);
 				return NULL;
 			}
 			seacpy(crypto->dhkey, (unsigned char *) data_src, (unsigned char *) data_dst, ((const unsigned char *) data_src) + 16, *len_dst);
 			//                    IV                          dst                         src                                      len
 			if(!HMAC_SHA256_32BYTES(h, (const unsigned char *) data_dst, (int)*len_dst, crypto->dhkey, DHKEY_SIZE))
 			{
-				Con_Printf("HMAC fail\n");
+				Con_DPrintf("HMAC fail\n");
 				return NULL;
 			}
 			if(memcmp(((const unsigned char *) data_src)+1, h, 15)) // ignore first byte, used for length
 			{
-				Con_Printf("HMAC mismatch\n");
+				Con_DPrintf("HMAC mismatch\n");
 				return NULL;
 			}
 			if(developer_networking.integer)
@@ -1611,19 +1611,19 @@ const void *Crypto_DecryptPacket(crypto_t *crypto, const void *data_src, size_t 
 		{
 			if(len_src < 16)
 			{
-				Con_Printf("Crypto_DecryptPacket failed (not enough space: %d bytes in, %d bytes out)\n", (int) len_src, (int) len);
+				Con_DPrintf("Crypto_DecryptPacket failed (not enough space: %d bytes in, %d bytes out)\n", (int) len_src, (int) len);
 				return NULL;
 			}
 			*len_dst = len_src - 16;
 			if(len < *len_dst)
 			{
-				Con_Printf("Crypto_DecryptPacket failed (not enough space: %d bytes in, %d->%d bytes out)\n", (int) len_src, (int) *len_dst, (int) len);
+				Con_DPrintf("Crypto_DecryptPacket failed (not enough space: %d bytes in, %d->%d bytes out)\n", (int) len_src, (int) *len_dst, (int) len);
 				return NULL;
 			}
 			//memcpy(data_dst, data_src + 16, *len_dst);
 			if(!HMAC_SHA256_32BYTES(h, ((const unsigned char *) data_src) + 16, (int)*len_dst, crypto->dhkey, DHKEY_SIZE))
 			{
-				Con_Printf("HMAC fail\n");
+				Con_DPrintf("HMAC fail\n");
 				Com_HexDumpToConsole((const unsigned char *) data_src, (int)len_src);
 				return NULL;
 			}
@@ -1641,14 +1641,14 @@ const void *Crypto_DecryptPacket(crypto_t *crypto, const void *data_src, size_t 
 					h[0] ^= 0x80;
 					if(memcmp((const unsigned char *) data_src, h, 16)) // ignore first byte, used for length
 					{
-						Con_Printf("HMAC mismatch\n");
+						Con_DPrintf("HMAC mismatch\n");
 						Com_HexDumpToConsole((const unsigned char *) data_src, (int)len_src);
 						return NULL;
 					}
 				}
 				else
 				{
-					Con_Printf("HMAC mismatch\n");
+					Con_DPrintf("HMAC mismatch\n");
 					Com_HexDumpToConsole((const unsigned char *) data_src, (int)len_src);
 					return NULL;
 				}
@@ -2051,7 +2051,7 @@ int Crypto_ServerParsePacket(const char *data_in, size_t len_in, char *data_out,
 		if(do_reject && crypto_servercpu_accumulator < 0)
 		{
 			if(realtime > complain_time + 5)
-				Con_Printf("crypto: cannot perform requested crypto operations; denial service attack or crypto_servercpupercent/crypto_servercpumaxtime are too low\n");
+				Con_DPrintf("crypto: cannot perform requested crypto operations; denial service attack or crypto_servercpupercent/crypto_servercpumaxtime are too low\n");
 			*len_out = 0;
 			return CRYPTO_DISCARD;
 		}
@@ -2062,10 +2062,10 @@ int Crypto_ServerParsePacket(const char *data_in, size_t len_in, char *data_out,
 	{
 		t = Sys_DirtyTime() - t;if (t < 0.0) t = 0.0; // dirtytime can step backwards
 		if(crypto_servercpudebug.integer)
-			Con_Printf("crypto: accumulator was %.1f ms, used %.1f ms for crypto, ", crypto_servercpu_accumulator * 1000, t * 1000);
+			Con_DPrintf("crypto: accumulator was %.1f ms, used %.1f ms for crypto, ", crypto_servercpu_accumulator * 1000, t * 1000);
 		crypto_servercpu_accumulator -= t;
 		if(crypto_servercpudebug.integer)
-			Con_Printf("is %.1f ms\n", crypto_servercpu_accumulator * 1000);
+			Con_DPrintf("is %.1f ms\n", crypto_servercpu_accumulator * 1000);
 	}
 	return ret;
 }

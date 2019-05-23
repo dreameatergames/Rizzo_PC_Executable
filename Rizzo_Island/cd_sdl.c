@@ -117,7 +117,7 @@ int CDAudio_SysUpdate (void)
 void CDAudio_SysInit (void)
 {
 	if( SDL_InitSubSystem( SDL_INIT_CDROM ) == -1 )
-		Con_Print( "Failed to init the CDROM SDL subsystem!\n" );
+		Con_DPrint( "Failed to init the CDROM SDL subsystem!\n" );
 
 	Cmd_AddCommand( "cddrive", CDAudio_SDL_CDDrive_f, "select an SDL-detected CD drive by number" );
 }
@@ -140,12 +140,12 @@ int CDAudio_SysStartup (void)
 	if( numdrives == -1 ) // was the CDROM system initialized correctly?
 		return -1;
 
-	Con_Printf( "Found %i cdrom drives.\n", numdrives );
+	Con_DPrintf( "Found %i cdrom drives.\n", numdrives );
 
 	for( i = 0 ; i < numdrives ; i++, cd = NULL ) {
 		cd = SDL_CDOpen( i );
 		if( !cd ) {
-			Con_Printf( "CD drive %i is invalid.\n", i );
+			Con_DPrintf( "CD drive %i is invalid.\n", i );
 			continue;
 		}
 
@@ -153,9 +153,9 @@ int CDAudio_SysStartup (void)
 			if( IsAudioCD() )
 				break;
 			else
-				Con_Printf( "The CD in drive %i is not an audio cd.\n", i );
+				Con_DPrintf( "The CD in drive %i is not an audio cd.\n", i );
 		else
-			Con_Printf( "No CD in drive %i.\n", i );
+			Con_DPrintf( "No CD in drive %i.\n", i );
 
 		SDL_CDClose( cd );
 	}
@@ -184,7 +184,7 @@ void CDAudio_SDL_CDDrive_f( void )
 
 	i = atoi( Cmd_Argv( 1 ) );
 	if( i >= numdrives ) {
-		Con_Printf("Only %i drives!\n", numdrives );
+		Con_DPrintf("Only %i drives!\n", numdrives );
 		return;
 	}
 
@@ -193,14 +193,14 @@ void CDAudio_SDL_CDDrive_f( void )
 
 	cd = SDL_CDOpen( i );
 	if( !cd ) {
-		Con_Printf( "Couldn't open drive %i.\n", i );
+		Con_DPrintf( "Couldn't open drive %i.\n", i );
 		return;
 	}
 
 	if( !CD_INDRIVE( SDL_CDStatus( cd ) ) )
-		Con_Printf( "No cd in drive %i.\n", i );
+		Con_DPrintf( "No cd in drive %i.\n", i );
 	else if( !IsAudioCD() )
-		Con_Printf( "The CD in drive %i is not an audio CD.\n", i );
+		Con_DPrintf( "The CD in drive %i is not an audio CD.\n", i );
 
 	ValidateDrive();
 }

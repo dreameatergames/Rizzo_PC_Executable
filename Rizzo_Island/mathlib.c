@@ -712,8 +712,8 @@ void AnglesFromVectors (vec3_t angles, const vec3_t forward, const vec3_t up, qb
 		AngleVectors(angles, tforward, tleft, tup);
 		if (VectorDistance(tforward, nforward) > 0.01 || VectorDistance(tup, nup) > 0.01)
 		{
-			Con_Printf("vectoangles('%f %f %f', '%f %f %f') = %f %f %f\n", nforward[0], nforward[1], nforward[2], nup[0], nup[1], nup[2], angles[0], angles[1], angles[2]);
-			Con_Printf("^3But that is '%f %f %f', '%f %f %f'\n", tforward[0], tforward[1], tforward[2], tup[0], tup[1], tup[2]);
+			Con_DPrintf("vectoangles('%f %f %f', '%f %f %f') = %f %f %f\n", nforward[0], nforward[1], nforward[2], nup[0], nup[1], nup[2], angles[0], angles[1], angles[2]);
+			Con_DPrintf("^3But that is '%f %f %f', '%f %f %f'\n", tforward[0], tforward[1], tforward[2], tup[0], tup[1], tup[2]);
 		}
 	}
 	else
@@ -721,8 +721,8 @@ void AnglesFromVectors (vec3_t angles, const vec3_t forward, const vec3_t up, qb
 		AngleVectors(angles, tforward, tleft, tup);
 		if (VectorDistance(tforward, nforward) > 0.01)
 		{
-			Con_Printf("vectoangles('%f %f %f') = %f %f %f\n", nforward[0], nforward[1], nforward[2], angles[0], angles[1], angles[2]);
-			Con_Printf("^3But that is '%f %f %f'\n", tforward[0], tforward[1], tforward[2]);
+			Con_DPrintf("vectoangles('%f %f %f') = %f %f %f\n", nforward[0], nforward[1], nforward[2], angles[0], angles[1], angles[2]);
+			Con_DPrintf("^3But that is '%f %f %f'\n", tforward[0], tforward[1], tforward[2]);
 		}
 	}
 }
@@ -853,7 +853,7 @@ void Mathlib_Init(void)
 
 void Matrix4x4_Print(const matrix4x4_t *in)
 {
-	Con_Printf("%f %f %f %f\n%f %f %f %f\n%f %f %f %f\n%f %f %f %f\n"
+	Con_DPrintf("%f %f %f %f\n%f %f %f %f\n%f %f %f %f\n%f %f %f %f\n"
 	, in->m[0][0], in->m[0][1], in->m[0][2], in->m[0][3]
 	, in->m[1][0], in->m[1][1], in->m[1][2], in->m[1][3]
 	, in->m[2][0], in->m[2][1], in->m[2][2], in->m[2][3]
@@ -991,7 +991,7 @@ static void testmul128(unsigned int a0, unsigned int a1, unsigned int a2, unsign
 	 || result[1] != expected[1]
 	 || result[2] != expected[2]
 	 || result[3] != expected[3])
-		Con_Printf("testmul128(\na = %08x %08x %08x %08x,\nb = %08x %08x %08x %08x,\nx = %08x %08x %08x %08x) instead computed\nc = %08x %08x %08x %08x\n", a[0], a[1], a[2], a[3], b[0], b[1], b[2], b[3], expected[0], expected[1], expected[2], expected[3], result[0], result[1], result[2], result[3]);
+		Con_DPrintf("testmul128(\na = %08x %08x %08x %08x,\nb = %08x %08x %08x %08x,\nx = %08x %08x %08x %08x) instead computed\nc = %08x %08x %08x %08x\n", a[0], a[1], a[2], a[3], b[0], b[1], b[2], b[3], expected[0], expected[1], expected[2], expected[3], result[0], result[1], result[2], result[3]);
 }
 
 void Math_RandomSeed_UnitTests(void)

@@ -344,7 +344,7 @@ static qboolean _ServerList_CompareStr( const char *A, serverlist_maskop_t op, c
 		case SLMO_NOTCONTAIN:
 			return !*bufferB || !strstr( bufferA, bufferB );
 		case SLMO_STARTSWITH:
-			//Con_Printf("startsWith: %s %s\n", bufferA, bufferB);
+			//Con_DPrintf("startsWith: %s %s\n", bufferA, bufferB);
 			return *bufferB && !memcmp(bufferA, bufferB, strlen(bufferB));
 		case SLMO_NOTSTARTSWITH:
 			return !*bufferB || memcmp(bufferA, bufferB, strlen(bufferB));
@@ -630,11 +630,11 @@ int NetConn_Read(lhnetsocket_t *mysocket, void *data, int maxlength, lhnetaddres
 		if (length > 0)
 		{
 			LHNETADDRESS_ToString(peeraddress, addressstring2, sizeof(addressstring2), true);
-			Con_Printf("LHNET_Read(%p (%s), %p, %i, %p) = %i from %s:\n", (void *)mysocket, addressstring, (void *)data, maxlength, (void *)peeraddress, length, addressstring2);
+			Con_DPrintf("LHNET_Read(%p (%s), %p, %i, %p) = %i from %s:\n", (void *)mysocket, addressstring, (void *)data, maxlength, (void *)peeraddress, length, addressstring2);
 			Com_HexDumpToConsole((unsigned char *)data, length);
 		}
 		else
-			Con_Printf("LHNET_Read(%p (%s), %p, %i, %p) = %i\n", (void *)mysocket, addressstring, (void *)data, maxlength, (void *)peeraddress, length);
+			Con_DPrintf("LHNET_Read(%p (%s), %p, %i, %p) = %i\n", (void *)mysocket, addressstring, (void *)data, maxlength, (void *)peeraddress, length);
 	}
 	return length;
 }
@@ -657,7 +657,7 @@ int NetConn_Write(lhnetsocket_t *mysocket, const void *data, int length, const l
 		char addressstring[128], addressstring2[128];
 		LHNETADDRESS_ToString(LHNET_AddressFromSocket(mysocket), addressstring, sizeof(addressstring), true);
 		LHNETADDRESS_ToString(peeraddress, addressstring2, sizeof(addressstring2), true);
-		Con_Printf("LHNET_Write(%p (%s), %p, %i, %p (%s)) = %i%s\n", (void *)mysocket, addressstring, (void *)data, length, (void *)peeraddress, addressstring2, length, ret == length ? "" : " (ERROR)");
+		Con_DPrintf("LHNET_Write(%p (%s), %p, %i, %p (%s)) = %i%s\n", (void *)mysocket, addressstring, (void *)data, length, (void *)peeraddress, addressstring2, length, ret == length ? "" : " (ERROR)");
 		Com_HexDumpToConsole((unsigned char *)data, length);
 	}
 	return ret;
@@ -775,7 +775,7 @@ int NetConn_SendUnreliableMessage(netconn_t *conn, sizebuf_t *data, protocolvers
 		}
 		if (packetLen + (sendreliable ? conn->sendMessageLength : 0) > 1400)
 		{
-			Con_Printf ("NetConn_SendUnreliableMessage: reliable message too big %u\n", data->cursize);
+			Con_DPrintf ("NetConn_SendUnreliableMessage: reliable message too big %u\n", data->cursize);
 			return -1;
 		}
 
@@ -850,7 +850,7 @@ int NetConn_SendUnreliableMessage(netconn_t *conn, sizebuf_t *data, protocolvers
 		{
 			if (conn->message.cursize > (int)sizeof(conn->sendMessage))
 			{
-				Con_Printf("NetConn_SendUnreliableMessage: reliable message too big (%u > %u)\n", conn->message.cursize, (int)sizeof(conn->sendMessage));
+				Con_DPrintf("NetConn_SendUnreliableMessage: reliable message too big (%u > %u)\n", conn->message.cursize, (int)sizeof(conn->sendMessage));
 				conn->message.overflowed = true;
 				return -1;
 			}
@@ -904,7 +904,7 @@ int NetConn_SendUnreliableMessage(netconn_t *conn, sizebuf_t *data, protocolvers
 
 			if (packetLen > (int)sizeof(sendbuffer))
 			{
-				Con_Printf("NetConn_SendUnreliableMessage: message too big %u\n", data->cursize);
+				Con_DPrintf("NetConn_SendUnreliableMessage: message too big %u\n", data->cursize);
 				return -1;
 			}
 
@@ -966,16 +966,16 @@ static void NetConn_OpenClientPort(const char *addressstring, lhnetaddresstype_t
 			cl_sockets[cl_numsockets++] = s;
 			LHNETADDRESS_ToString(LHNET_AddressFromSocket(s), addressstring2, sizeof(addressstring2), true);
 			if (addresstype != LHNETADDRESSTYPE_LOOP)
-				Con_Printf("Client opened a socket on address %s\n", addressstring2);
+				Con_DPrintf("Client opened a socket on address %s\n", addressstring2);
 		}
 		else
 		{
 			LHNETADDRESS_ToString(&address, addressstring2, sizeof(addressstring2), true);
-			Con_Printf("Client failed to open a socket on address %s\n", addressstring2);
+			Con_DPrintf("Client failed to open a socket on address %s\n", addressstring2);
 		}
 	}
 	else
-		Con_Printf("Client unable to parse address %s\n", addressstring);
+		Con_DPrintf("Client unable to parse address %s\n", addressstring);
 }
 
 void NetConn_OpenClientPorts(void)
@@ -991,9 +991,9 @@ void NetConn_OpenClientPorts(void)
 	if (cl_netport.integer != port)
 		Cvar_SetValueQuick(&cl_netport, port);
 	if(port == 0)
-		Con_Printf("Client using an automatically assigned port\n");
+		Con_DPrintf("Client using an automatically assigned port\n");
 	else
-		Con_Printf("Client using port %i\n", port);
+		Con_DPrintf("Client using port %i\n", port);
 	NetConn_OpenClientPort(NULL, LHNETADDRESSTYPE_LOOP, 2);
 	NetConn_OpenClientPort(net_address.string, LHNETADDRESSTYPE_INET4, port);
 #ifndef NOSUPPORTIPV6
@@ -1029,18 +1029,18 @@ static qboolean NetConn_OpenServerPort(const char *addressstring, lhnetaddressty
 				sv_sockets[sv_numsockets++] = s;
 				LHNETADDRESS_ToString(LHNET_AddressFromSocket(s), addressstring2, sizeof(addressstring2), true);
 				if (addresstype != LHNETADDRESSTYPE_LOOP)
-					Con_Printf("Server listening on address %s\n", addressstring2);
+					Con_DPrintf("Server listening on address %s\n", addressstring2);
 				return true;
 			}
 			else
 			{
 				LHNETADDRESS_ToString(&address, addressstring2, sizeof(addressstring2), true);
-				Con_Printf("Server failed to open socket on address %s\n", addressstring2);
+				Con_DPrintf("Server failed to open socket on address %s\n", addressstring2);
 			}
 		}
 		else
 		{
-			Con_Printf("Server unable to parse address %s\n", addressstring);
+			Con_DPrintf("Server unable to parse address %s\n", addressstring);
 			// if it cant parse one address, it wont be able to parse another for sure
 			return false;
 		}
@@ -1061,7 +1061,7 @@ void NetConn_OpenServerPorts(int opennetports)
 	port = bound(0, sv_netport.integer, 65535);
 	if (port == 0)
 		port = 26000;
-	Con_Printf("Server using port %i\n", port);
+	Con_DPrintf("Server using port %i\n", port);
 	if (sv_netport.integer != port)
 		Cvar_SetValueQuick(&sv_netport, port);
 	if (cls.state != ca_dedicated)
@@ -1188,7 +1188,7 @@ void NetConn_UpdateSockets(void)
 			{
 				char s[128];
 				LHNETADDRESS_ToString(&cls.rcon_addresses[i], s, sizeof(s), true);
-				Con_Printf("rcon to %s (for command %s) failed: challenge request timed out\n", s, cls.rcon_commands[i]);
+				Con_DPrintf("rcon to %s (for command %s) failed: challenge request timed out\n", s, cls.rcon_commands[i]);
 				cls.rcon_commands[i][0] = 0;
 				--cls.rcon_trying;
 				break;
@@ -1470,7 +1470,7 @@ static int NetConn_ReceivedMessage(netconn_t *conn, const unsigned char *data, s
 						memcpy(conn->receiveMessage + conn->receiveMessageLength, data, length);
 						conn->receiveMessageLength += (int)length;
 					} else {
-						Con_Printf( "Reliable message (seq: %i) too big for message buffer!\n"
+						Con_DPrintf( "Reliable message (seq: %i) too big for message buffer!\n"
 									"Dropping the message!\n", sequence );
 						conn->receiveMessageLength = 0;
 						return 1;
@@ -1529,7 +1529,7 @@ static void NetConn_ConnectionEstablished(lhnetsocket_t *mysocket, lhnetaddress_
 	if(cls.crypto.authenticated)
 	{
 		Crypto_FinishInstance(crypto, &cls.crypto);
-		Con_Printf("%s connection to %s has been established: server is %s@%s%.*s, I am %.*s@%s%.*s\n",
+		Con_DPrintf("%s connection to %s has been established: server is %s@%s%.*s, I am %.*s@%s%.*s\n",
 				crypto->use_aes ? "Encrypted" : "Authenticated",
 				cls.netcon->address,
 				crypto->server_idfp[0] ? crypto->server_idfp : "-",
@@ -1540,7 +1540,7 @@ static void NetConn_ConnectionEstablished(lhnetsocket_t *mysocket, lhnetaddress_
 				crypto_keyfp_recommended_length, crypto->client_keyfp[0] ? crypto->client_keyfp : "-"
 				);
 	}
-	Con_Printf("Connection accepted to %s\n", cls.netcon->address);
+	Con_DPrintf("Connection accepted to %s\n", cls.netcon->address);
 	key_dest = key_game;
 #ifdef CONFIG_MENU
 	m_state = m_none;
@@ -1611,7 +1611,7 @@ static int NetConn_ClientParsePacket_ServerList_ProcessReply(const char *address
 		entry->querytime = realtime;
 		// if not in the slist menu we should print the server to console
 		if (serverlist_consoleoutput)
-			Con_Printf("querying %s\n", addressstring);
+			Con_DPrintf("querying %s\n", addressstring);
 		++serverlist_cachecount;
 	}
 	// if this is the first reply from this server, count it as having replied
@@ -1656,7 +1656,7 @@ static void NetConn_ClientParsePacket_ServerList_UpdateCache(int n)
 	}
 	// if not in the slist menu we should print the server to console (if wanted)
 	else if( serverlist_consoleoutput )
-		Con_Printf("%s\n%s\n", serverlist_cache[n].line1, serverlist_cache[n].line2);
+		Con_DPrintf("%s\n%s\n", serverlist_cache[n].line1, serverlist_cache[n].line2);
 	// and finally, update the view set
 	if(!serverlist_paused)
 		ServerList_ViewList_Insert( entry );
@@ -1712,7 +1712,7 @@ static void NetConn_ClientParsePacket_ServerList_ParseDPList(lhnetaddress_t *sen
 {
 	masterreplycount++;
 	if (serverlist_consoleoutput)
-		Con_Printf("received DarkPlaces %sserver list...\n", isextended ? "extended " : "");
+		Con_DPrintf("received DarkPlaces %sserver list...\n", isextended ? "extended " : "");
 	while (length >= 7)
 	{
 		char ipstring [128];
@@ -1771,7 +1771,7 @@ static void NetConn_ClientParsePacket_ServerList_ParseDPList(lhnetaddress_t *sen
 		}
 
 		if (serverlist_consoleoutput && developer_networking.integer)
-			Con_Printf("Requesting info from DarkPlaces server %s\n", ipstring);
+			Con_DPrintf("Requesting info from DarkPlaces server %s\n", ipstring);
 		
 		if( !NetConn_ClientParsePacket_ServerList_PrepareQuery( PROTOCOL_DARKPLACES7, ipstring, false ) ) {
 			break;
@@ -1818,7 +1818,7 @@ static int NetConn_ClientParsePacket(lhnetsocket_t *mysocket, unsigned char *dat
 
 		if (developer_networking.integer)
 		{
-			Con_Printf("NetConn_ClientParsePacket: %s sent us a command:\n", addressstring2);
+			Con_DPrintf("NetConn_ClientParsePacket: %s sent us a command:\n", addressstring2);
 			Com_HexDumpToConsole(data, length);
 		}
 
@@ -1984,7 +1984,7 @@ static int NetConn_ClientParsePacket(lhnetsocket_t *mysocket, unsigned char *dat
 				++p;
 			}
 			else
-				Con_Printf("statusResponse without players block?\n");
+				Con_DPrintf("statusResponse without players block?\n");
 
 			if ((s = InfoString_GetValue(string, "gamename"     , infostringvalue, sizeof(infostringvalue))) != NULL) strlcpy(info->game, s, sizeof (info->game));
 			if ((s = InfoString_GetValue(string, "modname"      , infostringvalue, sizeof(infostringvalue))) != NULL) strlcpy(info->mod , s, sizeof (info->mod ));
@@ -2068,12 +2068,12 @@ static int NetConn_ClientParsePacket(lhnetsocket_t *mysocket, unsigned char *dat
 			length -= 2;
 			masterreplycount++;
 			if (serverlist_consoleoutput)
-				Con_Printf("received QuakeWorld server list from %s...\n", addressstring2);
+				Con_DPrintf("received QuakeWorld server list from %s...\n", addressstring2);
 			while (length >= 6 && (data[0] != 0xFF || data[1] != 0xFF || data[2] != 0xFF || data[3] != 0xFF) && data[4] * 256 + data[5] != 0)
 			{
 				dpsnprintf (ipstring, sizeof (ipstring), "%u.%u.%u.%u:%u", data[0], data[1], data[2], data[3], data[4] * 256 + data[5]);
 				if (serverlist_consoleoutput && developer_networking.integer)
-					Con_Printf("Requesting info from QuakeWorld server %s\n", ipstring);
+					Con_DPrintf("Requesting info from QuakeWorld server %s\n", ipstring);
 				
 				if( !NetConn_ClientParsePacket_ServerList_PrepareQuery( PROTOCOL_QUAKEWORLD, ipstring, false ) ) {
 					break;
@@ -2115,7 +2115,7 @@ static int NetConn_ClientParsePacket(lhnetsocket_t *mysocket, unsigned char *dat
 				Con_DPrintf("c message from wrong server %s\n", addressstring2);
 				return true;
 			}
-			Con_Printf("challenge %s received, sending QuakeWorld connect request back to %s\n", string + 1, addressstring2);
+			Con_DPrintf("challenge %s received, sending QuakeWorld connect request back to %s\n", string + 1, addressstring2);
 #ifdef CONFIG_MENU
 			M_Update_Return_Reason("Got QuakeWorld challenge response");
 #endif
@@ -2148,7 +2148,7 @@ static int NetConn_ClientParsePacket(lhnetsocket_t *mysocket, unsigned char *dat
 
 			// qw server status
 			if (serverlist_consoleoutput && developer_networking.integer >= 2)
-				Con_Printf("QW server status from server at %s:\n%s\n", addressstring2, string + 1);
+				Con_DPrintf("QW server status from server at %s:\n%s\n", addressstring2, string + 1);
 
 			string += 1;
 			// search the cache for this server and update it
@@ -2196,7 +2196,7 @@ static int NetConn_ClientParsePacket(lhnetsocket_t *mysocket, unsigned char *dat
 				Con_DPrintf("n message from wrong server %s\n", addressstring2);
 				return true;
 			}
-			Con_Printf("QW print command from server at %s:\n%s\n", addressstring2, string + 1);
+			Con_DPrintf("QW print command from server at %s:\n%s\n", addressstring2, string + 1);
 		}
 		// we may not have liked the packet, but it was a command packet, so
 		// we're done processing this packet now
@@ -2251,7 +2251,7 @@ static int NetConn_ClientParsePacket(lhnetsocket_t *mysocket, unsigned char *dat
 				else
 					cls.proquake_serverflags = 0;
 				if (cls.proquake_servermod == 1)
-					Con_Printf("Connected to ProQuake %.1f server, enabling precise aim\n", cls.proquake_serverversion / 10.0f);
+					Con_DPrintf("Connected to ProQuake %.1f server, enabling precise aim\n", cls.proquake_serverversion / 10.0f);
 				// update the server IP in the userinfo (QW servers expect this, and it is used by the reconnect command)
 				InfoString_SetValue(cls.userinfo, sizeof(cls.userinfo), "*ip", addressstring2);
 #ifdef CONFIG_MENU
@@ -2304,17 +2304,17 @@ static int NetConn_ClientParsePacket(lhnetsocket_t *mysocket, unsigned char *dat
 			if (developer_extra.integer)
 				Con_DPrintf("Datagram_ParseConnectionless: received CCREP_RCON from %s.\n", addressstring2);
 
-			Con_Printf("%s\n", MSG_ReadString(&cl_message, cl_readstring, sizeof(cl_readstring)));
+			Con_DPrintf("%s\n", MSG_ReadString(&cl_message, cl_readstring, sizeof(cl_readstring)));
 			break;
 		case CCREP_PLAYER_INFO:
 			// we got a CCREP_PLAYER_INFO??
 			//if (developer_extra.integer)
-				Con_Printf("Datagram_ParseConnectionless: received CCREP_PLAYER_INFO from %s.\n", addressstring2);
+				Con_DPrintf("Datagram_ParseConnectionless: received CCREP_PLAYER_INFO from %s.\n", addressstring2);
 			break;
 		case CCREP_RULE_INFO:
 			// we got a CCREP_RULE_INFO??
 			//if (developer_extra.integer)
-				Con_Printf("Datagram_ParseConnectionless: received CCREP_RULE_INFO from %s.\n", addressstring2);
+				Con_DPrintf("Datagram_ParseConnectionless: received CCREP_RULE_INFO from %s.\n", addressstring2);
 			break;
 		default:
 			break;
@@ -2402,7 +2402,7 @@ void NetConn_QueryQueueFrame(void)
 
 			// if not in the slist menu we should print the server to console
 			if (serverlist_consoleoutput)
-				Con_Printf("querying %25s (%i. try)\n", entry->info.cname, entry->querycounter);
+				Con_DPrintf("querying %25s (%i. try)\n", entry->info.cname, entry->querycounter);
 
 			queries++;
 		}
@@ -2697,7 +2697,7 @@ static qboolean NetConn_PreventFlood(lhnetaddress_t *peeraddress, server_floodad
 					// until the flood has subsided
 					floodlist[floodslotnum].lasttime = realtime;
 				}
-				//Con_Printf("Flood detected!\n");
+				//Con_DPrintf("Flood detected!\n");
 				return true;
 			}
 			// the flood appears to have subsided, so allow this
@@ -2708,7 +2708,7 @@ static qboolean NetConn_PreventFlood(lhnetaddress_t *peeraddress, server_floodad
 	// begin a new timeout on this address
 	floodlist[bestfloodslotnum].address = noportpeeraddress;
 	floodlist[bestfloodslotnum].lasttime = realtime;
-	//Con_Printf("Flood detection initiated!\n");
+	//Con_DPrintf("Flood detection initiated!\n");
 	return false;
 }
 
@@ -2727,7 +2727,7 @@ void NetConn_ClearFlood(lhnetaddress_t *peeraddress, server_floodaddress_t *floo
 			// remove the ban
 			floodlist[floodslotnum].address.addresstype = LHNETADDRESSTYPE_NONE;
 			floodlist[floodslotnum].lasttime = 0;
-			//Con_Printf("Flood cleared!\n");
+			//Con_DPrintf("Flood cleared!\n");
 		}
 	}
 }
@@ -2904,15 +2904,15 @@ static void RCon_Execute(lhnetsocket_t *mysocket, lhnetaddress_t *peeraddress, c
 	{
 		// looks like a legitimate rcon command with the correct password
 		const char *s_ptr = s;
-		Con_Printf("server received %s command from %s: ", userlevel, host_client ? host_client->name : addressstring2);
+		Con_DPrintf("server received %s command from %s: ", userlevel, host_client ? host_client->name : addressstring2);
 		while(s_ptr != endpos)
 		{
 			size_t l = strlen(s_ptr);
 			if(l)
-				Con_Printf(" %s;", s_ptr);
+				Con_DPrintf(" %s;", s_ptr);
 			s_ptr += l + 1;
 		}
-		Con_Printf("\n");
+		Con_DPrintf("\n");
 
 		if (!host_client || !host_client->netconnection || LHNETADDRESS_GetAddressType(&host_client->netconnection->peeraddress) != LHNETADDRESSTYPE_LOOP)
 			Con_Rcon_Redirect_Init(mysocket, peeraddress, proquakeprotocol);
@@ -2932,7 +2932,7 @@ static void RCon_Execute(lhnetsocket_t *mysocket, lhnetaddress_t *peeraddress, c
 	}
 	else
 	{
-		Con_Printf("server denied rcon access to %s\n", host_client ? host_client->name : addressstring2);
+		Con_DPrintf("server denied rcon access to %s\n", host_client ? host_client->name : addressstring2);
 	}
 }
 
@@ -2975,7 +2975,7 @@ static int NetConn_ServerParsePacket(lhnetsocket_t *mysocket, unsigned char *dat
 
 		if (developer_extra.integer)
 		{
-			Con_Printf("NetConn_ServerParsePacket: %s sent us a command:\n", addressstring2);
+			Con_DPrintf("NetConn_ServerParsePacket: %s sent us a command:\n", addressstring2);
 			Com_HexDumpToConsole(data, length);
 		}
 
@@ -3052,7 +3052,7 @@ static int NetConn_ServerParsePacket(lhnetsocket_t *mysocket, unsigned char *dat
 				// no need to check challenge
 				if(crypto_developer.integer)
 				{
-					Con_Printf("%s connection to %s is being established: client is %s@%s%.*s, I am %.*s@%s%.*s\n",
+					Con_DPrintf("%s connection to %s is being established: client is %s@%s%.*s, I am %.*s@%s%.*s\n",
 							crypto->use_aes ? "Encrypted" : "Authenticated",
 							addressstring2,
 							crypto->client_idfp[0] ? crypto->client_idfp : "-",
@@ -3085,7 +3085,7 @@ static int NetConn_ServerParsePacket(lhnetsocket_t *mysocket, unsigned char *dat
 			if(!(islocal || sv_public.integer > -2))
 			{
 				if (developer_extra.integer)
-					Con_Printf("Datagram_ParseConnectionless: sending \"reject %s\" to %s.\n", sv_public_rejectreason.string, addressstring2);
+					Con_DPrintf("Datagram_ParseConnectionless: sending \"reject %s\" to %s.\n", sv_public_rejectreason.string, addressstring2);
 				memcpy(response, "\377\377\377\377", 4);
 				dpsnprintf(response+4, sizeof(response)-4, "reject %s", sv_public_rejectreason.string);
 				NetConn_WriteString(mysocket, response, peeraddress);
@@ -3096,7 +3096,7 @@ static int NetConn_ServerParsePacket(lhnetsocket_t *mysocket, unsigned char *dat
 			if(!(s = InfoString_GetValue(string, "protocol", infostringvalue, sizeof(infostringvalue))) || strcmp(s, "darkplaces 3"))
 			{
 				if (developer_extra.integer)
-					Con_Printf("Datagram_ParseConnectionless: sending \"reject Wrong game protocol.\" to %s.\n", addressstring2);
+					Con_DPrintf("Datagram_ParseConnectionless: sending \"reject Wrong game protocol.\" to %s.\n", addressstring2);
 				NetConn_WriteString(mysocket, "\377\377\377\377reject Wrong game protocol.", peeraddress);
 				return true;
 			}
@@ -3124,7 +3124,7 @@ static int NetConn_ServerParsePacket(lhnetsocket_t *mysocket, unsigned char *dat
 							  )
 							{
 								if (developer_extra.integer)
-									Con_Printf("Datagram_ParseConnectionless: sending \"reject Attempt to change key of crypto.\" to %s.\n", addressstring2);
+									Con_DPrintf("Datagram_ParseConnectionless: sending \"reject Attempt to change key of crypto.\" to %s.\n", addressstring2);
 								NetConn_WriteString(mysocket, "\377\377\377\377reject Attempt to change key of crypto.", peeraddress);
 								return true;
 							}
@@ -3136,7 +3136,7 @@ static int NetConn_ServerParsePacket(lhnetsocket_t *mysocket, unsigned char *dat
 						if(client->netconnection->crypto.authenticated)
 						{
 							if (developer_extra.integer)
-								Con_Printf("Datagram_ParseConnectionless: sending \"reject Attempt to downgrade crypto.\" to %s.\n", addressstring2);
+								Con_DPrintf("Datagram_ParseConnectionless: sending \"reject Attempt to downgrade crypto.\" to %s.\n", addressstring2);
 							NetConn_WriteString(mysocket, "\377\377\377\377reject Attempt to downgrade crypto.", peeraddress);
 							return true;
 						}
@@ -3146,7 +3146,7 @@ static int NetConn_ServerParsePacket(lhnetsocket_t *mysocket, unsigned char *dat
 						// client crashed and is coming back,
 						// keep their stuff intact
 						if (developer_extra.integer)
-							Con_Printf("Datagram_ParseConnectionless: sending \"accept\" to %s.\n", addressstring2);
+							Con_DPrintf("Datagram_ParseConnectionless: sending \"accept\" to %s.\n", addressstring2);
 						NetConn_WriteString(mysocket, "\377\377\377\377accept", peeraddress);
 						if(crypto && crypto->authenticated)
 							Crypto_FinishInstance(&client->netconnection->crypto, crypto);
@@ -3157,7 +3157,7 @@ static int NetConn_ServerParsePacket(lhnetsocket_t *mysocket, unsigned char *dat
 						// client is still trying to connect,
 						// so we send a duplicate reply
 						if (developer_extra.integer)
-							Con_Printf("Datagram_ParseConnectionless: sending duplicate accept to %s.\n", addressstring2);
+							Con_DPrintf("Datagram_ParseConnectionless: sending duplicate accept to %s.\n", addressstring2);
 						if(crypto && crypto->authenticated)
 							Crypto_FinishInstance(&client->netconnection->crypto, crypto);
 						NetConn_WriteString(mysocket, "\377\377\377\377accept", peeraddress);
@@ -3177,7 +3177,7 @@ static int NetConn_ServerParsePacket(lhnetsocket_t *mysocket, unsigned char *dat
 				{
 					// allocated connection
 					if (developer_extra.integer)
-						Con_Printf("Datagram_ParseConnectionless: sending \"accept\" to %s.\n", conn->address);
+						Con_DPrintf("Datagram_ParseConnectionless: sending \"accept\" to %s.\n", conn->address);
 					NetConn_WriteString(mysocket, "\377\377\377\377accept", peeraddress);
 					// now set up the client
 					if(crypto && crypto->authenticated)
@@ -3190,7 +3190,7 @@ static int NetConn_ServerParsePacket(lhnetsocket_t *mysocket, unsigned char *dat
 
 			// no empty slots found - server is full
 			if (developer_extra.integer)
-				Con_Printf("Datagram_ParseConnectionless: sending \"reject Server is full.\" to %s.\n", addressstring2);
+				Con_DPrintf("Datagram_ParseConnectionless: sending \"reject Server is full.\" to %s.\n", addressstring2);
 			NetConn_WriteString(mysocket, "\377\377\377\377reject Server is full.", peeraddress);
 
 			return true;
@@ -3381,7 +3381,7 @@ static int NetConn_ServerParsePacket(lhnetsocket_t *mysocket, unsigned char *dat
 					if((crypto && crypto->authenticated) || knownclient->netconnection->crypto.authenticated)
 					{
 						if (developer_extra.integer)
-							Con_Printf("Datagram_ParseConnectionless: sending CCREP_REJECT \"Attempt to downgrade crypto.\" to %s.\n", addressstring2);
+							Con_DPrintf("Datagram_ParseConnectionless: sending CCREP_REJECT \"Attempt to downgrade crypto.\" to %s.\n", addressstring2);
 						SZ_Clear(&sv_message);
 						// save space for the header, filled in later
 						MSG_WriteLong(&sv_message, 0);
@@ -3614,7 +3614,7 @@ void NetConn_ServerFrame(void)
 		// never timeout loopback connections
 		if (host_client->netconnection && realtime > host_client->netconnection->timeout && LHNETADDRESS_GetAddressType(&host_client->netconnection->peeraddress) != LHNETADDRESSTYPE_LOOP)
 		{
-			Con_Printf("Client \"%s\" connection timed out\n", host_client->name);
+			Con_DPrintf("Client \"%s\" connection timed out\n", host_client->name);
 			SV_DropClient(false);
 		}
 	}
@@ -3733,7 +3733,7 @@ void NetConn_QueryMasters(qboolean querydp, qboolean queryqw)
 						{
 							char lookupstring[128];
 							LHNETADDRESS_ToString(&masteraddress, lookupstring, sizeof(lookupstring), true);
-							Con_Printf("Querying master %s (resolved from %s)\n", lookupstring, sv_qwmasters[masternum].string);
+							Con_DPrintf("Querying master %s (resolved from %s)\n", lookupstring, sv_qwmasters[masternum].string);
 						}
 						masterquerycount++;
 						NetConn_Write(cl_sockets[i], request, (int)strlen(request) + 1, &masteraddress);
@@ -3805,18 +3805,18 @@ static void Net_Heartbeat_f(void)
 static void PrintStats(netconn_t *conn)
 {
 	if ((cls.state == ca_connected && cls.protocol == PROTOCOL_QUAKEWORLD) || (sv.active && sv.protocol == PROTOCOL_QUAKEWORLD))
-		Con_Printf("address=%21s canSend=%u sendSeq=%6u recvSeq=%6u\n", conn->address, !conn->sendMessageLength, conn->outgoing_unreliable_sequence, conn->qw.incoming_sequence);
+		Con_DPrintf("address=%21s canSend=%u sendSeq=%6u recvSeq=%6u\n", conn->address, !conn->sendMessageLength, conn->outgoing_unreliable_sequence, conn->qw.incoming_sequence);
 	else
-		Con_Printf("address=%21s canSend=%u sendSeq=%6u recvSeq=%6u\n", conn->address, !conn->sendMessageLength, conn->nq.sendSequence, conn->nq.receiveSequence);
-	Con_Printf("unreliable messages sent   = %i\n", conn->unreliableMessagesSent);
-	Con_Printf("unreliable messages recv   = %i\n", conn->unreliableMessagesReceived);
-	Con_Printf("reliable messages sent     = %i\n", conn->reliableMessagesSent);
-	Con_Printf("reliable messages received = %i\n", conn->reliableMessagesReceived);
-	Con_Printf("packetsSent                = %i\n", conn->packetsSent);
-	Con_Printf("packetsReSent              = %i\n", conn->packetsReSent);
-	Con_Printf("packetsReceived            = %i\n", conn->packetsReceived);
-	Con_Printf("receivedDuplicateCount     = %i\n", conn->receivedDuplicateCount);
-	Con_Printf("droppedDatagrams           = %i\n", conn->droppedDatagrams);
+		Con_DPrintf("address=%21s canSend=%u sendSeq=%6u recvSeq=%6u\n", conn->address, !conn->sendMessageLength, conn->nq.sendSequence, conn->nq.receiveSequence);
+	Con_DPrintf("unreliable messages sent   = %i\n", conn->unreliableMessagesSent);
+	Con_DPrintf("unreliable messages recv   = %i\n", conn->unreliableMessagesReceived);
+	Con_DPrintf("reliable messages sent     = %i\n", conn->reliableMessagesSent);
+	Con_DPrintf("reliable messages received = %i\n", conn->reliableMessagesReceived);
+	Con_DPrintf("packetsSent                = %i\n", conn->packetsSent);
+	Con_DPrintf("packetsReSent              = %i\n", conn->packetsReSent);
+	Con_DPrintf("packetsReceived            = %i\n", conn->packetsReceived);
+	Con_DPrintf("receivedDuplicateCount     = %i\n", conn->receivedDuplicateCount);
+	Con_DPrintf("droppedDatagrams           = %i\n", conn->droppedDatagrams);
 }
 
 void Net_Stats_f(void)
@@ -3920,11 +3920,11 @@ void NetConn_Init(void)
 	{
 		if (LHNETADDRESS_FromString(&tempaddress, com_argv[i + 1], 0) == 1)
 		{
-			Con_Printf("-ip option used, setting net_address to \"%s\"\n", com_argv[i + 1]);
+			Con_DPrintf("-ip option used, setting net_address to \"%s\"\n", com_argv[i + 1]);
 			Cvar_SetQuick(&net_address, com_argv[i + 1]);
 		}
 		else
-			Con_Printf("-ip option used, but unable to parse the address \"%s\"\n", com_argv[i + 1]);
+			Con_DPrintf("-ip option used, but unable to parse the address \"%s\"\n", com_argv[i + 1]);
 	}
 // COMMANDLINEOPTION: Server: -port <portnumber> sets the port to use for a server (default 26000, the same port as QUAKE itself), useful if you host multiple servers on your machine
 	if (((i = COM_CheckParm("-port")) || (i = COM_CheckParm("-ipport")) || (i = COM_CheckParm("-udpport"))) && i + 1 < com_argc)
@@ -3932,11 +3932,11 @@ void NetConn_Init(void)
 		i = atoi(com_argv[i + 1]);
 		if (i >= 0 && i < 65536)
 		{
-			Con_Printf("-port option used, setting port cvar to %i\n", i);
+			Con_DPrintf("-port option used, setting port cvar to %i\n", i);
 			Cvar_SetValueQuick(&sv_netport, i);
 		}
 		else
-			Con_Printf("-port option used, but %i is not a valid port number\n", i);
+			Con_DPrintf("-port option used, but %i is not a valid port number\n", i);
 	}
 	cl_numsockets = 0;
 	sv_numsockets = 0;

@@ -56,7 +56,7 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 	// Check the requested sound format
 	if (requested->width < 1 || requested->width > 2)
 	{
-		Con_Printf("SndSys_Init: invalid sound width (%hu)\n",
+		Con_DPrintf("SndSys_Init: invalid sound width (%hu)\n",
 					requested->width);
 
 		if (suggested != NULL)
@@ -102,7 +102,7 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 		SndSys_Shutdown ();
 		return false;
 	}
-	Con_Printf ("SndSys_Init: using %u fragments of %u bytes\n",
+	Con_DPrintf ("SndSys_Init: using %u fragments of %u bytes\n",
 				ioctl_param >> 16, 1 << (ioctl_param & 0xFFFF));
 
 	// Set the sound width
@@ -124,7 +124,7 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 				suggested->width = 1;
 		}
 
-		Con_Printf("SndSys_Init: could not set the sound width to %hu\n",
+		Con_DPrintf("SndSys_Init: could not set the sound width to %hu\n",
 					requested->width);
 		SndSys_Shutdown();
 		return false;
@@ -141,7 +141,7 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 			suggested->channels = ioctl_param;
 		}
 
-		Con_Printf("SndSys_Init: could not set the number of channels to %hu\n",
+		Con_DPrintf("SndSys_Init: could not set the number of channels to %hu\n",
 					requested->channels);
 		SndSys_Shutdown();
 		return false;
@@ -158,7 +158,7 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 			suggested->speed = ioctl_param;
 		}
 
-		Con_Printf("SndSys_Init: could not set the sound speed to %u\n",
+		Con_DPrintf("SndSys_Init: could not set the sound speed to %u\n",
 					requested->speed);
 		SndSys_Shutdown();
 		return false;
@@ -215,14 +215,14 @@ static int SndSys_Write (const unsigned char* buffer, unsigned int nb_bytes)
 	if (written < 0)
 	{
 		if (errno != EAGAIN)
-			Con_Printf ("SndSys_Write: audio write returned %d! (errno= %d)\n",
+			Con_DPrintf ("SndSys_Write: audio write returned %d! (errno= %d)\n",
 						written, errno);
 		return written;
 	}
 
 	factor = snd_renderbuffer->format.width * snd_renderbuffer->format.channels;
 	if (written % factor != 0)
-		Sys_Error ("SndSys_Write: nb of bytes written (%d) isn't aligned to a frame sample!\n",
+		Con_DPrintf ("SndSys_Write: nb of bytes written (%d) isn't aligned to a frame sample!\n",
 				   written);
 
 	snd_renderbuffer->startframe += written / factor;

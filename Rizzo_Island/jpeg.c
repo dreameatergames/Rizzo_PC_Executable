@@ -517,7 +517,7 @@ qboolean JPEG_OpenLibrary (void)
 
 #ifdef __ANDROID__
 	// loading the native Android libjpeg.so causes crashes
-	Con_Printf("Not opening libjpeg.so dynamically on Android - use LINK_TO_LIBJPEG instead if it is needed.\n");
+	Con_DPrintf("Not opening libjpeg.so dynamically on Android - use LINK_TO_LIBJPEG instead if it is needed.\n");
 	return false;
 #endif
 
@@ -634,7 +634,7 @@ unsigned char* JPEG_LoadImage_BGRA (const unsigned char *f, int filesize, int *m
 
 	if (image_width > 32768 || image_height > 32768 || image_width <= 0 || image_height <= 0)
 	{
-		Con_Printf("JPEG_LoadImage: invalid image size %ix%i\n", image_width, image_height);
+		Con_DPrintf("JPEG_LoadImage: invalid image size %ix%i\n", image_width, image_height);
 		return NULL;
 	}
 
@@ -647,7 +647,7 @@ unsigned char* JPEG_LoadImage_BGRA (const unsigned char *f, int filesize, int *m
 		if (scanline)
 			Mem_Free (scanline);
 
-		Con_Printf("JPEG_LoadImage: not enough memory for %i by %i image\n", image_width, image_height);
+		Con_DPrintf("JPEG_LoadImage: not enough memory for %i by %i image\n", image_width, image_height);
 		qjpeg_finish_decompress (&cinfo);
 		qjpeg_destroy_decompress (&cinfo);
 		return NULL;
@@ -963,7 +963,7 @@ size_t JPEG_SaveImage_to_Buffer (char *jpegbuf, size_t jpegsize, int width, int 
 
 		for(i = 0; i <= 100; ++i)
 		{
-			Con_Printf("! %d %d %d %d\n", width, height, i, (int) JPEG_try_SaveImage_to_Buffer(&cinfo, buf, sizeof(buf), i, width, height, img));
+			Con_DPrintf("! %d %d %d %d\n", width, height, i, (int) JPEG_try_SaveImage_to_Buffer(&cinfo, buf, sizeof(buf), i, width, height, img));
 		}
 
 		Mem_Free(img);
@@ -981,7 +981,7 @@ size_t JPEG_SaveImage_to_Buffer (char *jpegbuf, size_t jpegsize, int width, int 
 		--quality;
 		if(quality < 0)
 		{
-			Con_Printf("couldn't write image at all, probably too big\n");
+			Con_DPrintf("couldn't write image at all, probably too big\n");
 			return 0;
 		}
 	}
@@ -1103,7 +1103,7 @@ qboolean Image_Compress(const char *imagename, size_t maxsize, void **buf, size_
 	{
 		Z_Free(*buf);
 		*buf = NULL;
-		Con_Printf("could not compress image %s to %d bytes\n", imagename, (int)maxsize);
+		Con_DPrintf("could not compress image %s to %d bytes\n", imagename, (int)maxsize);
 		// return false;
 		// also cache failures!
 	}

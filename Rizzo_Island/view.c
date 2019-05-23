@@ -363,7 +363,7 @@ static void V_BonusFlash_f (void)
 			cl.cshifts[CSHIFT_BONUS].alphafade = 100;
 	}
 	else
-		Con_Printf("usage:\nbf, or bf R G B [A [alphafade]]\n");
+		Con_DPrintf("usage:\nbf, or bf R G B [A [alphafade]]\n");
 }
 
 /*

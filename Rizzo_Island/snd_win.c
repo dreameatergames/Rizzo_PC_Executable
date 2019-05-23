@@ -199,7 +199,7 @@ static qboolean SndSys_BuildWaveFormat (const snd_format_t* requested, WAVEFORMA
 				break;
 
 			default:
-				Con_Printf("SndSys_BuildWaveFormat: invalid number of channels (%hu)\n", requested->channels);
+				Con_DPrintf("SndSys_BuildWaveFormat: invalid number of channels (%hu)\n", requested->channels);
 				return false;
 		}
 	}
@@ -342,7 +342,7 @@ static sndinitstat SndSys_InitDirectSound (const snd_format_t* requested)
 			requested->width != format.Format.wBitsPerSample / 8 ||
 			requested->speed != format.Format.nSamplesPerSec)
 		{
-			Con_Printf("DS:CreateSoundBuffer Failed (%d): channels=%u, width=%u, speed=%u\n",
+			Con_DPrintf("DS:CreateSoundBuffer Failed (%d): channels=%u, width=%u, speed=%u\n",
 					   (int)result, (unsigned)format.Format.nChannels, (unsigned)format.Format.wBitsPerSample / 8, (unsigned)format.Format.nSamplesPerSec);
 			SndSys_Shutdown ();
 			return SIS_FAILURE;
@@ -379,7 +379,7 @@ static sndinitstat SndSys_InitDirectSound (const snd_format_t* requested)
 	// Make sure mixer is active
 	IDirectSoundBuffer_Play(pDSBuf, 0, 0, DSBPLAY_LOOPING);
 
-	Con_Printf("   %d channel(s)\n"
+	Con_DPrintf("   %d channel(s)\n"
 				"   %d bits/sample\n"
 				"   %d samples/sec\n",
 				requested->channels, requested->width * 8, requested->speed);
@@ -725,7 +725,7 @@ void SndSys_Submit (void)
 		}
 		else
 		{
-			Con_Printf("waveOutWrite failed, error code %d\n", (int) wResult);
+			Con_DPrintf("waveOutWrite failed, error code %d\n", (int) wResult);
 			SndSys_Shutdown ();
 			return;
 		}
@@ -860,7 +860,7 @@ qboolean SndSys_LockRenderBuffer (void)
 		}
 
 		if ((void*)dsound_pbuf != snd_renderbuffer->ring)
-			Sys_Error("SndSys_LockRenderBuffer: the ring address has changed!!!\n");
+			Con_DPrintf("SndSys_LockRenderBuffer: the ring address has changed!!!\n");
 		return true;
 	}
 #endif

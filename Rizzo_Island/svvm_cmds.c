@@ -1016,7 +1016,7 @@ static void VM_SV_findradius(prvm_prog_t *prog)
 	if (numtouchedicts > MAX_EDICTS)
 	{
 		// this never happens
-		Con_Printf("SV_EntitiesInBox returned %i edicts, max was %i\n", numtouchedicts, MAX_EDICTS);
+		Con_DPrintf("SV_EntitiesInBox returned %i edicts, max was %i\n", numtouchedicts, MAX_EDICTS);
 		numtouchedicts = MAX_EDICTS;
 	}
 	for (i = 0;i < numtouchedicts;i++)

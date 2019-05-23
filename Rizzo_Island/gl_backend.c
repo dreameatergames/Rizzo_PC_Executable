@@ -138,52 +138,52 @@ void GL_PrintError(int errornumber, const char *filename, int linenumber)
 	{
 #ifdef GL_INVALID_ENUM
 	case GL_INVALID_ENUM:
-		Con_Printf("GL_INVALID_ENUM at %s:%i\n", filename, linenumber);
+		Con_DPrintf("GL_INVALID_ENUM at %s:%i\n", filename, linenumber);
 		break;
 #endif
 #ifdef GL_INVALID_VALUE
 	case GL_INVALID_VALUE:
-		Con_Printf("GL_INVALID_VALUE at %s:%i\n", filename, linenumber);
+		Con_DPrintf("GL_INVALID_VALUE at %s:%i\n", filename, linenumber);
 		break;
 #endif
 #ifdef GL_INVALID_OPERATION
 	case GL_INVALID_OPERATION:
-		Con_Printf("GL_INVALID_OPERATION at %s:%i\n", filename, linenumber);
+		Con_DPrintf("GL_INVALID_OPERATION at %s:%i\n", filename, linenumber);
 		break;
 #endif
 #ifdef GL_STACK_OVERFLOW
 	case GL_STACK_OVERFLOW:
-		Con_Printf("GL_STACK_OVERFLOW at %s:%i\n", filename, linenumber);
+		Con_DPrintf("GL_STACK_OVERFLOW at %s:%i\n", filename, linenumber);
 		break;
 #endif
 #ifdef GL_STACK_UNDERFLOW
 	case GL_STACK_UNDERFLOW:
-		Con_Printf("GL_STACK_UNDERFLOW at %s:%i\n", filename, linenumber);
+		Con_DPrintf("GL_STACK_UNDERFLOW at %s:%i\n", filename, linenumber);
 		break;
 #endif
 #ifdef GL_OUT_OF_MEMORY
 	case GL_OUT_OF_MEMORY:
-		Con_Printf("GL_OUT_OF_MEMORY at %s:%i\n", filename, linenumber);
+		Con_DPrintf("GL_OUT_OF_MEMORY at %s:%i\n", filename, linenumber);
 		break;
 #endif
 #ifdef GL_TABLE_TOO_LARGE
 	case GL_TABLE_TOO_LARGE:
-		Con_Printf("GL_TABLE_TOO_LARGE at %s:%i\n", filename, linenumber);
+		Con_DPrintf("GL_TABLE_TOO_LARGE at %s:%i\n", filename, linenumber);
 		break;
 #endif
 #ifdef GL_INVALID_FRAMEBUFFER_OPERATION
 	case GL_INVALID_FRAMEBUFFER_OPERATION:
-		Con_Printf("GL_INVALID_FRAMEBUFFER_OPERATION at %s:%i\n", filename, linenumber);
+		Con_DPrintf("GL_INVALID_FRAMEBUFFER_OPERATION at %s:%i\n", filename, linenumber);
 		break;
 #endif
 	default:
-		Con_Printf("GL UNKNOWN (%i) at %s:%i\n", errornumber, filename, linenumber);
+		Con_DPrintf("GL UNKNOWN (%i) at %s:%i\n", errornumber, filename, linenumber);
 		break;
 	}
 }
 #endif
 
-#define BACKENDACTIVECHECK if (!gl_state.active) Sys_Error("GL backend function called when backend is not active");
+#define BACKENDACTIVECHECK if (!gl_state.active) Con_DPrintf("GL backend function called when backend is not active");
 
 void SCR_ScreenShot_f (void);
 
@@ -740,12 +740,12 @@ qboolean R_ScissorForBBox(const float *mins, const float *maxs, int *scissor)
 	// if we have some points to transform, check what screen area is covered
 	x1 = y1 = x2 = y2 = 0;
 	v[3] = 1.0f;
-	//Con_Printf("%i vertices to transform...\n", numvertices);
+	//Con_DPrintf("%i vertices to transform...\n", numvertices);
 	for (i = 0;i < numvertices;i++)
 	{
 		VectorCopy(vertex[i], v);
 		R_Viewport_TransformToScreen(&r_refdef.view.viewport, v, v2);
-		//Con_Printf("%.3f %.3f %.3f %.3f transformed to %.3f %.3f %.3f %.3f\n", v[0], v[1], v[2], v[3], v2[0], v2[1], v2[2], v2[3]);
+		//Con_DPrintf("%.3f %.3f %.3f %.3f transformed to %.3f %.3f %.3f %.3f\n", v[0], v[1], v[2], v[3], v2[0], v2[1], v2[2], v2[3]);
 		if (i)
 		{
 			if (x1 > v2[0]) x1 = v2[0];
@@ -769,7 +769,7 @@ qboolean R_ScissorForBBox(const float *mins, const float *maxs, int *scissor)
 	//iy2 = vid.height - (int)(y1 + 1.0f);
 	//iy2 = r_refdef.view.viewport.height + 2 * r_refdef.view.viewport.y - (int)(y1 + 1.0f);
 	iy2 = (int)(y2 + 1.0f);
-	//Con_Printf("%f %f %f %f\n", x1, y1, x2, y2);
+	//Con_DPrintf("%f %f %f %f\n", x1, y1, x2, y2);
 
 	// clamp it to the screen
 	if (ix1 < r_refdef.view.viewport.x) ix1 = r_refdef.view.viewport.x;
@@ -909,7 +909,7 @@ void R_Viewport_InitOrtho(r_viewport_t *v, const matrix4x4_t *cameramatrix, int 
 		vec4_t test2;
 		Vector4Set(test1, (x1+x2)*0.5f, (y1+y2)*0.5f, 0.0f, 1.0f);
 		R_Viewport_TransformToScreen(v, test1, test2);
-		Con_Printf("%f %f %f -> %f %f %f\n", test1[0], test1[1], test1[2], test2[0], test2[1], test2[2]);
+		Con_DPrintf("%f %f %f -> %f %f %f\n", test1[0], test1[1], test1[2], test2[0], test2[1], test2[2]);
 	}
 #endif
 }
@@ -1327,7 +1327,7 @@ int R_Mesh_CreateFramebufferObject(rtexture_t *depthtexture, rtexture_t *colorte
 			status = qglCheckFramebufferStatus(GL_FRAMEBUFFER);CHECKGLERROR
 			if (status != GL_FRAMEBUFFER_COMPLETE)
 			{
-				Con_Printf("R_Mesh_CreateFramebufferObject: glCheckFramebufferStatus returned %i\n", status);
+				Con_DPrintf("R_Mesh_CreateFramebufferObject: glCheckFramebufferStatus returned %i\n", status);
 				gl_state.framebufferobject = 0; // GL unbinds it for us
 				qglDeleteFramebuffers(1, (GLuint*)&temp);
 				temp = 0;
@@ -1382,7 +1382,7 @@ int R_Mesh_CreateFramebufferObject(rtexture_t *depthtexture, rtexture_t *colorte
 			status = qglCheckFramebufferStatus(GL_FRAMEBUFFER);CHECKGLERROR
 			if (status != GL_FRAMEBUFFER_COMPLETE)
 			{
-				Con_Printf("R_Mesh_CreateFramebufferObject: glCheckFramebufferStatus returned %i\n", status);
+				Con_DPrintf("R_Mesh_CreateFramebufferObject: glCheckFramebufferStatus returned %i\n", status);
 				gl_state.framebufferobject = 0; // GL unbinds it for us
 				qglDeleteFramebuffers(1, (GLuint*)&temp);
 				temp = 0;
@@ -2685,7 +2685,7 @@ void R_Mesh_Start(void)
 	R_Mesh_SetUseVBO();
 	if (gl_printcheckerror.integer && !gl_paranoid.integer)
 	{
-		Con_Printf("WARNING: gl_printcheckerror is on but gl_paranoid is off, turning it on...\n");
+		Con_DPrintf("WARNING: gl_printcheckerror is on but gl_paranoid is off, turning it on...\n");
 		Cvar_SetValueQuick(&gl_paranoid, 1);
 	}
 }
@@ -2709,7 +2709,7 @@ static qboolean GL_Backend_CompileShader(int programobject, GLenum shadertypeenu
 			for (j = 0;strings[i][j];j++)
 				if (strings[i][j] == '\n')
 					pretextlines++;
-		Con_Printf("%s shader compile log:\n%s\n(line offset for any above warnings/errors: %i)\n", shadertype, compilelog, pretextlines);
+		Con_DPrintf("%s shader compile log:\n%s\n(line offset for any above warnings/errors: %i)\n", shadertype, compilelog, pretextlines);
 	}
 	if (!shadercompiled)
 	{
@@ -2904,7 +2904,7 @@ void R_Mesh_Draw(int firstvertex, int numvertices, int firsttriangle, int numtri
 			{
 				if (element3i[i] < firstvertex || element3i[i] >= firstvertex + numvertices)
 				{
-					Con_Printf("R_Mesh_Draw: invalid vertex index %i (outside range %i - %i) in element3i array\n", element3i[i], firstvertex, firstvertex + numvertices);
+					Con_DPrintf("R_Mesh_Draw: invalid vertex index %i (outside range %i - %i) in element3i array\n", element3i[i], firstvertex, firstvertex + numvertices);
 					return;
 				}
 			}
@@ -2915,7 +2915,7 @@ void R_Mesh_Draw(int firstvertex, int numvertices, int firsttriangle, int numtri
 			{
 				if (element3s[i] < firstvertex || element3s[i] >= firstvertex + numvertices)
 				{
-					Con_Printf("R_Mesh_Draw: invalid vertex index %i (outside range %i - %i) in element3s array\n", element3s[i], firstvertex, firstvertex + numvertices);
+					Con_DPrintf("R_Mesh_Draw: invalid vertex index %i (outside range %i - %i) in element3s array\n", element3s[i], firstvertex, firstvertex + numvertices);
 					return;
 				}
 			}
@@ -3399,7 +3399,7 @@ void R_Mesh_UpdateMeshBuffer(r_meshbuffer_t *buffer, const void *data, size_t si
 						IDirect3DIndexBuffer9_Release((IDirect3DIndexBuffer9*)buffer->devicebuffer);
 					buffer->devicebuffer = NULL;
 					if (FAILED(result = IDirect3DDevice9_CreateIndexBuffer(vid_d3d9dev, (unsigned int)(offset+size), buffer->isdynamic ? D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC : 0, buffer->isindex16 ? D3DFMT_INDEX16 : D3DFMT_INDEX32, buffer->isdynamic ? D3DPOOL_DEFAULT : D3DPOOL_MANAGED, &d3d9indexbuffer, NULL)))
-						Sys_Error("IDirect3DDevice9_CreateIndexBuffer(%p, %d, %x, %x, %x, %p, NULL) returned %x\n", vid_d3d9dev, (int)size, buffer->isdynamic ? (int)D3DUSAGE_DYNAMIC : 0, buffer->isindex16 ? (int)D3DFMT_INDEX16 : (int)D3DFMT_INDEX32, buffer->isdynamic ? (int)D3DPOOL_DEFAULT : (int)D3DPOOL_MANAGED, &d3d9indexbuffer, (int)result);
+						Con_DPrintf("IDirect3DDevice9_CreateIndexBuffer(%p, %d, %x, %x, %x, %p, NULL) returned %x\n", vid_d3d9dev, (int)size, buffer->isdynamic ? (int)D3DUSAGE_DYNAMIC : 0, buffer->isindex16 ? (int)D3DFMT_INDEX16 : (int)D3DFMT_INDEX32, buffer->isdynamic ? (int)D3DPOOL_DEFAULT : (int)D3DPOOL_MANAGED, &d3d9indexbuffer, (int)result);
 					buffer->devicebuffer = (void *)d3d9indexbuffer;
 					buffer->size = offset+size;
 				}
@@ -3421,7 +3421,7 @@ void R_Mesh_UpdateMeshBuffer(r_meshbuffer_t *buffer, const void *data, size_t si
 						IDirect3DVertexBuffer9_Release((IDirect3DVertexBuffer9*)buffer->devicebuffer);
 					buffer->devicebuffer = NULL;
 					if (FAILED(result = IDirect3DDevice9_CreateVertexBuffer(vid_d3d9dev, (unsigned int)(offset+size), buffer->isdynamic ? D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC : 0, 0, buffer->isdynamic ? D3DPOOL_DEFAULT : D3DPOOL_MANAGED, &d3d9vertexbuffer, NULL)))
-						Sys_Error("IDirect3DDevice9_CreateVertexBuffer(%p, %d, %x, %x, %x, %p, NULL) returned %x\n", vid_d3d9dev, (int)size, buffer->isdynamic ? (int)D3DUSAGE_DYNAMIC : 0, 0, buffer->isdynamic ? (int)D3DPOOL_DEFAULT : (int)D3DPOOL_MANAGED, &d3d9vertexbuffer, (int)result);
+						Con_DPrintf("IDirect3DDevice9_CreateVertexBuffer(%p, %d, %x, %x, %x, %p, NULL) returned %x\n", vid_d3d9dev, (int)size, buffer->isdynamic ? (int)D3DUSAGE_DYNAMIC : 0, 0, buffer->isdynamic ? (int)D3DPOOL_DEFAULT : (int)D3DPOOL_MANAGED, &d3d9vertexbuffer, (int)result);
 					buffer->devicebuffer = (void *)d3d9vertexbuffer;
 					buffer->size = offset+size;
 				}
@@ -3526,7 +3526,7 @@ void GL_Mesh_ListVBOs(qboolean printeach)
 		bufferstat[type][isdynamic][0]++;
 		bufferstat[type][isdynamic][1] += buffer->size;
 		if (printeach)
-			Con_Printf("buffer #%i %s = %i bytes (%s %s)\n", i, buffer->name, (int)buffer->size, isdynamic ? "dynamic" : "static", buffertypename[type]);
+			Con_DPrintf("buffer #%i %s = %i bytes (%s %s)\n", i, buffer->name, (int)buffer->size, isdynamic ? "dynamic" : "static", buffertypename[type]);
 	}
 	index16count   = (int)(bufferstat[R_BUFFERDATA_INDEX16][0][0] + bufferstat[R_BUFFERDATA_INDEX16][1][0]);
 	index16mem     = (int)(bufferstat[R_BUFFERDATA_INDEX16][0][1] + bufferstat[R_BUFFERDATA_INDEX16][1][1]);
@@ -3538,7 +3538,7 @@ void GL_Mesh_ListVBOs(qboolean printeach)
 	uniformmem   = (int)(bufferstat[R_BUFFERDATA_UNIFORM][0][1] + bufferstat[R_BUFFERDATA_UNIFORM][1][1]);
 	totalcount = index16count + index32count + vertexcount + uniformcount;
 	totalmem = index16mem + index32mem + vertexmem + uniformmem;
-	Con_Printf("%i 16bit indexbuffers totalling %i bytes (%.3f MB)\n%i 32bit indexbuffers totalling %i bytes (%.3f MB)\n%i vertexbuffers totalling %i bytes (%.3f MB)\n%i uniformbuffers totalling %i bytes (%.3f MB)\ncombined %i buffers totalling %i bytes (%.3fMB)\n", index16count, index16mem, index16mem / 10248576.0, index32count, index32mem, index32mem / 10248576.0, vertexcount, vertexmem, vertexmem / 10248576.0, uniformcount, uniformmem, uniformmem / 10248576.0, totalcount, totalmem, totalmem / 10248576.0);
+	Con_DPrintf("%i 16bit indexbuffers totalling %i bytes (%.3f MB)\n%i 32bit indexbuffers totalling %i bytes (%.3f MB)\n%i vertexbuffers totalling %i bytes (%.3f MB)\n%i uniformbuffers totalling %i bytes (%.3f MB)\ncombined %i buffers totalling %i bytes (%.3fMB)\n", index16count, index16mem, index16mem / 10248576.0, index32count, index32mem, index32mem / 10248576.0, vertexcount, vertexmem, vertexmem / 10248576.0, uniformcount, uniformmem, uniformmem / 10248576.0, totalcount, totalmem, totalmem / 10248576.0);
 }
 
 

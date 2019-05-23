@@ -229,7 +229,7 @@ void CL_SetInfo(const char *key, const char *value, qboolean send, qboolean allo
 	if (fail)
 	{
 		if (!quiet)
-			Con_Printf("Can't setinfo \"%s\" \"%s\"\n", key, value);
+			Con_DPrintf("Can't setinfo \"%s\" \"%s\"\n", key, value);
 		return;
 	}
 	InfoString_SetValue(cls.userinfo, sizeof(cls.userinfo), key, value);
@@ -283,7 +283,7 @@ void CL_ExpandEntities(int num)
 	if (num >= cl.max_entities)
 	{
 		if (!cl.entities)
-			Sys_Error("CL_ExpandEntities: cl.entities not initialized");
+			Con_DPrintf("CL_ExpandEntities: cl.entities not initialized");
 		if (num >= MAX_EDICTS)
 			Host_Error("CL_ExpandEntities: num %i >= %i", num, MAX_EDICTS);
 		oldmaxentities = cl.max_entities;
@@ -498,7 +498,7 @@ static void CL_PrintEntities_f(void)
 			modelname = ent->render.model->name;
 		else
 			modelname = "--no model--";
-		Con_Printf("%3i: %-25s:%4i (%5i %5i %5i) [%3i %3i %3i] %4.2f %5.3f\n", i, modelname, ent->render.framegroupblend[0].frame, (int) ent->state_current.origin[0], (int) ent->state_current.origin[1], (int) ent->state_current.origin[2], (int) ent->state_current.angles[0] % 360, (int) ent->state_current.angles[1] % 360, (int) ent->state_current.angles[2] % 360, ent->render.scale, ent->render.alpha);
+		Con_DPrintf("%3i: %-25s:%4i (%5i %5i %5i) [%3i %3i %3i] %4.2f %5.3f\n", i, modelname, ent->render.framegroupblend[0].frame, (int) ent->state_current.origin[0], (int) ent->state_current.origin[1], (int) ent->state_current.origin[2], (int) ent->state_current.angles[0] % 360, (int) ent->state_current.angles[1] % 360, (int) ent->state_current.angles[2] % 360, ent->render.scale, ent->render.alpha);
 	}
 }
 
@@ -515,7 +515,7 @@ static void CL_ModelIndexList_f(void)
 	dp_model_t *model;
 
 	// Print Header
-	Con_Printf("%3s: %-30s %-8s %-8s\n", "ID", "Name", "Type", "Triangles");
+	Con_DPrintf("%3s: %-30s %-8s %-8s\n", "ID", "Name", "Type", "Triangles");
 
 	for (i = -MAX_MODELS;i < MAX_MODELS;i++)
 	{
@@ -523,9 +523,9 @@ static void CL_ModelIndexList_f(void)
 		if (!model)
 			continue;
 		if(model->loaded || i == 1)
-			Con_Printf("%3i: %-30s %-8s %-10i\n", i, model->name, model->modeldatatypestring, model->surfmesh.num_triangles);
+			Con_DPrintf("%3i: %-30s %-8s %-10i\n", i, model->name, model->modeldatatypestring, model->surfmesh.num_triangles);
 		else
-			Con_Printf("%3i: %-30s %-30s\n", i, model->name, "--no local model found--");
+			Con_DPrintf("%3i: %-30s %-30s\n", i, model->name, "--no local model found--");
 		i++;
 	}
 }
@@ -543,7 +543,7 @@ static void CL_SoundIndexList_f(void)
 
 	while(cl.sound_precache[i] && i != MAX_SOUNDS)
 	{ // Valid Sound
-		Con_Printf("%i : %s\n", i, cl.sound_precache[i]->name);
+		Con_DPrintf("%i : %s\n", i, cl.sound_precache[i]->name);
 		i++;
 	}
 }
@@ -640,7 +640,7 @@ void CL_ClearTempEntities (void)
 	// grow tempentities buffer on request
 	if (r_refdef.scene.expandtempentities)
 	{
-		Con_Printf("CL_NewTempEntity: grow maxtempentities from %i to %i\n", r_refdef.scene.maxtempentities, r_refdef.scene.maxtempentities * 2);
+		Con_DPrintf("CL_NewTempEntity: grow maxtempentities from %i to %i\n", r_refdef.scene.maxtempentities, r_refdef.scene.maxtempentities * 2);
 		r_refdef.scene.maxtempentities *= 2;
 		r_refdef.scene.tempentities = (entity_render_t *)Mem_Realloc(cls.permanentmempool, r_refdef.scene.tempentities, sizeof(entity_render_t) * r_refdef.scene.maxtempentities);
 		r_refdef.scene.expandtempentities = false;
@@ -677,12 +677,12 @@ void CL_Effect(vec3_t org, int modelindex, int startframe, int framecount, float
 		return;
 	if (framerate < 1)
 	{
-		Con_Printf("CL_Effect: framerate %f is < 1\n", framerate);
+		Con_DPrintf("CL_Effect: framerate %f is < 1\n", framerate);
 		return;
 	}
 	if (framecount < 1)
 	{
-		Con_Printf("CL_Effect: framecount %i is < 1\n", framecount);
+		Con_DPrintf("CL_Effect: framecount %i is < 1\n", framecount);
 		return;
 	}
 	for (i = 0, e = cl.effects;i < cl.max_effects;i++, e++)
@@ -720,7 +720,7 @@ void CL_AllocLightFlash(entity_render_t *ent, matrix4x4_t *matrix, float radius,
 	if (i == cl.max_dlights)
 		return;
 
-	//Con_Printf("dlight %i : %f %f %f : %f %f %f\n", i, org[0], org[1], org[2], red * radius, green * radius, blue * radius);
+	//Con_DPrintf("dlight %i : %f %f %f : %f %f %f\n", i, org[0], org[1], org[2], red * radius, green * radius, blue * radius);
 	memset (dl, 0, sizeof(*dl));
 	cl.num_dlights = max(cl.num_dlights, i + 1);
 	Matrix4x4_Normalize(&dl->matrix, matrix);
@@ -1975,7 +1975,7 @@ static void CL_Fog_f (void)
 {
 	if (Cmd_Argc () == 1)
 	{
-		Con_Printf("\"fog\" is \"%f %f %f %f %f %f %f %f %f\"\n", r_refdef.fog_density, r_refdef.fog_red, r_refdef.fog_green, r_refdef.fog_blue, r_refdef.fog_alpha, r_refdef.fog_start, r_refdef.fog_end, r_refdef.fog_height, r_refdef.fog_fadedepth);
+		Con_DPrintf("\"fog\" is \"%f %f %f %f %f %f %f %f %f\"\n", r_refdef.fog_density, r_refdef.fog_red, r_refdef.fog_green, r_refdef.fog_blue, r_refdef.fog_alpha, r_refdef.fog_start, r_refdef.fog_end, r_refdef.fog_height, r_refdef.fog_fadedepth);
 		return;
 	}
 	FOG_clear(); // so missing values get good defaults
@@ -2008,7 +2008,7 @@ static void CL_Fog_HeightTexture_f (void)
 {
 	if (Cmd_Argc () < 11)
 	{
-		Con_Printf("\"fog_heighttexture\" is \"%f %f %f %f %f %f %f %f %f %s\"\n", r_refdef.fog_density, r_refdef.fog_red, r_refdef.fog_green, r_refdef.fog_blue, r_refdef.fog_alpha, r_refdef.fog_start, r_refdef.fog_end, r_refdef.fog_height, r_refdef.fog_fadedepth, r_refdef.fog_height_texturename);
+		Con_DPrintf("\"fog_heighttexture\" is \"%f %f %f %f %f %f %f %f %f %s\"\n", r_refdef.fog_density, r_refdef.fog_red, r_refdef.fog_green, r_refdef.fog_blue, r_refdef.fog_alpha, r_refdef.fog_start, r_refdef.fog_end, r_refdef.fog_height, r_refdef.fog_fadedepth, r_refdef.fog_height_texturename);
 		return;
 	}
 	FOG_clear(); // so missing values get good defaults
@@ -2048,7 +2048,7 @@ static void CL_TimeRefresh_f (void)
 	}
 	timedelta = Sys_DirtyTime() - timestart;
 
-	Con_Printf("%f seconds (%f fps)\n", timedelta, 128/timedelta);
+	Con_DPrintf("%f seconds (%f fps)\n", timedelta, 128/timedelta);
 }
 
 static void CL_AreaStats_f(void)
@@ -2104,7 +2104,7 @@ static void CL_Locs_FreeNode(cl_locnode_t *node)
 			return;
 		}
 	}
-	Con_Printf("CL_Locs_FreeNode: no such node! (%p)\n", (void *)node);
+	Con_DPrintf("CL_Locs_FreeNode: no such node! (%p)\n", (void *)node);
 }
 
 static void CL_Locs_AddNode(vec3_t mins, vec3_t maxs, const char *name)
@@ -2131,7 +2131,7 @@ static void CL_Locs_Add_f(void)
 	vec3_t mins, maxs;
 	if (Cmd_Argc() != 5 && Cmd_Argc() != 8)
 	{
-		Con_Printf("usage: %s x y z[ x y z] name\n", Cmd_Argv(0));
+		Con_DPrintf("usage: %s x y z[ x y z] name\n", Cmd_Argv(0));
 		return;
 	}
 	mins[0] = atof(Cmd_Argv(1));
@@ -2155,7 +2155,7 @@ static void CL_Locs_RemoveNearest_f(void)
 	if (loc)
 		CL_Locs_FreeNode(loc);
 	else
-		Con_Printf("no loc point or box found for your location\n");
+		Con_DPrintf("no loc point or box found for your location\n");
 }
 
 static void CL_Locs_Clear_f(void)
@@ -2171,12 +2171,12 @@ static void CL_Locs_Save_f(void)
 	char locfilename[MAX_QPATH];
 	if (!cl.locnodes)
 	{
-		Con_Printf("No loc points/boxes exist!\n");
+		Con_DPrintf("No loc points/boxes exist!\n");
 		return;
 	}
 	if (cls.state != ca_connected || !cl.worldmodel)
 	{
-		Con_Printf("No level loaded!\n");
+		Con_DPrintf("No level loaded!\n");
 		return;
 	}
 	dpsnprintf(locfilename, sizeof(locfilename), "%s.loc", cl.worldnamenoextension);
@@ -2196,7 +2196,7 @@ static void CL_Locs_Save_f(void)
 			if (VectorCompare(loc->mins, loc->maxs))
 				break;
 		if (loc)
-			Con_Printf("Warning: writing loc file containing a mixture of qizmo-style points and proquake-style boxes may not work in qizmo or proquake!\n");
+			Con_DPrintf("Warning: writing loc file containing a mixture of qizmo-style points and proquake-style boxes may not work in qizmo or proquake!\n");
 	}
 	for (loc = cl.locnodes;loc;loc = loc->next)
 	{
@@ -2249,7 +2249,7 @@ void CL_Locs_Reload_f(void)
 
 	if (cls.state != ca_connected || !cl.worldmodel)
 	{
-		Con_Printf("No level loaded!\n");
+		Con_DPrintf("No level loaded!\n");
 		return;
 	}
 

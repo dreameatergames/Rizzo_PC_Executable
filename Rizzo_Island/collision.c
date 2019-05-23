@@ -52,13 +52,13 @@ void Collision_Init (void)
 static void Collision_PrintBrushAsQHull(colbrushf_t *brush, const char *name)
 {
 	int i;
-	Con_Printf("3 %s\n%i\n", name, brush->numpoints);
+	Con_DPrintf("3 %s\n%i\n", name, brush->numpoints);
 	for (i = 0;i < brush->numpoints;i++)
-		Con_Printf("%f %f %f\n", brush->points[i].v[0], brush->points[i].v[1], brush->points[i].v[2]);
+		Con_DPrintf("%f %f %f\n", brush->points[i].v[0], brush->points[i].v[1], brush->points[i].v[2]);
 	// FIXME: optimize!
-	Con_Printf("4\n%i\n", brush->numplanes);
+	Con_DPrintf("4\n%i\n", brush->numplanes);
 	for (i = 0;i < brush->numplanes;i++)
-		Con_Printf("%f %f %f %f\n", brush->planes[i].normal[0], brush->planes[i].normal[1], brush->planes[i].normal[2], brush->planes[i].dist);
+		Con_DPrintf("%f %f %f %f\n", brush->planes[i].normal[0], brush->planes[i].normal[1], brush->planes[i].normal[2], brush->planes[i].dist);
 }
 
 static void Collision_ValidateBrush(colbrushf_t *brush)
@@ -85,7 +85,7 @@ static void Collision_ValidateBrush(colbrushf_t *brush)
 		pointswithinsufficientplanes = 0;
 		for (k = 0;k < brush->numplanes;k++)
 			if (DotProduct(brush->planes[k].normal, brush->planes[k].normal) < 0.0001f)
-				Con_Printf("Collision_ValidateBrush: plane #%i (%f %f %f %f) is degenerate\n", k, brush->planes[k].normal[0], brush->planes[k].normal[1], brush->planes[k].normal[2], brush->planes[k].dist);
+				Con_DPrintf("Collision_ValidateBrush: plane #%i (%f %f %f %f) is degenerate\n", k, brush->planes[k].normal[0], brush->planes[k].normal[1], brush->planes[k].normal[2], brush->planes[k].dist);
 		for (j = 0;j < brush->numpoints;j++)
 		{
 			pointonplanes = 0;
@@ -94,7 +94,7 @@ static void Collision_ValidateBrush(colbrushf_t *brush)
 				d = DotProduct(brush->points[j].v, brush->planes[k].normal) - brush->planes[k].dist;
 				if (d > COLLISION_PLANE_DIST_EPSILON)
 				{
-					Con_Printf("Collision_ValidateBrush: point #%i (%f %f %f) infront of plane #%i (%f %f %f %f)\n", j, brush->points[j].v[0], brush->points[j].v[1], brush->points[j].v[2], k, brush->planes[k].normal[0], brush->planes[k].normal[1], brush->planes[k].normal[2], brush->planes[k].dist);
+					Con_DPrintf("Collision_ValidateBrush: point #%i (%f %f %f) infront of plane #%i (%f %f %f %f)\n", j, brush->points[j].v[0], brush->points[j].v[1], brush->points[j].v[2], k, brush->planes[k].normal[0], brush->planes[k].normal[1], brush->planes[k].normal[2], brush->planes[k].dist);
 					printbrush = true;
 				}
 				if (fabs(d) > COLLISION_PLANE_DIST_EPSILON)
@@ -569,7 +569,7 @@ colbrushf_t *Collision_AllocBrushFromPermanentPolygonFloat(mempool_t *mempool, i
 	brush->edgedirs = (colpointf_t *)(brush->planes + brush->numplanes);
 	brush->q3surfaceflags = q3surfaceflags;
 	brush->texture = texture;
-	Sys_Error("Collision_AllocBrushFromPermanentPolygonFloat: FIXME: this code needs to be updated to generate a mesh...");
+	Con_DPrintf("Collision_AllocBrushFromPermanentPolygonFloat: FIXME: this code needs to be updated to generate a mesh...");
 	return brush;
 }
 
@@ -649,7 +649,7 @@ void Collision_TraceBrushBrushFloat(trace_t *trace, const colbrushf_t *trace_sta
 		endplane[3] = furthestplanedist_float(endplane, other_end->points, othernumpoints);
 		startdist = nearestplanedist_float(startplane, trace_start->points, tracenumpoints) - startplane[3];
 		enddist = nearestplanedist_float(endplane, trace_end->points, tracenumpoints) - endplane[3];
-		//Con_Printf("%c%i: startdist = %f, enddist = %f, startdist / (startdist - enddist) = %f\n", nplane2 != nplane ? 'b' : 'a', nplane2, startdist, enddist, startdist / (startdist - enddist));
+		//Con_DPrintf("%c%i: startdist = %f, enddist = %f, startdist / (startdist - enddist) = %f\n", nplane2 != nplane ? 'b' : 'a', nplane2, startdist, enddist, startdist / (startdist - enddist));
 
 		// aside from collisions, this is also used for error correction
 		if (startdist <= 0.0f && nplane < numplanes1 && (startdepth < startdist || startdepth == 1))
@@ -814,7 +814,7 @@ void Collision_TraceLineBrushFloat(trace_t *trace, const vec3_t linestart, const
 		endplane[3] = other_end->planes[nplane].dist;
 		startdist = DotProduct(linestart, startplane) - startplane[3];
 		enddist = DotProduct(lineend, endplane) - endplane[3];
-		//Con_Printf("%c%i: startdist = %f, enddist = %f, startdist / (startdist - enddist) = %f\n", nplane2 != nplane ? 'b' : 'a', nplane2, startdist, enddist, startdist / (startdist - enddist));
+		//Con_DPrintf("%c%i: startdist = %f, enddist = %f, startdist / (startdist - enddist) = %f\n", nplane2 != nplane ? 'b' : 'a', nplane2, startdist, enddist, startdist / (startdist - enddist));
 
 		// aside from collisions, this is also used for error correction
 		if (startdist <= 0.0f && (startdepth < startdist || startdepth == 1))
@@ -1757,7 +1757,7 @@ void Collision_ClipToGenericEntity(trace_t *trace, dp_model_t *model, const fram
 	Matrix4x4_Transform(inversematrix, extendtraceinfo.extendstart, starttransformed);
 	Matrix4x4_Transform(inversematrix, extendtraceinfo.extendend, endtransformed);
 #if COLLISIONPARANOID >= 3
-	Con_Printf("trans(%f %f %f -> %f %f %f, %f %f %f -> %f %f %f)", extendtraceinfo.extendstart[0], extendtraceinfo.extendstart[1], extendtraceinfo.extendstart[2], starttransformed[0], starttransformed[1], starttransformed[2], extendtraceinfo.extendend[0], extendtraceinfo.extendend[1], extendtraceinfo.extendend[2], endtransformed[0], endtransformed[1], endtransformed[2]);
+	Con_DPrintf("trans(%f %f %f -> %f %f %f, %f %f %f -> %f %f %f)", extendtraceinfo.extendstart[0], extendtraceinfo.extendstart[1], extendtraceinfo.extendstart[2], starttransformed[0], starttransformed[1], starttransformed[2], extendtraceinfo.extendend[0], extendtraceinfo.extendend[1], extendtraceinfo.extendend[2], endtransformed[0], endtransformed[1], endtransformed[2]);
 #endif
 
 	if (model && model->TraceBox)
@@ -1810,7 +1810,7 @@ void Collision_ClipLineToGenericEntity(trace_t *trace, dp_model_t *model, const 
 	Matrix4x4_Transform(inversematrix, extendtraceinfo.extendstart, starttransformed);
 	Matrix4x4_Transform(inversematrix, extendtraceinfo.extendend, endtransformed);
 #if COLLISIONPARANOID >= 3
-	Con_Printf("trans(%f %f %f -> %f %f %f, %f %f %f -> %f %f %f)", extendtraceinfo.extendstart[0], extendtraceinfo.extendstart[1], extendtraceinfo.extendstart[2], starttransformed[0], starttransformed[1], starttransformed[2], extendtraceinfo.extendend[0], extendtraceinfo.extendend[1], extendtraceinfo.extendend[2], endtransformed[0], endtransformed[1], endtransformed[2]);
+	Con_DPrintf("trans(%f %f %f -> %f %f %f, %f %f %f -> %f %f %f)", extendtraceinfo.extendstart[0], extendtraceinfo.extendstart[1], extendtraceinfo.extendstart[2], starttransformed[0], starttransformed[1], starttransformed[2], extendtraceinfo.extendend[0], extendtraceinfo.extendend[1], extendtraceinfo.extendend[2], endtransformed[0], endtransformed[1], endtransformed[2]);
 #endif
 
 	if (model && model->TraceLineAgainstSurfaces && hitsurfaces)
@@ -1848,7 +1848,7 @@ void Collision_ClipPointToGenericEntity(trace_t *trace, dp_model_t *model, const
 
 	Matrix4x4_Transform(inversematrix, start, starttransformed);
 #if COLLISIONPARANOID >= 3
-	Con_Printf("trans(%f %f %f -> %f %f %f)", start[0], start[1], start[2], starttransformed[0], starttransformed[1], starttransformed[2]);
+	Con_DPrintf("trans(%f %f %f -> %f %f %f)", start[0], start[1], start[2], starttransformed[0], starttransformed[1], starttransformed[2]);
 #endif
 
 	if (model && model->TracePoint)

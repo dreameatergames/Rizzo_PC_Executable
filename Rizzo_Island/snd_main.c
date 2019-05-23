@@ -328,7 +328,7 @@ static void S_SoundList_f (void)
 			unsigned int size;
 
 			size = (unsigned int)sfx->memsize;
-			Con_Printf ("%c%c%c(%5iHz %2db %6s) %8i : %s\n",
+			Con_DPrintf ("%c%c%c(%5iHz %2db %6s) %8i : %s\n",
 						(sfx->loopstart < sfx->total_length) ? 'L' : ' ',
 						(sfx->flags & SFXFLAG_STREAMED) ? 'S' : ' ',
 						(sfx->flags & SFXFLAG_MENUSOUND) ? 'P' : ' ',
@@ -340,9 +340,9 @@ static void S_SoundList_f (void)
 			total += size;
 		}
 		else
-			Con_Printf ("    (  unknown  ) unloaded : %s\n", sfx->name);
+			Con_DPrintf ("    (  unknown  ) unloaded : %s\n", sfx->name);
 	}
-	Con_Printf("Total resident: %i\n", total);
+	Con_DPrintf("Total resident: %i\n", total);
 }
 
 
@@ -354,11 +354,11 @@ static void S_SoundInfo_f(void)
 		return;
 	}
 
-	Con_Printf("%5d speakers\n", snd_renderbuffer->format.channels);
-	Con_Printf("%5d frames\n", snd_renderbuffer->maxframes);
-	Con_Printf("%5d samplebits\n", snd_renderbuffer->format.width * 8);
-	Con_Printf("%5d speed\n", snd_renderbuffer->format.speed);
-	Con_Printf("%5u total_channels\n", total_channels);
+	Con_DPrintf("%5d speakers\n", snd_renderbuffer->format.channels);
+	Con_DPrintf("%5d frames\n", snd_renderbuffer->maxframes);
+	Con_DPrintf("%5d samplebits\n", snd_renderbuffer->format.width * 8);
+	Con_DPrintf("%5d speed\n", snd_renderbuffer->format.speed);
+	Con_DPrintf("%5u total_channels\n", total_channels);
 }
 
 
@@ -458,7 +458,7 @@ static void S_SetChannelLayout (void)
 			break;
 	if (i >= SND_SPEAKERLAYOUTS)
 	{
-		Con_Printf("S_SetChannelLayout: can't find the speaker layout for %hu channels. Defaulting to mono output\n",
+		Con_DPrintf("S_SetChannelLayout: can't find the speaker layout for %hu channels. Defaulting to mono output\n",
 				   snd_renderbuffer->format.channels);
 		i = SND_SPEAKERLAYOUTS - 1;
 	}
@@ -517,7 +517,7 @@ static void S_SetChannelLayout (void)
 			SWAP_LISTENERS(listeners[3], listeners[5], swaplistener);
 		}
 
-		Con_Printf("S_SetChannelLayout: using %s speaker layout for 3D sound\n",
+		Con_DPrintf("S_SetChannelLayout: using %s speaker layout for 3D sound\n",
 				   (layout == SND_CHANNELLAYOUT_ALSA) ? "ALSA" : "standard");
 	}
 
@@ -633,7 +633,7 @@ void S_Startup (void)
 		fixed_speed = true;
 		if (chosen_fmt.speed != prev_render_format.speed)
 		{
-			Con_Printf("S_Startup: sound speed has changed! This is NOT supported yet. Falling back to previous speed (%u Hz)\n",
+			Con_DPrintf("S_Startup: sound speed has changed! This is NOT supported yet. Falling back to previous speed (%u Hz)\n",
 					   prev_render_format.speed);
 			chosen_fmt.speed = prev_render_format.speed;
 		}
@@ -683,7 +683,7 @@ void S_Startup (void)
 		accepted = false;
 		do
 		{
-			Con_Printf("S_Startup: initializing sound output format: %dHz, %d bit, %d channels...\n",
+			Con_DPrintf("S_Startup: initializing sound output format: %dHz, %d bit, %d channels...\n",
 						chosen_fmt.speed, chosen_fmt.width * 8,
 						chosen_fmt.channels);
 
@@ -692,13 +692,13 @@ void S_Startup (void)
 
 			if (!accepted)
 			{
-				Con_Printf("S_Startup: sound output initialization FAILED\n");
+				Con_DPrintf("S_Startup: sound output initialization FAILED\n");
 
 				// If the module is suggesting another one
 				if (suggest_fmt.speed != 0)
 				{
 					memcpy(&chosen_fmt, &suggest_fmt, sizeof(chosen_fmt));
-					Con_Printf ("           Driver has suggested %dHz, %d bit, %d channels. Retrying...\n",
+					Con_DPrintf ("           Driver has suggested %dHz, %d bit, %d channels. Retrying...\n",
 								suggest_fmt.speed, suggest_fmt.width * 8,
 								suggest_fmt.channels);
 				}
@@ -723,7 +723,7 @@ void S_Startup (void)
 	}
 
 	memcpy(&prev_render_format, &snd_renderbuffer->format, sizeof(prev_render_format));
-	Con_Printf("Sound format: %dHz, %d channels, %d bits per sample\n",
+	Con_DPrintf("Sound format: %dHz, %d channels, %d bits per sample\n",
 			   chosen_fmt.speed, chosen_fmt.channels, chosen_fmt.width * 8);
 
 	// Update the cvars
@@ -748,7 +748,7 @@ void S_Startup (void)
 		// some modules write directly to a shared (DMA) buffer
 		extrasoundtime = oldpaintedtime + snd_renderbuffer->maxframes - 1;
 		extrasoundtime -= extrasoundtime % snd_renderbuffer->maxframes;
-		Con_Printf("S_Startup: extra sound time = %u\n", extrasoundtime);
+		Con_DPrintf("S_Startup: extra sound time = %u\n", extrasoundtime);
 
 		soundtime = extrasoundtime;
 	}
@@ -784,7 +784,7 @@ static void S_Restart_f(void)
 	// So, refuse to do this if we are connected.
 	if(cls.state == ca_connected)
 	{
-		Con_Printf("snd_restart would wreak havoc if you do that while connected!\n");
+		Con_DPrintf("snd_restart would wreak havoc if you do that while connected!\n");
 		return;
 	}
 
@@ -953,7 +953,7 @@ void S_UnloadAllSounds_f (void)
 	// So, refuse to do this if we are connected.
 	if(cls.state == ca_connected)
 	{
-		Con_Printf("snd_unloadallsounds would wreak havoc if you do that while connected!\n");
+		Con_DPrintf("snd_unloadallsounds would wreak havoc if you do that while connected!\n");
 		return;
 	}
 
@@ -988,7 +988,7 @@ sfx_t *S_FindName (const char *name)
 
 	if (strlen (name) >= sizeof (sfx->name))
 	{
-		Con_Printf ("S_FindName: sound name too long (%s)\n", name);
+		Con_DPrintf ("S_FindName: sound name too long (%s)\n", name);
 		return NULL;
 	}
 
@@ -1033,7 +1033,7 @@ void S_FreeSfx (sfx_t *sfx, qboolean force)
 		return;
 
 	if (developer_loading.integer)
-		Con_Printf ("unloading sound %s\n", sfx->name);
+		Con_DPrintf ("unloading sound %s\n", sfx->name);
 
 	// Remove it from the list of known sfx
 	if (sfx == known_sfx)
@@ -1050,7 +1050,7 @@ void S_FreeSfx (sfx_t *sfx, qboolean force)
 			}
 		if (prev_sfx == NULL)
 		{
-			Con_Printf ("S_FreeSfx: Can't find SFX %s in the list!\n", sfx->name);
+			Con_DPrintf ("S_FreeSfx: Can't find SFX %s in the list!\n", sfx->name);
 			return;
 		}
 	}
@@ -1060,7 +1060,7 @@ void S_FreeSfx (sfx_t *sfx, qboolean force)
 	{
 		if (channels[i].sfx == sfx)
 		{
-			Con_Printf("S_FreeSfx: stopping channel %i for sfx \"%s\"\n", i, sfx->name);
+			Con_DPrintf("S_FreeSfx: stopping channel %i for sfx \"%s\"\n", i, sfx->name);
 			S_StopChannel (i, true, false);
 		}
 	}
@@ -1307,7 +1307,7 @@ static void SND_Spatialize_WithSfx(channel_t *ch, qboolean isstatic, sfx_t *sfx)
 	{
 		if (ch->entnum >= MAX_EDICTS)
 		{
-			//Con_Printf("-- entnum %i origin %f %f %f neworigin %f %f %f\n", ch->entnum, ch->origin[0], ch->origin[1], ch->origin[2], cl.entities[ch->entnum].state_current.origin[0], cl.entities[ch->entnum].state_current.origin[1], cl.entities[ch->entnum].state_current.origin[2]);
+			//Con_DPrintf("-- entnum %i origin %f %f %f neworigin %f %f %f\n", ch->entnum, ch->origin[0], ch->origin[1], ch->origin[2], cl.entities[ch->entnum].state_current.origin[0], cl.entities[ch->entnum].state_current.origin[1], cl.entities[ch->entnum].state_current.origin[2]);
 
 			if (ch->entnum > MAX_EDICTS)
 				if (!CL_VM_GetEntitySoundOrigin(ch->entnum, ch->origin))
@@ -1316,7 +1316,7 @@ static void SND_Spatialize_WithSfx(channel_t *ch, qboolean isstatic, sfx_t *sfx)
 		else if (cl.entities[ch->entnum].state_current.active)
 		{
 			dp_model_t *model;
-			//Con_Printf("-- entnum %i origin %f %f %f neworigin %f %f %f\n", ch->entnum, ch->origin[0], ch->origin[1], ch->origin[2], cl.entities[ch->entnum].state_current.origin[0], cl.entities[ch->entnum].state_current.origin[1], cl.entities[ch->entnum].state_current.origin[2]);
+			//Con_DPrintf("-- entnum %i origin %f %f %f neworigin %f %f %f\n", ch->entnum, ch->origin[0], ch->origin[1], ch->origin[2], cl.entities[ch->entnum].state_current.origin[0], cl.entities[ch->entnum].state_current.origin[1], cl.entities[ch->entnum].state_current.origin[2]);
 			model = CL_GetModelByIndex(cl.entities[ch->entnum].state_current.modelindex);
 			if (model && model->soundfromcenter)
 				VectorMAM(0.5f, cl.entities[ch->entnum].render.mins, 0.5f, cl.entities[ch->entnum].render.maxs, ch->origin);
@@ -1325,7 +1325,7 @@ static void SND_Spatialize_WithSfx(channel_t *ch, qboolean isstatic, sfx_t *sfx)
 		}
 		else if (cl.csqc_server2csqcentitynumber[ch->entnum])
 		{
-			//Con_Printf("-- entnum %i (client %i) origin %f %f %f neworigin %f %f %f\n", ch->entnum, cl.csqc_server2csqcentitynumber[ch->entnum], ch->origin[0], ch->origin[1], ch->origin[2], cl.entities[ch->entnum].state_current.origin[0], cl.entities[ch->entnum].state_current.origin[1], cl.entities[ch->entnum].state_current.origin[2]);
+			//Con_DPrintf("-- entnum %i (client %i) origin %f %f %f neworigin %f %f %f\n", ch->entnum, cl.csqc_server2csqcentitynumber[ch->entnum], ch->origin[0], ch->origin[1], ch->origin[2], cl.entities[ch->entnum].state_current.origin[0], cl.entities[ch->entnum].state_current.origin[1], cl.entities[ch->entnum].state_current.origin[2]);
 
 			if (!CL_VM_GetEntitySoundOrigin(cl.csqc_server2csqcentitynumber[ch->entnum] + MAX_EDICTS, ch->origin))
 				ch->entnum = MAX_EDICTS; // entity was removed, disown sound
@@ -1620,7 +1620,7 @@ static void S_PlaySfxOnChannel (sfx_t *sfx, channel_t *target_chan, unsigned int
 {
 	if (!sfx)
 	{
-		Con_Printf("S_PlaySfxOnChannel called with NULL??\n");
+		Con_DPrintf("S_PlaySfxOnChannel called with NULL??\n");
 		return;
 	}
 
@@ -1640,7 +1640,7 @@ static void S_PlaySfxOnChannel (sfx_t *sfx, channel_t *target_chan, unsigned int
 	if (target_chan->sfx)
 	{
 		int channelindex = (int)(target_chan - channels);
-		Con_Printf("S_PlaySfxOnChannel(%s): channel %i already in use??  Clearing.\n", sfx->name, channelindex);
+		Con_DPrintf("S_PlaySfxOnChannel(%s): channel %i already in use??  Clearing.\n", sfx->name, channelindex);
 		S_StopChannel (channelindex, true, false);
 	}
 	// We MUST set sfx LAST because otherwise we could crash a threaded mixer
@@ -1915,7 +1915,7 @@ void S_StaticSound (sfx_t *sfx, vec3_t origin, float fvol, float attenuation)
 		return;
 	if (!sfx->fetcher)
 	{
-		Con_Printf ("S_StaticSound: \"%s\" hasn't been precached\n", sfx->name);
+		Con_DPrintf ("S_StaticSound: \"%s\" hasn't been precached\n", sfx->name);
 		return;
 	}
 
@@ -2073,7 +2073,7 @@ static void S_PaintAndSubmit (void)
 						extrasoundtime);
 		}
 		else if (!soundtimehack)
-			Con_Printf("S_PaintAndSubmit: WARNING: newsoundtime < soundtime (%u < %u)\n",
+			Con_DPrintf("S_PaintAndSubmit: WARNING: newsoundtime < soundtime (%u < %u)\n",
 					   newsoundtime, soundtime);
 	}
 	soundtime = newsoundtime;
@@ -2300,7 +2300,7 @@ void S_Update(const matrix4x4_t *listenermatrix)
 
 	// debugging output
 	if (snd_show.integer)
-		Con_Printf("----(%u)----\n", cls.soundstats.mixedsounds);
+		Con_DPrintf("----(%u)----\n", cls.soundstats.mixedsounds);
 
 	S_PaintAndSubmit();
 }
@@ -2324,7 +2324,7 @@ qboolean S_LocalSound (const char *sound)
 	sfx = S_PrecacheSound (sound, true, false);
 	if (!sfx)
 	{
-		Con_Printf("S_LocalSound: can't precache %s\n", sound);
+		Con_DPrintf("S_LocalSound: can't precache %s\n", sound);
 		return false;
 	}
 

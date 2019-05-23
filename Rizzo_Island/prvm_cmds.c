@@ -34,7 +34,7 @@ void VM_Warning(prvm_prog_t *prog, const char *fmt, ...)
 
 	Con_Print(msg);
 
-	// TODO: either add a cvar/cmd to control the state dumping or replace some of the calls with Con_Printf [9/13/2006 Black]
+	// TODO: either add a cvar/cmd to control the state dumping or replace some of the calls with Con_DPrintf [9/13/2006 Black]
 	if(prvm_backtraceforwarnings.integer && recursive != realtime) // NOTE: this compares to the time, just in case if PRVM_PrintState causes a Host_Error and keeps recursive set
 	{
 		recursive = realtime;
@@ -331,7 +331,7 @@ void VM_error(prvm_prog_t *prog)
 	char string[VM_STRINGTEMP_LENGTH];
 
 	VM_VarString(prog, 0, string, sizeof(string));
-	Con_Printf("======%s ERROR in %s:\n%s\n", prog->name, PRVM_GetString(prog, prog->xfunction->s_name), string);
+	Con_DPrintf("======%s ERROR in %s:\n%s\n", prog->name, PRVM_GetString(prog, prog->xfunction->s_name), string);
 	ed = PRVM_PROG_TO_EDICT(PRVM_allglobaledict(self));
 	PRVM_ED_Print(prog, ed, NULL);
 
@@ -354,11 +354,11 @@ void VM_objerror(prvm_prog_t *prog)
 	char string[VM_STRINGTEMP_LENGTH];
 
 	VM_VarString(prog, 0, string, sizeof(string));
-	Con_Printf("======OBJECT ERROR======\n"); // , prog->name, PRVM_GetString(prog->xfunction->s_name), string); // or include them? FIXME
+	Con_DPrintf("======OBJECT ERROR======\n"); // , prog->name, PRVM_GetString(prog->xfunction->s_name), string); // or include them? FIXME
 	ed = PRVM_PROG_TO_EDICT(PRVM_allglobaledict(self));
 	PRVM_ED_Print(prog, ed, NULL);
 	PRVM_ED_Free (prog, ed);
-	Con_Printf("%s OBJECT ERROR in %s:\n%s\nTip: read above for entity information\n", prog->name, PRVM_GetString(prog, prog->xfunction->s_name), string);
+	Con_DPrintf("%s OBJECT ERROR in %s:\n%s\nTip: read above for entity information\n", prog->name, PRVM_GetString(prog, prog->xfunction->s_name), string);
 }
 
 /*
@@ -1781,12 +1781,12 @@ static qfile_t *VM_GetFileHandle(prvm_prog_t *prog, int index)
 {
 	if (index < 0 || index >= PRVM_MAX_OPENFILES)
 	{
-		Con_Printf("VM_GetFileHandle: invalid file handle %i used in %s\n", index, prog->name);
+		Con_DPrintf("VM_GetFileHandle: invalid file handle %i used in %s\n", index, prog->name);
 		return NULL;
 	}
 	if (prog->openfiles[index] == NULL)
 	{
-		Con_Printf("VM_GetFileHandle: no such file handle %i (or file has been closed) in %s\n", index, prog->name);
+		Con_DPrintf("VM_GetFileHandle: no such file handle %i (or file has been closed) in %s\n", index, prog->name);
 		return NULL;
 	}
 	return prog->openfiles[index];

@@ -58,7 +58,7 @@ Host_Quit_f
 void Host_Quit_f (void)
 {
 	if(host_shuttingdown)
-		Con_Printf("shutting down already!\n");
+		Con_DPrintf("shutting down already!\n");
 	else
 		Sys_Quit (0);
 }
@@ -87,7 +87,7 @@ static void Host_Status_f (void)
 			Cmd_ForwardToServer ();
 			return;
 		}
-		print = Con_Printf;
+		print = Con_DPrintf;
 	}
 	else
 		print = SV_ClientPrintf;
@@ -315,7 +315,7 @@ static void Host_Ping_f (void)
 			Cmd_ForwardToServer ();
 			return;
 		}
-		print = Con_Printf;
+		print = Con_DPrintf;
 	}
 	else
 		print = SV_ClientPrintf;
@@ -488,7 +488,7 @@ void Host_Reconnect_f (void)
 		if (temp[0])
 			CL_EstablishConnection(temp, -1);
 		else
-			Con_Printf("Reconnect to what server?  (you have not connected to a server yet)\n");
+			Con_DPrintf("Reconnect to what server?  (you have not connected to a server yet)\n");
 		return;
 	}
 	// if connected, do something based on protocol
@@ -502,7 +502,7 @@ void Host_Reconnect_f (void)
 
 		if (cls.state == ca_connected && cls.signon < SIGNONS)
 		{
-			Con_Printf("reconnecting...\n");
+			Con_DPrintf("reconnecting...\n");
 			MSG_WriteChar(&cls.netcon->message, qw_clc_stringcmd);
 			MSG_WriteString(&cls.netcon->message, "new");
 		}
@@ -572,7 +572,7 @@ void Host_Savegame_to(prvm_prog_t *prog, const char *name)
 
 	isserver = prog == SVVM_prog;
 
-	Con_Printf("Saving game to %s...\n", name);
+	Con_DPrintf("Saving game to %s...\n", name);
 	f = FS_OpenRealFile(name, "wb", false);
 	if (!f)
 	{
@@ -625,7 +625,7 @@ void Host_Savegame_to(prvm_prog_t *prog, const char *name)
 	for (i=0 ; i<prog->num_edicts ; i++)
 	{
 		FS_Printf(f,"// edict %d\n", i);
-		//Con_Printf("edict %d...\n", i);
+		//Con_DPrintf("edict %d...\n", i);
 		PRVM_ED_Write (prog, f, PRVM_EDICT_NUM(i));
 	}
 
@@ -788,7 +788,7 @@ static void Host_Loadgame_f (void)
 	strlcpy (filename, Cmd_Argv(1), sizeof(filename));
 	FS_DefaultExtension (filename, ".sav", sizeof (filename));
 
-	Con_Printf("Loading game from %s...\n", filename);
+	Con_DPrintf("Loading game from %s...\n", filename);
 
 	// stop playing demos
 	if (cls.demoplayback)
@@ -811,7 +811,7 @@ static void Host_Loadgame_f (void)
 	}
 
 	if(developer_entityparsing.integer)
-		Con_Printf("Host_Loadgame_f: loading version\n");
+		Con_DPrintf("Host_Loadgame_f: loading version\n");
 
 	// version
 	COM_ParseToken_Simple(&t, false, false, true);
@@ -819,12 +819,12 @@ static void Host_Loadgame_f (void)
 	if (version != SAVEGAME_VERSION)
 	{
 		Mem_Free(text);
-		Con_Printf("Savegame is version %i, not %i\n", version, SAVEGAME_VERSION);
+		Con_DPrintf("Savegame is version %i, not %i\n", version, SAVEGAME_VERSION);
 		return;
 	}
 
 	if(developer_entityparsing.integer)
-		Con_Printf("Host_Loadgame_f: loading description\n");
+		Con_DPrintf("Host_Loadgame_f: loading description\n");
 
 	// description
 	COM_ParseToken_Simple(&t, false, false, true);
@@ -841,14 +841,14 @@ static void Host_Loadgame_f (void)
 	Cvar_SetValue ("skill", (float)current_skill);
 
 	if(developer_entityparsing.integer)
-		Con_Printf("Host_Loadgame_f: loading mapname\n");
+		Con_DPrintf("Host_Loadgame_f: loading mapname\n");
 
 	// mapname
 	COM_ParseToken_Simple(&t, false, false, true);
 	strlcpy (mapname, com_token, sizeof(mapname));
 
 	if(developer_entityparsing.integer)
-		Con_Printf("Host_Loadgame_f: loading time\n");
+		Con_DPrintf("Host_Loadgame_f: loading time\n");
 
 	// time
 	COM_ParseToken_Simple(&t, false, false, true);
@@ -857,7 +857,7 @@ static void Host_Loadgame_f (void)
 	allowcheats = sv_cheats.integer != 0;
 
 	if(developer_entityparsing.integer)
-		Con_Printf("Host_Loadgame_f: spawning server\n");
+		Con_DPrintf("Host_Loadgame_f: spawning server\n");
 
 	SV_SpawnServer (mapname);
 	if (!sv.active)
@@ -870,7 +870,7 @@ static void Host_Loadgame_f (void)
 	sv.loadgame = true;
 
 	if(developer_entityparsing.integer)
-		Con_Printf("Host_Loadgame_f: loading light styles\n");
+		Con_DPrintf("Host_Loadgame_f: loading light styles\n");
 
 // load the light styles
 
@@ -893,7 +893,7 @@ static void Host_Loadgame_f (void)
 	}
 
 	if(developer_entityparsing.integer)
-		Con_Printf("Host_Loadgame_f: skipping until globals\n");
+		Con_DPrintf("Host_Loadgame_f: skipping until globals\n");
 
 	// now skip everything before the first opening brace
 	// (this is for forward compatibility, so that older versions (at
@@ -936,7 +936,7 @@ static void Host_Loadgame_f (void)
 		if (entnum == -1)
 		{
 			if(developer_entityparsing.integer)
-				Con_Printf("Host_Loadgame_f: loading globals\n");
+				Con_DPrintf("Host_Loadgame_f: loading globals\n");
 
 			// parse the global vars
 			PRVM_ED_ParseGlobals (prog, start);
@@ -959,7 +959,7 @@ static void Host_Loadgame_f (void)
 			ent->priv.server->free = false;
 
 			if(developer_entityparsing.integer)
-				Con_Printf("Host_Loadgame_f: loading edict %d\n", entnum);
+				Con_DPrintf("Host_Loadgame_f: loading edict %d\n", entnum);
 
 			PRVM_ED_ParseEdict (prog, start, ent);
 
@@ -979,7 +979,7 @@ static void Host_Loadgame_f (void)
 		svs.clients[0].spawn_parms[i] = spawn_parms[i];
 
 	if(developer_entityparsing.integer)
-		Con_Printf("Host_Loadgame_f: skipping until extended data\n");
+		Con_DPrintf("Host_Loadgame_f: skipping until extended data\n");
 
 	// read extended data if present
 	// the extended data is stored inside a /* */ comment block, which the
@@ -991,9 +991,9 @@ static void Host_Loadgame_f (void)
 		if (end[0] == '/' && end[1] == '*' && (end[2] == '\r' || end[2] == '\n'))
 		{
 			if(developer_entityparsing.integer)
-				Con_Printf("Host_Loadgame_f: loading extended data\n");
+				Con_DPrintf("Host_Loadgame_f: loading extended data\n");
 
-			Con_Printf("Loading extended DarkPlaces savegame\n");
+			Con_DPrintf("Loading extended DarkPlaces savegame\n");
 			t = end + 2;
 			memset(sv.lightstyles[0], 0, sizeof(sv.lightstyles));
 			memset(sv.model_precache[0], 0, sizeof(sv.model_precache));
@@ -1010,7 +1010,7 @@ static void Host_Loadgame_f (void)
 					if (i >= 0 && i < MAX_LIGHTSTYLES)
 						strlcpy(sv.lightstyles[i], com_token, sizeof(sv.lightstyles[i]));
 					else
-						Con_Printf("unsupported lightstyle %i \"%s\"\n", i, com_token);
+						Con_DPrintf("unsupported lightstyle %i \"%s\"\n", i, com_token);
 				}
 				else if (!strcmp(com_token, "sv.model_precache"))
 				{
@@ -1023,7 +1023,7 @@ static void Host_Loadgame_f (void)
 						sv.models[i] = Mod_ForName (sv.model_precache[i], true, false, sv.model_precache[i][0] == '*' ? sv.worldname : NULL);
 					}
 					else
-						Con_Printf("unsupported model %i \"%s\"\n", i, com_token);
+						Con_DPrintf("unsupported model %i \"%s\"\n", i, com_token);
 				}
 				else if (!strcmp(com_token, "sv.sound_precache"))
 				{
@@ -1033,7 +1033,7 @@ static void Host_Loadgame_f (void)
 					if (i >= 0 && i < MAX_SOUNDS)
 						strlcpy(sv.sound_precache[i], com_token, sizeof(sv.sound_precache[i]));
 					else
-						Con_Printf("unsupported sound %i \"%s\"\n", i, com_token);
+						Con_DPrintf("unsupported sound %i \"%s\"\n", i, com_token);
 				}
 				else if (!strcmp(com_token, "sv.buffer"))
 				{
@@ -1046,18 +1046,18 @@ static void Host_Loadgame_f (void)
 							if (COM_ParseToken_Simple(&t, false, false, true))
 								k |= atoi(com_token);
 							if (!BufStr_FindCreateReplace(prog, i, k, "string"))
-								Con_Printf("failed to create stringbuffer %i\n", i);
+								Con_DPrintf("failed to create stringbuffer %i\n", i);
 						}
 						else
-							Con_Printf("unsupported stringbuffer index %i \"%s\"\n", i, com_token);
+							Con_DPrintf("unsupported stringbuffer index %i \"%s\"\n", i, com_token);
 					}
 					else
-						Con_Printf("unexpected end of line when parsing sv.buffer (expected buffer index)\n");
+						Con_DPrintf("unexpected end of line when parsing sv.buffer (expected buffer index)\n");
 				}
 				else if (!strcmp(com_token, "sv.bufstr"))
 				{
 					if (!COM_ParseToken_Simple(&t, false, false, true))
-						Con_Printf("unexpected end of line when parsing sv.bufstr\n");
+						Con_DPrintf("unexpected end of line when parsing sv.bufstr\n");
 					else
 					{
 						i = atoi(com_token);
@@ -1070,13 +1070,13 @@ static void Host_Loadgame_f (void)
 								if (COM_ParseToken_Simple(&t, false, false, true))
 									BufStr_Set(prog, stringbuffer, k, com_token);
 								else
-									Con_Printf("unexpected end of line when parsing sv.bufstr (expected string)\n");
+									Con_DPrintf("unexpected end of line when parsing sv.bufstr (expected string)\n");
 							}
 							else
-								Con_Printf("unexpected end of line when parsing sv.bufstr (expected strindex)\n");
+								Con_DPrintf("unexpected end of line when parsing sv.bufstr (expected strindex)\n");
 						}
 						else
-							Con_Printf("failed to create stringbuffer %i \"%s\"\n", i, com_token);
+							Con_DPrintf("failed to create stringbuffer %i \"%s\"\n", i, com_token);
 					}
 				}	
 				// skip any trailing text or unrecognized commands
@@ -1097,7 +1097,7 @@ static void Host_Loadgame_f (void)
 	}
 
 	if(developer_entityparsing.integer)
-		Con_Printf("Host_Loadgame_f: finished\n");
+		Con_DPrintf("Host_Loadgame_f: finished\n");
 
 	// make sure we're connected to loopback
 	if (sv.active && cls.state == ca_disconnected)
@@ -1124,7 +1124,7 @@ static void Host_Name_f (void)
 	{
 		if (cmd_source == src_command)
 		{
-			Con_Printf("name: %s\n", cl_name.string);
+			Con_DPrintf("name: %s\n", cl_name.string);
 		}
 		return;
 	}
@@ -1141,8 +1141,8 @@ static void Host_Name_f (void)
 		Cvar_Set ("_cl_name", newName);
 		if (strlen(newNameSource) >= sizeof(newName)) // overflowed
 		{
-			Con_Printf("Your name is longer than %i chars! It has been truncated.\n", (int) (sizeof(newName) - 1));
-			Con_Printf("name: %s\n", cl_name.string);
+			Con_DPrintf("Your name is longer than %i chars! It has been truncated.\n", (int) (sizeof(newName) - 1));
+			Con_DPrintf("name: %s\n", cl_name.string);
 		}
 		return;
 	}
@@ -1254,7 +1254,7 @@ static void Host_Playermodel_f (void)
 	{
 		if (cmd_source == src_command)
 		{
-			Con_Printf("\"playermodel\" is \"%s\"\n", cl_playermodel.string);
+			Con_DPrintf("\"playermodel\" is \"%s\"\n", cl_playermodel.string);
 		}
 		return;
 	}
@@ -1314,7 +1314,7 @@ static void Host_Playerskin_f (void)
 	{
 		if (cmd_source == src_command)
 		{
-			Con_Printf("\"playerskin\" is \"%s\"\n", cl_playerskin.string);
+			Con_DPrintf("\"playerskin\" is \"%s\"\n", cl_playerskin.string);
 		}
 		return;
 	}
@@ -1362,7 +1362,7 @@ static void Host_Playerskin_f (void)
 
 static void Host_Version_f (void)
 {
-	Con_Printf("Version: %s build %s\n", gamename, buildstring);
+	Con_DPrintf("Version: %s build %s\n", gamename, buildstring);
 }
 
 static void Host_Say(qboolean teamonly)
@@ -1645,7 +1645,7 @@ static void Host_Color_f(void)
 	{
 		if (cmd_source == src_command)
 		{
-			Con_Printf("\"color\" is \"%i %i\"\n", cl_color.integer >> 4, cl_color.integer & 15);
+			Con_DPrintf("\"color\" is \"%i %i\"\n", cl_color.integer >> 4, cl_color.integer & 15);
 			Con_Print("color <0-15> [0-15]\n");
 		}
 		return;
@@ -1667,7 +1667,7 @@ static void Host_TopColor_f(void)
 	{
 		if (cmd_source == src_command)
 		{
-			Con_Printf("\"topcolor\" is \"%i\"\n", (cl_color.integer >> 4) & 15);
+			Con_DPrintf("\"topcolor\" is \"%i\"\n", (cl_color.integer >> 4) & 15);
 			Con_Print("topcolor <0-15>\n");
 		}
 		return;
@@ -1682,7 +1682,7 @@ static void Host_BottomColor_f(void)
 	{
 		if (cmd_source == src_command)
 		{
-			Con_Printf("\"bottomcolor\" is \"%i\"\n", cl_color.integer & 15);
+			Con_DPrintf("\"bottomcolor\" is \"%i\"\n", cl_color.integer & 15);
 			Con_Print("bottomcolor <0-15>\n");
 		}
 		return;
@@ -1701,7 +1701,7 @@ static void Host_Rate_f(void)
 	{
 		if (cmd_source == src_command)
 		{
-			Con_Printf("\"rate\" is \"%i\"\n", cl_rate.integer);
+			Con_DPrintf("\"rate\" is \"%i\"\n", cl_rate.integer);
 			Con_Print("rate <bytespersecond>\n");
 		}
 		return;
@@ -1723,7 +1723,7 @@ static void Host_Rate_BurstSize_f(void)
 
 	if (Cmd_Argc() != 2)
 	{
-		Con_Printf("\"rate_burstsize\" is \"%i\"\n", cl_rate_burstsize.integer);
+		Con_DPrintf("\"rate_burstsize\" is \"%i\"\n", cl_rate_burstsize.integer);
 		Con_Print("rate_burstsize <bytes>\n");
 		return;
 	}
@@ -1775,7 +1775,7 @@ static void Host_Pause_f (void)
 			Cmd_ForwardToServer ();
 			return;
 		}
-		print = Con_Printf;
+		print = Con_DPrintf;
 	}
 	else
 		print = SV_ClientPrintf;
@@ -1821,7 +1821,7 @@ static void Host_PModel_f (void)
 	{
 		if (cmd_source == src_command)
 		{
-			Con_Printf("\"pmodel\" is \"%s\"\n", cl_pmodel.string);
+			Con_DPrintf("\"pmodel\" is \"%s\"\n", cl_pmodel.string);
 		}
 		return;
 	}
@@ -1916,7 +1916,7 @@ static void Host_Spawn_f (void)
 	}
 	else
 	{
-		//Con_Printf("Host_Spawn_f: host_client->edict->netname = %s, host_client->edict->netname = %s, host_client->name = %s\n", PRVM_GetString(PRVM_serveredictstring(host_client->edict, netname)), PRVM_GetString(PRVM_serveredictstring(host_client->edict, netname)), host_client->name);
+		//Con_DPrintf("Host_Spawn_f: host_client->edict->netname = %s, host_client->edict->netname = %s, host_client->name = %s\n", PRVM_GetString(PRVM_serveredictstring(host_client->edict, netname)), PRVM_GetString(PRVM_serveredictstring(host_client->edict, netname)), host_client->name);
 
 		// copy spawn parms out of the client_t
 		for (i=0 ; i< NUM_SPAWN_PARMS ; i++)
@@ -1929,7 +1929,7 @@ static void Host_Spawn_f (void)
 		prog->ExecuteProgram(prog, PRVM_serverfunction(ClientConnect), "QC function ClientConnect is missing");
 
 		if (cls.state == ca_dedicated)
-			Con_Printf("%s connected\n", host_client->name);
+			Con_DPrintf("%s connected\n", host_client->name);
 
 		PRVM_serverglobalfloat(time) = sv.time;
 		prog->ExecuteProgram(prog, PRVM_serverfunction(PutClientInServer), "QC function PutClientInServer is missing");
@@ -2040,7 +2040,7 @@ static void Host_Begin_f (void)
 				break;
 		if (i == svs.maxclients)
 		{
-			Con_Printf("Loaded game, everyone rejoined - unpausing\n");
+			Con_DPrintf("Loaded game, everyone rejoined - unpausing\n");
 			sv.paused = sv.loadgame = false; // we're basically done with loading now
 		}
 	}
@@ -2302,7 +2302,7 @@ static void Host_Viewmodel_f (void)
 			cl.model_precache[(int)PRVM_serveredictfloat(e, modelindex)] = m;
 		}
 		else
-			Con_Printf("viewmodel: can't load %s\n", Cmd_Argv(1));
+			Con_DPrintf("viewmodel: can't load %s\n", Cmd_Argv(1));
 	}
 }
 
@@ -2338,9 +2338,9 @@ static void Host_Viewframe_f (void)
 static void PrintFrameName (dp_model_t *m, int frame)
 {
 	if (m->animscenes)
-		Con_Printf("frame %i: %s\n", frame, m->animscenes[frame].name);
+		Con_DPrintf("frame %i: %s\n", frame, m->animscenes[frame].name);
 	else
-		Con_Printf("frame %i\n", frame);
+		Con_DPrintf("frame %i\n", frame);
 }
 
 /*
@@ -2421,7 +2421,7 @@ static void Host_Startdemos_f (void)
 	c = Cmd_Argc() - 1;
 	if (c > MAX_DEMOS)
 	{
-		Con_Printf("Max %i demos in demoloop\n", MAX_DEMOS);
+		Con_DPrintf("Max %i demos in demoloop\n", MAX_DEMOS);
 		c = MAX_DEMOS;
 	}
 	Con_DPrintf("%i demo(s) in loop\n", c);
@@ -2520,7 +2520,7 @@ static void MaxPlayers_f(void)
 
 	if (Cmd_Argc() != 2)
 	{
-		Con_Printf("\"maxplayers\" is \"%u\"\n", svs.maxclients_next);
+		Con_DPrintf("\"maxplayers\" is \"%u\"\n", svs.maxclients_next);
 		return;
 	}
 
@@ -2532,7 +2532,7 @@ static void MaxPlayers_f(void)
 
 	n = atoi(Cmd_Argv(1));
 	n = bound(1, n, MAX_SCOREBOARD);
-	Con_Printf("\"maxplayers\" set to \"%u\"\n", n);
+	Con_DPrintf("\"maxplayers\" set to \"%u\"\n", n);
 
 	svs.maxclients_next = n;
 	if (n == 1)
@@ -2556,13 +2556,13 @@ static void Host_PQRcon_f (void)
 
 	if (Cmd_Argc() == 1)
 	{
-		Con_Printf("%s: Usage: %s command\n", Cmd_Argv(0), Cmd_Argv(0));
+		Con_DPrintf("%s: Usage: %s command\n", Cmd_Argv(0), Cmd_Argv(0));
 		return;
 	}
 
 	if (!rcon_password.string || !rcon_password.string[0] || rcon_secure.integer > 0)
 	{
-		Con_Printf ("You must set rcon_password before issuing an pqrcon command, and rcon_secure must be 0.\n");
+		Con_DPrintf ("You must set rcon_password before issuing an pqrcon command, and rcon_secure must be 0.\n");
 		return;
 	}
 
@@ -2575,7 +2575,7 @@ static void Host_PQRcon_f (void)
 	{
 		if (!rcon_address.string[0])
 		{
-			Con_Printf ("You must either be connected, or set the rcon_address cvar to issue rcon commands\n");
+			Con_DPrintf ("You must either be connected, or set the rcon_address cvar to issue rcon commands\n");
 			return;
 		}
 		LHNETADDRESS_FromString(&cls.rcon_address, rcon_address.string, sv_netport.integer);
@@ -2618,13 +2618,13 @@ static void Host_Rcon_f (void) // credit: taken from QuakeWorld
 
 	if (Cmd_Argc() == 1)
 	{
-		Con_Printf("%s: Usage: %s command\n", Cmd_Argv(0), Cmd_Argv(0));
+		Con_DPrintf("%s: Usage: %s command\n", Cmd_Argv(0), Cmd_Argv(0));
 		return;
 	}
 
 	if (!rcon_password.string || !rcon_password.string[0])
 	{
-		Con_Printf ("You must set rcon_password before issuing an rcon command.\n");
+		Con_DPrintf ("You must set rcon_password before issuing an rcon command.\n");
 		return;
 	}
 
@@ -2637,7 +2637,7 @@ static void Host_Rcon_f (void) // credit: taken from QuakeWorld
 	{
 		if (!rcon_address.string[0])
 		{
-			Con_Printf ("You must either be connected, or set the rcon_address cvar to issue rcon commands\n");
+			Con_DPrintf ("You must either be connected, or set the rcon_address cvar to issue rcon commands\n");
 			return;
 		}
 		LHNETADDRESS_FromString(&cls.rcon_address, rcon_address.string, sv_netport.integer);
@@ -2652,7 +2652,7 @@ static void Host_Rcon_f (void) // credit: taken from QuakeWorld
 			{
 				char s[128];
 				LHNETADDRESS_ToString(&cls.rcon_addresses[cls.rcon_ringpos], s, sizeof(s), true);
-				Con_Printf("rcon to %s (for command %s) failed: too many buffered commands (possibly increase MAX_RCONS)\n", s, cls.rcon_commands[cls.rcon_ringpos]);
+				Con_DPrintf("rcon to %s (for command %s) failed: too many buffered commands (possibly increase MAX_RCONS)\n", s, cls.rcon_commands[cls.rcon_ringpos]);
 				cls.rcon_commands[cls.rcon_ringpos][0] = 0;
 				--cls.rcon_trying;
 			}
@@ -2707,7 +2707,7 @@ static void Host_User_f (void) // credit: taken from QuakeWorld
 
 	if (Cmd_Argc() != 2)
 	{
-		Con_Printf ("Usage: user <username / userid>\n");
+		Con_DPrintf ("Usage: user <username / userid>\n");
 		return;
 	}
 
@@ -2723,7 +2723,7 @@ static void Host_User_f (void) // credit: taken from QuakeWorld
 			return;
 		}
 	}
-	Con_Printf ("User not in server.\n");
+	Con_DPrintf ("User not in server.\n");
 }
 
 /*
@@ -2739,18 +2739,18 @@ static void Host_Users_f (void) // credit: taken from QuakeWorld
 	int		c;
 
 	c = 0;
-	Con_Printf ("userid frags name\n");
-	Con_Printf ("------ ----- ----\n");
+	Con_DPrintf ("userid frags name\n");
+	Con_DPrintf ("------ ----- ----\n");
 	for (i = 0;i < cl.maxclients;i++)
 	{
 		if (cl.scores[i].name[0])
 		{
-			Con_Printf ("%6i %4i %s\n", cl.scores[i].qw_userid, cl.scores[i].frags, cl.scores[i].name);
+			Con_DPrintf ("%6i %4i %s\n", cl.scores[i].qw_userid, cl.scores[i].frags, cl.scores[i].name);
 			c++;
 		}
 	}
 
-	Con_Printf ("%i total users\n", c);
+	Con_DPrintf ("%i total users\n", c);
 }
 
 /*
@@ -2766,7 +2766,7 @@ static void Host_FullServerinfo_f (void) // credit: taken from QuakeWorld
 	char temp[512];
 	if (Cmd_Argc() != 2)
 	{
-		Con_Printf ("usage: fullserverinfo <complete info string>\n");
+		Con_DPrintf ("usage: fullserverinfo <complete info string>\n");
 		return;
 	}
 
@@ -2791,7 +2791,7 @@ static void Host_FullInfo_f (void) // credit: taken from QuakeWorld
 
 	if (Cmd_Argc() != 2)
 	{
-		Con_Printf ("fullinfo <complete info string>\n");
+		Con_DPrintf ("fullinfo <complete info string>\n");
 		return;
 	}
 
@@ -2808,7 +2808,7 @@ static void Host_FullInfo_f (void) // credit: taken from QuakeWorld
 		s += len;
 		if (!*s)
 		{
-			Con_Printf ("MISSING VALUE\n");
+			Con_DPrintf ("MISSING VALUE\n");
 			return;
 		}
 		++s; // Skip over backslash.
@@ -2846,7 +2846,7 @@ static void Host_SetInfo_f (void) // credit: taken from QuakeWorld
 	}
 	if (Cmd_Argc() != 3)
 	{
-		Con_Printf ("usage: setinfo [ <key> <value> ]\n");
+		Con_DPrintf ("usage: setinfo [ <key> <value> ]\n");
 		return;
 	}
 	CL_SetInfo(Cmd_Argv(1), Cmd_Argv(2), true, false, false, false);
@@ -2872,13 +2872,13 @@ static void Host_Packet_f (void) // credit: taken from QuakeWorld
 
 	if (Cmd_Argc() != 3)
 	{
-		Con_Printf ("packet <destination> <contents>\n");
+		Con_DPrintf ("packet <destination> <contents>\n");
 		return;
 	}
 
 	if (!LHNETADDRESS_FromString (&address, Cmd_Argv(1), sv_netport.integer))
 	{
-		Con_Printf ("Bad address\n");
+		Con_DPrintf ("Bad address\n");
 		return;
 	}
 

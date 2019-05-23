@@ -771,7 +771,7 @@ static pack_t *FS_LoadPackPK3FromFD (const char *packfile, filedesc_t packhandle
 	if (! PK3_GetEndOfCentralDir (packfile, packhandle, &eocd))
 	{
 		if(!silent)
-			Con_Printf ("%s is not a PK3 file\n", packfile);
+			Con_DPrintf ("%s is not a PK3 file\n", packfile);
 		FILEDESC_CLOSE(packhandle);
 		return NULL;
 	}
@@ -779,7 +779,7 @@ static pack_t *FS_LoadPackPK3FromFD (const char *packfile, filedesc_t packhandle
 	// Multi-volume ZIP archives are NOT allowed
 	if (eocd.disknum != 0 || eocd.cdir_disknum != 0)
 	{
-		Con_Printf ("%s is a multi-volume ZIP archive\n", packfile);
+		Con_DPrintf ("%s is a multi-volume ZIP archive\n", packfile);
 		FILEDESC_CLOSE(packhandle);
 		return NULL;
 	}
@@ -789,7 +789,7 @@ static pack_t *FS_LoadPackPK3FromFD (const char *packfile, filedesc_t packhandle
 #if MAX_FILES_IN_PACK < 65535
 	if (eocd.nbentries > MAX_FILES_IN_PACK)
 	{
-		Con_Printf ("%s contains too many files (%hu)\n", packfile, eocd.nbentries);
+		Con_DPrintf ("%s contains too many files (%hu)\n", packfile, eocd.nbentries);
 		FILEDESC_CLOSE(packhandle);
 		return NULL;
 	}
@@ -806,7 +806,7 @@ static pack_t *FS_LoadPackPK3FromFD (const char *packfile, filedesc_t packhandle
 	real_nb_files = PK3_BuildFileList (pack, &eocd);
 	if (real_nb_files < 0)
 	{
-		Con_Printf ("%s is not a valid PK3 file\n", packfile);
+		Con_DPrintf ("%s is not a valid PK3 file\n", packfile);
 		FILEDESC_CLOSE(pack->handle);
 		Mem_Free(pack);
 		return NULL;
@@ -846,13 +846,13 @@ static qboolean PK3_GetTrueFileOffset (packfile_t *pfile, pack_t *pack)
 	// Load the local file description
 	if (FILEDESC_SEEK (pack->handle, pfile->offset, SEEK_SET) == -1)
 	{
-		Con_Printf ("Can't seek in package %s\n", pack->filename);
+		Con_DPrintf ("Can't seek in package %s\n", pack->filename);
 		return false;
 	}
 	count = FILEDESC_READ (pack->handle, buffer, ZIP_LOCAL_CHUNK_BASE_SIZE);
 	if (count != ZIP_LOCAL_CHUNK_BASE_SIZE || BuffBigLong (buffer) != ZIP_DATA_HEADER)
 	{
-		Con_Printf ("Can't retrieve file %s in package %s\n", pfile->name, pack->filename);
+		Con_DPrintf ("Can't retrieve file %s in package %s\n", pfile->name, pack->filename);
 		return false;
 	}
 
@@ -902,7 +902,7 @@ static packfile_t* FS_AddFileToPack (const char* name, pack_t* pack,
 
 		// If we found the file, there's a problem
 		if (!diff)
-			Con_Printf ("Package %s contains the file %s several times\n", pack->filename, name);
+			Con_DPrintf ("Package %s contains the file %s several times\n", pack->filename, name);
 
 		// If we're too far in the list
 		if (diff > 0)
@@ -986,12 +986,12 @@ static void FS_Path_f (void)
 		if (s->pack)
 		{
 			if(s->pack->vpack)
-				Con_Printf("%sdir (virtual pack)\n", s->pack->filename);
+				Con_DPrintf("%sdir (virtual pack)\n", s->pack->filename);
 			else
-				Con_Printf("%s (%i files)\n", s->pack->filename, s->pack->numfiles);
+				Con_DPrintf("%s (%i files)\n", s->pack->filename, s->pack->numfiles);
 		}
 		else
-			Con_Printf("%s\n", s->filename);
+			Con_DPrintf("%s\n", s->filename);
 	}
 }
 
@@ -1018,13 +1018,13 @@ static pack_t *FS_LoadPackPAK (const char *packfile)
 		return NULL;
 	if(FILEDESC_READ (packhandle, (void *)&header, sizeof(header)) != sizeof(header))
 	{
-		Con_Printf ("%s is not a packfile\n", packfile);
+		Con_DPrintf ("%s is not a packfile\n", packfile);
 		FILEDESC_CLOSE(packhandle);
 		return NULL;
 	}
 	if (memcmp(header.id, "PACK", 4))
 	{
-		Con_Printf ("%s is not a packfile\n", packfile);
+		Con_DPrintf ("%s is not a packfile\n", packfile);
 		FILEDESC_CLOSE(packhandle);
 		return NULL;
 	}
@@ -1033,7 +1033,7 @@ static pack_t *FS_LoadPackPAK (const char *packfile)
 
 	if (header.dirlen % sizeof(dpackfile_t))
 	{
-		Con_Printf ("%s has an invalid directory size\n", packfile);
+		Con_DPrintf ("%s has an invalid directory size\n", packfile);
 		FILEDESC_CLOSE(packhandle);
 		return NULL;
 	}
@@ -1042,7 +1042,7 @@ static pack_t *FS_LoadPackPAK (const char *packfile)
 
 	if (numpackfiles < 0 || numpackfiles > MAX_FILES_IN_PACK)
 	{
-		Con_Printf ("%s has %i files\n", packfile, numpackfiles);
+		Con_DPrintf ("%s has %i files\n", packfile, numpackfiles);
 		FILEDESC_CLOSE(packhandle);
 		return NULL;
 	}
@@ -1051,7 +1051,7 @@ static pack_t *FS_LoadPackPAK (const char *packfile)
 	FILEDESC_SEEK (packhandle, header.dirofs, SEEK_SET);
 	if(header.dirlen != FILEDESC_READ (packhandle, (void *)info, header.dirlen))
 	{
-		Con_Printf("%s is an incomplete PAK, not loading\n", packfile);
+		Con_DPrintf("%s is an incomplete PAK, not loading\n", packfile);
 		Mem_Free(info);
 		FILEDESC_CLOSE(packhandle);
 		return NULL;
@@ -1147,7 +1147,7 @@ static qboolean FS_AddPack_Fullpath(const char *pakfile, const char *shortname, 
 	else if(!strcasecmp(ext, "obb")) // android apk expansion
 		pak = FS_LoadPackPK3 (pakfile);
 	else
-		Con_Printf("\"%s\" does not have a pack extension\n", pakfile);
+		Con_DPrintf("\"%s\" does not have a pack extension\n", pakfile);
 
 	if(pak)
 	{
@@ -1212,7 +1212,7 @@ static qboolean FS_AddPack_Fullpath(const char *pakfile, const char *shortname, 
 	}
 	else
 	{
-		Con_Printf("unable to load pak \"%s\"\n", pakfile);
+		Con_DPrintf("unable to load pak \"%s\"\n", pakfile);
 		return false;
 	}
 }
@@ -1245,7 +1245,7 @@ qboolean FS_AddPack(const char *pakfile, qboolean *already_loaded, qboolean keep
 	search = FS_FindFile(pakfile, &index, true);
 	if(!search || search->pack)
 	{
-		Con_Printf("could not find pak \"%s\"\n", pakfile);
+		Con_DPrintf("could not find pak \"%s\"\n", pakfile);
 		return false;
 	}
 
@@ -1541,7 +1541,7 @@ qboolean FS_ChangeGameDirs(int numgamedirs, char gamedirs[][MAX_QPATH], qboolean
 	if (numgamedirs > MAX_GAMEDIRS)
 	{
 		if (complain)
-			Con_Printf("That is too many gamedirs (%i > %i)\n", numgamedirs, MAX_GAMEDIRS);
+			Con_DPrintf("That is too many gamedirs (%i > %i)\n", numgamedirs, MAX_GAMEDIRS);
 		return false; // too many gamedirs
 	}
 
@@ -1552,13 +1552,13 @@ qboolean FS_ChangeGameDirs(int numgamedirs, char gamedirs[][MAX_QPATH], qboolean
 		if(!p)
 		{
 			if (complain)
-				Con_Printf("Nasty gamedir name rejected: %s\n", gamedirs[i]);
+				Con_DPrintf("Nasty gamedir name rejected: %s\n", gamedirs[i]);
 			return false; // nasty gamedirs
 		}
 		if(p == fs_checkgamedir_missing && failmissing)
 		{
 			if (complain)
-				Con_Printf("Gamedir missing: %s%s/\n", fs_basedir, gamedirs[i]);
+				Con_DPrintf("Gamedir missing: %s%s/\n", fs_basedir, gamedirs[i]);
 			return false; // missing gamedirs
 		}
 	}
@@ -1604,17 +1604,17 @@ static void FS_GameDir_f (void)
 
 	if (Cmd_Argc() < 2)
 	{
-		Con_Printf("gamedirs active:");
+		Con_DPrintf("gamedirs active:");
 		for (i = 0;i < fs_numgamedirs;i++)
-			Con_Printf(" %s", fs_gamedirs[i]);
-		Con_Printf("\n");
+			Con_DPrintf(" %s", fs_gamedirs[i]);
+		Con_DPrintf("\n");
 		return;
 	}
 
 	numgamedirs = Cmd_Argc() - 1;
 	if (numgamedirs > MAX_GAMEDIRS)
 	{
-		Con_Printf("Too many gamedirs (%i > %i)\n", numgamedirs, MAX_GAMEDIRS);
+		Con_DPrintf("Too many gamedirs (%i > %i)\n", numgamedirs, MAX_GAMEDIRS);
 		return;
 	}
 
@@ -1624,7 +1624,7 @@ static void FS_GameDir_f (void)
 	if ((cls.state == ca_connected && !cls.demoplayback) || sv.active)
 	{
 		// actually, changing during game would work fine, but would be stupid
-		Con_Printf("Can not change gamedir while client is connected or server is running!\n");
+		Con_DPrintf("Can not change gamedir while client is connected or server is running!\n");
 		return;
 	}
 
@@ -2138,13 +2138,13 @@ void FS_Init (void)
 
 	p = FS_CheckGameDir(gamedirname1);
 	if(!p || p == fs_checkgamedir_missing)
-		Con_Printf("WARNING: base gamedir %s%s/ not found!\n", fs_basedir, gamedirname1);
+		Con_DPrintf("WARNING: base gamedir %s%s/ not found!\n", fs_basedir, gamedirname1);
 
 	if(gamedirname2)
 	{
 		p = FS_CheckGameDir(gamedirname2);
 		if(!p || p == fs_checkgamedir_missing)
-			Con_Printf("WARNING: base gamedir %s%s/ not found!\n", fs_basedir, gamedirname2);
+			Con_DPrintf("WARNING: base gamedir %s%s/ not found!\n", fs_basedir, gamedirname2);
 	}
 
 	// -game <gamedir>
@@ -2159,9 +2159,9 @@ void FS_Init (void)
 			i++;
 			p = FS_CheckGameDir(com_argv[i]);
 			if(!p)
-				Sys_Error("Nasty -game name rejected: %s", com_argv[i]);
+				Con_DPrintf("Nasty -game name rejected: %s", com_argv[i]);
 			if(p == fs_checkgamedir_missing)
-				Con_Printf("WARNING: -game %s%s/ not found!\n", fs_basedir, com_argv[i]);
+				Con_DPrintf("WARNING: -game %s%s/ not found!\n", fs_basedir, com_argv[i]);
 			// add the gamedir to the list of active gamedirs
 			strlcpy (fs_gamedirs[fs_numgamedirs], com_argv[i], sizeof(fs_gamedirs[fs_numgamedirs]));
 			fs_numgamedirs++;
@@ -2236,7 +2236,7 @@ static filedesc_t FS_SysOpenFiledesc(const char *filepath, const char *mode, qbo
 			opt = O_CREAT | O_APPEND;
 			break;
 		default:
-			Con_Printf ("FS_SysOpen(%s, %s): invalid mode\n", filepath, mode);
+			Con_DPrintf ("FS_SysOpen(%s, %s): invalid mode\n", filepath, mode);
 			return FILEDESC_INVALID;
 	}
 	for (ind = 1; mode[ind] != '\0'; ind++)
@@ -2253,7 +2253,7 @@ static filedesc_t FS_SysOpenFiledesc(const char *filepath, const char *mode, qbo
 				dolock = true;
 				break;
 			default:
-				Con_Printf ("FS_SysOpen(%s, %s): unknown character in mode (%c)\n",
+				Con_DPrintf ("FS_SysOpen(%s, %s): unknown character in mode (%c)\n",
 							filepath, mode, mode[ind]);
 		}
 	}
@@ -2363,7 +2363,7 @@ static qfile_t *FS_OpenPackedFile (pack_t* pack, int pack_ind)
 	// No Zlib DLL = no compressed files
 	if (!zlib_dll && (pfile->flags & PACKFILE_FLAG_DEFLATED))
 	{
-		Con_Printf("WARNING: can't open the compressed file %s\n"
+		Con_DPrintf("WARNING: can't open the compressed file %s\n"
 					"You need the Zlib DLL to use compressed files\n",
 					pfile->name);
 		return NULL;
@@ -2374,7 +2374,7 @@ static qfile_t *FS_OpenPackedFile (pack_t* pack, int pack_ind)
 	// the dup() call to avoid having to close the dup_handle on error here
 	if (FILEDESC_SEEK (pack->handle, pfile->offset, SEEK_SET) == -1)
 	{
-		Con_Printf ("FS_OpenPackedFile: can't lseek to %s in %s (offset: %08x%08x)\n",
+		Con_DPrintf ("FS_OpenPackedFile: can't lseek to %s in %s (offset: %08x%08x)\n",
 					pfile->name, pack->filename, (unsigned int)(pfile->offset >> 32), (unsigned int)(pfile->offset));
 		return NULL;
 	}
@@ -2382,7 +2382,7 @@ static qfile_t *FS_OpenPackedFile (pack_t* pack, int pack_ind)
 	dup_handle = FILEDESC_DUP (pack->filename, pack->handle);
 	if (!FILEDESC_ISVALID(dup_handle))
 	{
-		Con_Printf ("FS_OpenPackedFile: can't dup package's handle (pack: %s)\n", pack->filename);
+		Con_DPrintf ("FS_OpenPackedFile: can't dup package's handle (pack: %s)\n", pack->filename);
 		return NULL;
 	}
 
@@ -2421,7 +2421,7 @@ static qfile_t *FS_OpenPackedFile (pack_t* pack, int pack_ind)
 		 */
 		if (qz_inflateInit2 (&ztk->zstream, -MAX_WBITS) != Z_OK)
 		{
-			Con_Printf ("FS_OpenPackedFile: inflate init error (file: %s)\n", pfile->name);
+			Con_DPrintf ("FS_OpenPackedFile: inflate init error (file: %s)\n", pfile->name);
 			FILEDESC_CLOSE(dup_handle);
 			Mem_Free(file);
 			return NULL;
@@ -2622,7 +2622,7 @@ static qfile_t *FS_OpenReadFile (const char *filename, qboolean quiet, qboolean 
 	{
 		if(symlinkLevels <= 0)
 		{
-			Con_Printf("symlink: %s: too many levels of symbolic links\n", filename);
+			Con_DPrintf("symlink: %s: too many levels of symbolic links\n", filename);
 			return NULL;
 		}
 		else
@@ -2714,7 +2714,7 @@ qfile_t* FS_OpenRealFile (const char* filepath, const char* mode, qboolean quiet
 
 	if (FS_CheckNastyPath(filepath, false))
 	{
-		Con_Printf("FS_OpenRealFile(\"%s\", \"%s\", %s): nasty filename rejected\n", filepath, mode, quiet ? "true" : "false");
+		Con_DPrintf("FS_OpenRealFile(\"%s\", \"%s\", %s): nasty filename rejected\n", filepath, mode, quiet ? "true" : "false");
 		return NULL;
 	}
 
@@ -2740,7 +2740,7 @@ qfile_t* FS_OpenVirtualFile (const char* filepath, qboolean quiet)
 	qfile_t *result = NULL;
 	if (FS_CheckNastyPath(filepath, false))
 	{
-		Con_Printf("FS_OpenVirtualFile(\"%s\", %s): nasty filename rejected\n", filepath, quiet ? "true" : "false");
+		Con_DPrintf("FS_OpenVirtualFile(\"%s\", %s): nasty filename rejected\n", filepath, quiet ? "true" : "false");
 		return NULL;
 	}
 
@@ -2835,7 +2835,7 @@ fs_offset_t FS_Write (qfile_t* file, const void* data, size_t datasize)
 	{
 		if (FILEDESC_SEEK (file->handle, file->buff_ind - file->buff_len, SEEK_CUR) == -1)
 		{
-			Con_Printf("WARNING: could not seek in %s.\n", file->filename);
+			Con_DPrintf("WARNING: could not seek in %s.\n", file->filename);
 		}
 	}
 
@@ -2995,7 +2995,7 @@ fs_offset_t FS_Read (qfile_t* file, void* buffer, size_t buffersize)
 			FILEDESC_SEEK (file->handle, file->offset + (fs_offset_t)ztk->in_position, SEEK_SET);
 			if (FILEDESC_READ (file->handle, ztk->input, count) != count)
 			{
-				Con_Printf ("FS_Read: unexpected end of file\n");
+				Con_DPrintf ("FS_Read: unexpected end of file\n");
 				break;
 			}
 
@@ -3018,7 +3018,7 @@ fs_offset_t FS_Read (qfile_t* file, void* buffer, size_t buffersize)
 			error = qz_inflate (&ztk->zstream, Z_SYNC_FLUSH);
 			if (error != Z_OK && error != Z_STREAM_END)
 			{
-				Con_Printf ("FS_Read: Can't inflate file\n");
+				Con_DPrintf ("FS_Read: Can't inflate file\n");
 				break;
 			}
 			ztk->in_ind = ztk->in_len - ztk->zstream.avail_in;
@@ -3040,7 +3040,7 @@ fs_offset_t FS_Read (qfile_t* file, void* buffer, size_t buffersize)
 			error = qz_inflate (&ztk->zstream, Z_SYNC_FLUSH);
 			if (error != Z_OK && error != Z_STREAM_END)
 			{
-				Con_Printf ("FS_Read: Can't inflate file\n");
+				Con_DPrintf ("FS_Read: Can't inflate file\n");
 				break;
 			}
 			ztk->in_ind = ztk->in_len - ztk->zstream.avail_in;
@@ -3229,7 +3229,7 @@ int FS_Seek (qfile_t* file, fs_offset_t offset, int whence)
 		ztk->in_position = 0;
 		file->position = 0;
 		if (FILEDESC_SEEK (file->handle, file->offset, SEEK_SET) == -1)
-			Con_Printf("IMPOSSIBLE: couldn't seek in already opened pk3 file.\n");
+			Con_DPrintf("IMPOSSIBLE: couldn't seek in already opened pk3 file.\n");
 
 		// Reset the Zlib stream
 		ztk->zstream.next_in = ztk->input;
@@ -3320,7 +3320,7 @@ static unsigned char *FS_LoadAndCloseQFile (qfile_t *file, const char *path, mem
 		filesize = file->real_length;
 		if(filesize < 0)
 		{
-			Con_Printf("FS_LoadFile(\"%s\", pool, %s, filesizepointer): trying to open a non-regular file\n", path, quiet ? "true" : "false");
+			Con_DPrintf("FS_LoadFile(\"%s\", pool, %s, filesizepointer): trying to open a non-regular file\n", path, quiet ? "true" : "false");
 			FS_Close(file);
 			return NULL;
 		}
@@ -3330,7 +3330,7 @@ static unsigned char *FS_LoadAndCloseQFile (qfile_t *file, const char *path, mem
 		FS_Read (file, buf, filesize);
 		FS_Close (file);
 		if (developer_loadfile.integer)
-			Con_Printf("loaded file \"%s\" (%u bytes)\n", path, (unsigned int)filesize);
+			Con_DPrintf("loaded file \"%s\" (%u bytes)\n", path, (unsigned int)filesize);
 	}
 
 	if (filesizepointer)
@@ -3385,7 +3385,7 @@ qboolean FS_WriteFileInBlocks (const char *filename, const void *const *data, co
 	file = FS_OpenRealFile(filename, "wb", false);
 	if (!file)
 	{
-		Con_Printf("FS_WriteFile: failed on %s\n", filename);
+		Con_DPrintf("FS_WriteFile: failed on %s\n", filename);
 		return false;
 	}
 
@@ -3572,7 +3572,7 @@ fssearch_t *FS_Search(const char *pattern, int caseinsensitive, int quiet)
 
 	if (i > 0)
 	{
-		Con_Printf("Don't use punctuation at the beginning of a search pattern!\n");
+		Con_DPrintf("Don't use punctuation at the beginning of a search pattern!\n");
 		return NULL;
 	}
 
@@ -3613,7 +3613,7 @@ fssearch_t *FS_Search(const char *pattern, int caseinsensitive, int quiet)
 						{
 							stringlistappend(&resultlist, temp);
 							if (!quiet && developer_loading.integer)
-								Con_Printf("SearchPackFile: %s : %s\n", pak->filename, temp);
+								Con_DPrintf("SearchPackFile: %s : %s\n", pak->filename, temp);
 						}
 					}
 					// strip off one path element at a time until empty
@@ -3718,7 +3718,7 @@ fssearch_t *FS_Search(const char *pattern, int caseinsensitive, int quiet)
 					{
 						stringlistappend(&resultlist, matchtemp);
 						if (!quiet && developer_loading.integer)
-							Con_Printf("SearchDirFile: %s\n", matchtemp);
+							Con_DPrintf("SearchDirFile: %s\n", matchtemp);
 					}
 				}
 			}
@@ -3816,7 +3816,7 @@ static int FS_ListDirectory(const char *pattern, int oneperline)
 					}
 				}
 				linebuf[linebufpos] = 0;
-				Con_Printf("%s\n", linebuf);
+				Con_DPrintf("%s\n", linebuf);
 			}
 		}
 		else
@@ -3824,7 +3824,7 @@ static int FS_ListDirectory(const char *pattern, int oneperline)
 	}
 	if (oneperline)
 		for (i = 0;i < numfiles;i++)
-			Con_Printf("%s\n", search->filenames[i]);
+			Con_DPrintf("%s\n", search->filenames[i]);
 	FS_FreeSearch(search);
 	return (int)numfiles;
 }
@@ -3834,7 +3834,7 @@ static void FS_ListDirectoryCmd (const char* cmdname, int oneperline)
 	const char *pattern;
 	if (Cmd_Argc() >= 3)
 	{
-		Con_Printf("usage:\n%s [path/pattern]\n", cmdname);
+		Con_DPrintf("usage:\n%s [path/pattern]\n", cmdname);
 		return;
 	}
 	if (Cmd_Argc() == 2)
@@ -3862,24 +3862,24 @@ void FS_Which_f(void)
 	searchpath_t *sp;
 	if (Cmd_Argc() != 2)
 	{
-		Con_Printf("usage:\n%s <file>\n", Cmd_Argv(0));
+		Con_DPrintf("usage:\n%s <file>\n", Cmd_Argv(0));
 		return;
 	}  
 	filename = Cmd_Argv(1);
 	sp = FS_FindFile(filename, &index, true);
 	if (!sp) {
-		Con_Printf("%s isn't anywhere\n", filename);
+		Con_DPrintf("%s isn't anywhere\n", filename);
 		return;
 	}
 	if (sp->pack)
 	{
 		if(sp->pack->vpack)
-			Con_Printf("%s is in virtual package %sdir\n", filename, sp->pack->shortname);
+			Con_DPrintf("%s is in virtual package %sdir\n", filename, sp->pack->shortname);
 		else
-			Con_Printf("%s is in package %s\n", filename, sp->pack->shortname);
+			Con_DPrintf("%s is in package %s\n", filename, sp->pack->shortname);
 	}
 	else
-		Con_Printf("%s is file %s%s\n", filename, sp->filename, filename);
+		Con_DPrintf("%s is file %s%s\n", filename, sp->filename, filename);
 }
 
 
@@ -3992,7 +3992,7 @@ unsigned char *FS_Deflate(const unsigned char *data, size_t size, size_t *deflat
 
 	if(qz_deflateInit2(&strm, level, Z_DEFLATED, -MAX_WBITS, Z_MEMLEVEL_DEFAULT, Z_BINARY) != Z_OK)
 	{
-		Con_Printf("FS_Deflate: deflate init error!\n");
+		Con_DPrintf("FS_Deflate: deflate init error!\n");
 		return NULL;
 	}
 
@@ -4002,7 +4002,7 @@ unsigned char *FS_Deflate(const unsigned char *data, size_t size, size_t *deflat
 	tmp = (unsigned char *) Mem_Alloc(tempmempool, size);
 	if(!tmp)
 	{
-		Con_Printf("FS_Deflate: not enough memory in tempmempool!\n");
+		Con_DPrintf("FS_Deflate: not enough memory in tempmempool!\n");
 		qz_deflateEnd(&strm);
 		return NULL;
 	}
@@ -4012,7 +4012,7 @@ unsigned char *FS_Deflate(const unsigned char *data, size_t size, size_t *deflat
 
 	if(qz_deflate(&strm, Z_FINISH) != Z_STREAM_END)
 	{
-		Con_Printf("FS_Deflate: deflate failed!\n");
+		Con_DPrintf("FS_Deflate: deflate failed!\n");
 		qz_deflateEnd(&strm);
 		Mem_Free(tmp);
 		return NULL;
@@ -4020,14 +4020,14 @@ unsigned char *FS_Deflate(const unsigned char *data, size_t size, size_t *deflat
 	
 	if(qz_deflateEnd(&strm) != Z_OK)
 	{
-		Con_Printf("FS_Deflate: deflateEnd failed\n");
+		Con_DPrintf("FS_Deflate: deflateEnd failed\n");
 		Mem_Free(tmp);
 		return NULL;
 	}
 
 	if(strm.total_out >= size)
 	{
-		Con_Printf("FS_Deflate: deflate is useless on this data!\n");
+		Con_DPrintf("FS_Deflate: deflate is useless on this data!\n");
 		Mem_Free(tmp);
 		return NULL;
 	}
@@ -4035,7 +4035,7 @@ unsigned char *FS_Deflate(const unsigned char *data, size_t size, size_t *deflat
 	out = (unsigned char *) Mem_Alloc(mempool, strm.total_out);
 	if(!out)
 	{
-		Con_Printf("FS_Deflate: not enough memory in target mempool!\n");
+		Con_DPrintf("FS_Deflate: not enough memory in target mempool!\n");
 		Mem_Free(tmp);
 		return NULL;
 	}
@@ -4091,7 +4091,7 @@ unsigned char *FS_Inflate(const unsigned char *data, size_t size, size_t *inflat
 
 	if(qz_inflateInit2(&strm, -MAX_WBITS) != Z_OK)
 	{
-		Con_Printf("FS_Inflate: inflate init error!\n");
+		Con_DPrintf("FS_Inflate: inflate init error!\n");
 		Mem_Free(outbuf.data);
 		return NULL;
 	}
@@ -4131,7 +4131,7 @@ unsigned char *FS_Inflate(const unsigned char *data, size_t size, size_t *inflat
 		}
 		if(ret != Z_OK && ret != Z_STREAM_END)
 		{
-			Con_Printf("Error after inflating %u bytes\n", (unsigned)strm.total_in);
+			Con_DPrintf("Error after inflating %u bytes\n", (unsigned)strm.total_in);
 			Mem_Free(outbuf.data);
 			qz_inflateEnd(&strm);
 			return NULL;
@@ -4146,7 +4146,7 @@ unsigned char *FS_Inflate(const unsigned char *data, size_t size, size_t *inflat
 	out = (unsigned char *) Mem_Alloc(mempool, outbuf.cursize);
 	if(!out)
 	{
-		Con_Printf("FS_Inflate: not enough memory in target mempool!\n");
+		Con_DPrintf("FS_Inflate: not enough memory in target mempool!\n");
 		Mem_Free(outbuf.data);
 		return NULL;
 	}

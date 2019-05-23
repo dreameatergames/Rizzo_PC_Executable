@@ -470,7 +470,7 @@ static void CD_f (void)
 		{
 			for (n = 1; n < MAXTRACKS; n++)
 				if (*remap[n])
-					Con_Printf("  %u -> %s\n", n, remap[n]);
+					Con_DPrintf("  %u -> %s\n", n, remap[n]);
 			return;
 		}
 		for (n = 1; n <= ret; n++)
@@ -538,34 +538,34 @@ static void CD_f (void)
 	{
 		CDAudio_GetAudioDiskInfo ();
 		if (cdValid)
-			Con_Printf("%u tracks on CD.\n", maxTrack);
+			Con_DPrintf("%u tracks on CD.\n", maxTrack);
 		else
 			Con_Print ("No CD in player.\n");
 		if (cdPlaying)
-			Con_Printf("Currently %s track %u\n", cdPlayLooping ? "looping" : "playing", cdPlayTrack);
+			Con_DPrintf("Currently %s track %u\n", cdPlayLooping ? "looping" : "playing", cdPlayTrack);
 		else if (wasPlaying)
-			Con_Printf("Paused %s track %u\n", cdPlayLooping ? "looping" : "playing", cdPlayTrack);
+			Con_DPrintf("Paused %s track %u\n", cdPlayLooping ? "looping" : "playing", cdPlayTrack);
 		if (cdvolume >= 0)
-			Con_Printf("Volume is %f\n", cdvolume);
+			Con_DPrintf("Volume is %f\n", cdvolume);
 		else
-			Con_Printf("Can't get CD volume\n");
+			Con_DPrintf("Can't get CD volume\n");
 		return;
 	}
 
-	Con_Printf("CD commands:\n");
-	Con_Printf("cd on - enables CD audio system\n");
-	Con_Printf("cd off - stops and disables CD audio system\n");
-	Con_Printf("cd reset - resets CD audio system (clears track remapping and re-reads disc information)\n");
-	Con_Printf("cd rescan - rescans disks in drives (to use another disc)\n");
-	Con_Printf("cd remap <remap1> [remap2] [remap3] [...] - chooses (possibly emulated) CD tracks to play when a map asks for a particular track, this has many uses\n");
-	Con_Printf("cd close - closes CD tray\n");
-	Con_Printf("cd eject - stops playing music and opens CD tray to allow you to change disc\n");
-	Con_Printf("cd play <tracknumber> <startposition> - plays selected track in remapping table\n");
-	Con_Printf("cd loop <tracknumber> <startposition> - plays and repeats selected track in remapping table\n");
-	Con_Printf("cd stop - stops playing current CD track\n");
-	Con_Printf("cd pause - pauses CD playback\n");
-	Con_Printf("cd resume - unpauses CD playback\n");
-	Con_Printf("cd info - prints basic disc information (number of tracks, currently playing track, volume level)\n");
+	Con_DPrintf("CD commands:\n");
+	Con_DPrintf("cd on - enables CD audio system\n");
+	Con_DPrintf("cd off - stops and disables CD audio system\n");
+	Con_DPrintf("cd reset - resets CD audio system (clears track remapping and re-reads disc information)\n");
+	Con_DPrintf("cd rescan - rescans disks in drives (to use another disc)\n");
+	Con_DPrintf("cd remap <remap1> [remap2] [remap3] [...] - chooses (possibly emulated) CD tracks to play when a map asks for a particular track, this has many uses\n");
+	Con_DPrintf("cd close - closes CD tray\n");
+	Con_DPrintf("cd eject - stops playing music and opens CD tray to allow you to change disc\n");
+	Con_DPrintf("cd play <tracknumber> <startposition> - plays selected track in remapping table\n");
+	Con_DPrintf("cd loop <tracknumber> <startposition> - plays and repeats selected track in remapping table\n");
+	Con_DPrintf("cd stop - stops playing current CD track\n");
+	Con_DPrintf("cd pause - pauses CD playback\n");
+	Con_DPrintf("cd resume - unpauses CD playback\n");
+	Con_DPrintf("cd info - prints basic disc information (number of tracks, currently playing track, volume level)\n");
 }
 
 static void CDAudio_SetVolume (float newvol)
@@ -761,7 +761,7 @@ int CDAudio_Startup (void)
 		saved_vol = 1.0f;
 	}
 	else
-		Con_Printf ("Initial CD volume: %g\n", saved_vol);
+		Con_DPrintf ("Initial CD volume: %g\n", saved_vol);
 
 	initialized = true;
 

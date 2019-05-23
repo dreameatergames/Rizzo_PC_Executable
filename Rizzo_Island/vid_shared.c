@@ -597,7 +597,7 @@ qboolean GL_CheckExtension(const char *minglver_or_ext, const dllfunction_t *fun
 			if (ext && !silent)
 				Con_DPrintf("%s is missing function \"%s\" - broken driver!\n", minglver_or_ext, func->name);
 			if (!ext)
-				Con_Printf("OpenGL %s core features are missing function \"%s\" - broken driver!\n", minglver_or_ext, func->name);
+				Con_DPrintf("OpenGL %s core features are missing function \"%s\" - broken driver!\n", minglver_or_ext, func->name);
 			failed = true;
 		}
 	}
@@ -1034,7 +1034,7 @@ void VID_ClearExtensions(void)
 void VID_CheckExtensions(void)
 {
 	if (!GL_CheckExtension("glbase", opengl110funcs, NULL, false))
-		Sys_Error("OpenGL 1.1.0 functions not found");
+		Con_DPrintf("OpenGL 1.1.0 functions not found");
 	vid.support.gl20shaders = GL_CheckExtension("2.0", gl20shaderfuncs, "-noshaders", true);
 
 	CHECKGLERROR
@@ -1157,7 +1157,7 @@ void VID_CheckExtensions(void)
 	if (vid.support.ext_texture_3d && vid.maxtexturesize_3d < 32)
 	{
 		vid.support.ext_texture_3d = false;
-		Con_Printf("GL_EXT_texture3D reported bogus GL_MAX_3D_TEXTURE_SIZE, disabled\n");
+		Con_DPrintf("GL_EXT_texture3D reported bogus GL_MAX_3D_TEXTURE_SIZE, disabled\n");
 	}
 
 	vid.texunits = vid.teximageunits = vid.texarrayunits = 1;
@@ -1176,8 +1176,8 @@ void VID_CheckExtensions(void)
 		vid.sRGBcapable2D = false;
 		vid.sRGBcapable3D = true;
 		vid.useinterleavedarrays = false;
-		Con_Printf("vid.support.arb_multisample %i\n", vid.support.arb_multisample);
-		Con_Printf("vid.support.gl20shaders %i\n", vid.support.gl20shaders);
+		Con_DPrintf("vid.support.arb_multisample %i\n", vid.support.arb_multisample);
+		Con_DPrintf("vid.support.gl20shaders %i\n", vid.support.gl20shaders);
 		vid.allowalphatocoverage = true; // but see below, it may get turned to false again if GL_SAMPLES_ARB is <= 1
 	}
 	else if (vid.support.arb_texture_env_combine && vid.texunits >= 2 && vid_gl13.integer)
@@ -1400,7 +1400,7 @@ void VID_ApplyJoyState(vid_joystate_t *joystate)
 		// DOES NOT WORK - no driver support in xinput1_3.dll :(
 		xinput_keystroke_t keystroke;
 		while (qXInputGetKeystroke && qXInputGetKeystroke(XUSER_INDEX_ANY, 0, &keystroke) == S_OK)
-			Con_Printf("XInput KeyStroke: VirtualKey %i, Unicode %i, Flags %x, UserIndex %i, HidCode %i\n", keystroke.VirtualKey, keystroke.Unicode, keystroke.Flags, keystroke.UserIndex, keystroke.HidCode);
+			Con_DPrintf("XInput KeyStroke: VirtualKey %i, Unicode %i, Flags %x, UserIndex %i, HidCode %i\n", keystroke.VirtualKey, keystroke.Unicode, keystroke.Flags, keystroke.UserIndex, keystroke.HidCode);
 #endif
 
 		// emit key events for buttons
@@ -1458,7 +1458,7 @@ int VID_Shared_SetJoystick(int index)
 	{
 		vid_xinputindex = xinputindex;
 		if (xinputindex >= 0)
-			Con_Printf("Joystick %i opened (XInput Device %i)\n", index, xinputindex);
+			Con_DPrintf("Joystick %i opened (XInput Device %i)\n", index, xinputindex);
 	}
 	return xinputcount;
 #else
@@ -1732,15 +1732,15 @@ void VID_Shared_Init(void)
 #ifdef SSE_POSSIBLE
 	if (Sys_HaveSSE2())
 	{
-		Con_Printf("DPSOFTRAST available (SSE2 instructions detected)\n");
+		Con_DPrintf("DPSOFTRAST available (SSE2 instructions detected)\n");
 		Cvar_RegisterVariable(&vid_soft);
 		Cvar_RegisterVariable(&vid_soft_threads);
 		Cvar_RegisterVariable(&vid_soft_interlace);
 	}
 	else
-		Con_Printf("DPSOFTRAST not available (SSE2 disabled or not detected)\n");
+		Con_DPrintf("DPSOFTRAST not available (SSE2 disabled or not detected)\n");
 #else
-	Con_Printf("DPSOFTRAST not available (SSE2 not compiled in)\n");
+	Con_DPrintf("DPSOFTRAST not available (SSE2 not compiled in)\n");
 #endif
 
 	Cvar_RegisterVariable(&vid_hardwaregammasupported);
@@ -1914,9 +1914,9 @@ static int VID_Mode(int fullscreen, int width, int height, int bpp, float refres
 			vid.sRGB2D = vid.sRGB3D = false;
 
 		if(vid.samples != vid.mode.samples)
-			Con_Printf("NOTE: requested %dx AA, got %dx AA\n", vid.mode.samples, vid.samples);
+			Con_DPrintf("NOTE: requested %dx AA, got %dx AA\n", vid.mode.samples, vid.samples);
 
-		Con_Printf("Video Mode: %s %dx%dx%dx%.2fhz%s%s\n", mode.fullscreen ? "fullscreen" : "window", mode.width, mode.height, mode.bitsperpixel, mode.refreshrate, mode.stereobuffer ? " stereo" : "", mode.samples > 1 ? va(vabuf, sizeof(vabuf), " (%ix AA)", mode.samples) : "");
+		Con_DPrintf("Video Mode: %s %dx%dx%dx%.2fhz%s%s\n", mode.fullscreen ? "fullscreen" : "window", mode.width, mode.height, mode.bitsperpixel, mode.refreshrate, mode.stereobuffer ? " stereo" : "", mode.samples > 1 ? va(vabuf, sizeof(vabuf), " (%ix AA)", mode.samples) : "");
 
 		Cvar_SetValueQuick(&vid_fullscreen, vid.mode.fullscreen);
 		Cvar_SetValueQuick(&vid_width, vid.mode.width);
@@ -1968,7 +1968,7 @@ void VID_Restart_f(void)
 		return;
 	}
 
-	Con_Printf("VID_Restart: changing from %s %dx%dx%dbpp%s%s, to %s %dx%dx%dbpp%s%s.\n",
+	Con_DPrintf("VID_Restart: changing from %s %dx%dx%dbpp%s%s, to %s %dx%dx%dbpp%s%s.\n",
 		vid.mode.fullscreen ? "fullscreen" : "window", vid.mode.width, vid.mode.height, vid.mode.bitsperpixel, vid.mode.fullscreen && vid.mode.userefreshrate ? va(vabuf, sizeof(vabuf), "x%.2fhz", vid.mode.refreshrate) : "", vid.mode.samples > 1 ? va(vabuf2, sizeof(vabuf2), " (%ix AA)", vid.mode.samples) : "",
 		vid_fullscreen.integer ? "fullscreen" : "window", vid_width.integer, vid_height.integer, vid_bitsperpixel.integer, vid_fullscreen.integer && vid_userefreshrate.integer ? va(vabuf, sizeof(vabuf), "x%.2fhz", vid_refreshrate.value) : "", vid_samples.integer > 1 ? va(vabuf2, sizeof(vabuf2), " (%ix AA)", vid_samples.integer) : "");
 	VID_CloseSystems();
@@ -1977,7 +1977,7 @@ void VID_Restart_f(void)
 	{
 		Con_Print("Video mode change failed\n");
 		if (!VID_Mode(vid.mode.fullscreen, vid.mode.width, vid.mode.height, vid.mode.bitsperpixel, vid.mode.refreshrate, vid.mode.stereobuffer, vid.mode.samples))
-			Sys_Error("Unable to restore to last working video mode");
+			Con_DPrintf("Unable to restore to last working video mode");
 	}
 	VID_OpenSystems();
 }
@@ -2047,7 +2047,7 @@ void VID_Start(void)
 			success = VID_Mode(vid_fullscreen.integer, vid_width.integer, vid_height.integer, vid_bitsperpixel.integer, vid_refreshrate.value, vid_stereobuffer.integer, vid_samples.integer);
 		}
 		if (!success)
-			Sys_Error("Video modes failed");
+			Con_DPrintf("Video modes failed");
 	}
 	VID_OpenSystems();
 }

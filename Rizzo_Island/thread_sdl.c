@@ -6,7 +6,7 @@
 int Thread_Init(void)
 {
 #ifdef THREADDISABLE
-	Con_Printf("Threading disabled in this build\n");
+	Con_DPrintf("Threading disabled in this build\n");
 #endif
 	return 0;
 }

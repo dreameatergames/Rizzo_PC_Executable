@@ -31,7 +31,7 @@ void VID_Shutdown(void)
 
 static void signal_handler(int sig)
 {
-	Con_Printf("Received signal %d, exiting...\n", sig);
+	Con_DPrintf("Received signal %d, exiting...\n", sig);
 	Sys_Quit(1);
 }
 

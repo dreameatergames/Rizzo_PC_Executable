@@ -469,26 +469,26 @@ static qboolean BuildXImages(int w, int h)
 	int i;
 	if(DefaultDepth(vidx11_display, vidx11_screen) != 32 && DefaultDepth(vidx11_display, vidx11_screen) != 24)
 	{
-		Con_Printf("Sorry, we only support 24bpp and 32bpp modes\n");
+		Con_DPrintf("Sorry, we only support 24bpp and 32bpp modes\n");
 		VID_Shutdown();
 		return false;
 	}
 	// match to dpsoftrast's specs
 	if(vidx11_visual->red_mask != 0x00FF0000)
 	{
-		Con_Printf("Sorry, we only support BGR visuals\n");
+		Con_DPrintf("Sorry, we only support BGR visuals\n");
 		VID_Shutdown();
 		return false;
 	}
 	if(vidx11_visual->green_mask != 0x0000FF00)
 	{
-		Con_Printf("Sorry, we only support BGR visuals\n");
+		Con_DPrintf("Sorry, we only support BGR visuals\n");
 		VID_Shutdown();
 		return false;
 	}
 	if(vidx11_visual->blue_mask != 0x000000FF)
 	{
-		Con_Printf("Sorry, we only support BGR visuals\n");
+		Con_DPrintf("Sorry, we only support BGR visuals\n");
 		VID_Shutdown();
 		return false;
 	}
@@ -500,27 +500,27 @@ static qboolean BuildXImages(int w, int h)
 			vidx11_ximage[i] = XShmCreateImage(vidx11_display, vidx11_visual, DefaultDepth(vidx11_display, vidx11_screen), ZPixmap, NULL, &vidx11_shminfo[i], w, h);
 			if(!vidx11_ximage[i])
 			{
-				Con_Printf("Failed to get an XImage segment\n");
+				Con_DPrintf("Failed to get an XImage segment\n");
 				VID_Shutdown();
 				return false;
 			}
 			if(vidx11_ximage[i]->bytes_per_line != w * 4)
 			{
-				Con_Printf("Sorry, we only support linear pixel layout\n");
+				Con_DPrintf("Sorry, we only support linear pixel layout\n");
 				VID_Shutdown();
 				return false;
 			}
 			vidx11_shminfo[i].shmid = shmget(IPC_PRIVATE, vidx11_ximage[i]->bytes_per_line * vidx11_ximage[i]->height, IPC_CREAT|0777);
 			if(vidx11_shminfo[i].shmid < 0)
 			{
-				Con_Printf("Failed to get a shm segment\n");
+				Con_DPrintf("Failed to get a shm segment\n");
 				VID_Shutdown();
 				return false;
 			}
 			vidx11_shminfo[i].shmaddr = vidx11_ximage[i]->data = shmat(vidx11_shminfo[i].shmid, NULL, 0);
 			if(!vidx11_shminfo[i].shmaddr)
 			{
-				Con_Printf("Failed to get a shm segment addresst\n");
+				Con_DPrintf("Failed to get a shm segment addresst\n");
 				VID_Shutdown();
 				return false;
 			}
@@ -537,13 +537,13 @@ static qboolean BuildXImages(int w, int h)
 			vidx11_ximage[i] = XCreateImage(vidx11_display, vidx11_visual, DefaultDepth(vidx11_display, vidx11_screen), ZPixmap, 0, (char*)p, w, h, 8, 0);
 			if(!vidx11_ximage[i])
 			{
-				Con_Printf("Failed to get an XImage segment\n");
+				Con_DPrintf("Failed to get an XImage segment\n");
 				VID_Shutdown();
 				return false;
 			}
 			if(vidx11_ximage[i]->bytes_per_line != w * 4)
 			{
-				Con_Printf("Sorry, we only support linear pixel layout\n");
+				Con_DPrintf("Sorry, we only support linear pixel layout\n");
 				VID_Shutdown();
 				return false;
 			}
@@ -637,7 +637,7 @@ static void HandleEvents(void)
 			if (event.xbutton.button <= 18)
 				Key_Event(buttonremap[event.xbutton.button - 1], 0, true);
 			else
-				Con_Printf("HandleEvents: ButtonPress gave value %d, 1-18 expected\n", event.xbutton.button);
+				Con_DPrintf("HandleEvents: ButtonPress gave value %d, 1-18 expected\n", event.xbutton.button);
 			break;
 
 		case ButtonRelease:
@@ -645,7 +645,7 @@ static void HandleEvents(void)
 			if (event.xbutton.button <= 18)
 				Key_Event(buttonremap[event.xbutton.button - 1], 0, false);
 			else
-				Con_Printf("HandleEvents: ButtonRelease gave value %d, 1-18 expected\n", event.xbutton.button);
+				Con_DPrintf("HandleEvents: ButtonRelease gave value %d, 1-18 expected\n", event.xbutton.button);
 			break;
 
 		case CreateNotify:
@@ -672,7 +672,7 @@ static void HandleEvents(void)
 				vid.width = event.xconfigure.width;
 				vid.height = event.xconfigure.height;
 				if(vid_isdesktopfullscreen)
-					Con_Printf("NetWM fullscreen: actually using resolution %dx%d\n", vid.width, vid.height);
+					Con_DPrintf("NetWM fullscreen: actually using resolution %dx%d\n", vid.width, vid.height);
 				else
 					Con_DPrintf("Updating to ConfigureNotify resolution %dx%d\n", vid.width, vid.height);
 
@@ -827,11 +827,11 @@ static void GL_CloseLibrary(void)
 
 static int GL_OpenLibrary(const char *name)
 {
-	Con_Printf("Loading OpenGL driver %s\n", name);
+	Con_DPrintf("Loading OpenGL driver %s\n", name);
 	GL_CloseLibrary();
 	if (!(prjobj = dlopen(name, RTLD_LAZY | RTLD_GLOBAL)))
 	{
-		Con_Printf("Unable to open symbol list for %s\n", name);
+		Con_DPrintf("Unable to open symbol list for %s\n", name);
 		return false;
 	}
 	strlcpy(gl_driver, name, sizeof(gl_driver));
@@ -892,7 +892,7 @@ void VID_Shutdown(void)
 
 static void signal_handler(int sig)
 {
-	Con_Printf("Received signal %d, exiting...\n", sig);
+	Con_DPrintf("Received signal %d, exiting...\n", sig);
 	VID_RestoreSystemGamma();
 	Sys_Quit(1);
 }
@@ -1213,7 +1213,7 @@ static qboolean VID_InitModeSoft(viddef_mode_t *mode)
 			}
 			else
 			{
-				Con_Printf("Skipping NETWM icon #%d because there is no space left\n", i);
+				Con_DPrintf("Skipping NETWM icon #%d because there is no space left\n", i);
 			}
 			++i;
 			Mem_Free(data);
@@ -1283,12 +1283,12 @@ static qboolean VID_InitModeSoft(viddef_mode_t *mode)
 	// COMMANDLINEOPTION: Unix GLX: -noshm disables XShm extensioon
 	if(dpyname && dpyname[0] == ':' && dpyname[1] && (dpyname[2] < '0' || dpyname[2] > '9') && !COM_CheckParm("-noshm") && XShmQueryExtension(vidx11_display))
 	{
-		Con_Printf("Using XShm\n");
+		Con_DPrintf("Using XShm\n");
 		vidx11_shmevent = XShmGetEventBase(vidx11_display) + ShmCompletion;
 	}
 	else
 	{
-		Con_Printf("Not using XShm\n");
+		Con_DPrintf("Not using XShm\n");
 		vidx11_shmevent = -1;
 	}
 	BuildXImages(mode->width, mode->height);
@@ -1303,7 +1303,7 @@ static qboolean VID_InitModeSoft(viddef_mode_t *mode)
 
 	if (DPSOFTRAST_Init(mode->width, mode->height, vid_soft_threads.integer, vid_soft_interlace.integer, (unsigned int *)vid.softpixels, (unsigned int *)vid.softdepthpixels) < 0)
 	{
-		Con_Printf("Failed to initialize software rasterizer\n");
+		Con_DPrintf("Failed to initialize software rasterizer\n");
 		VID_Shutdown();
 		return false;
 	}
@@ -1363,7 +1363,7 @@ static qboolean VID_InitModeGL(viddef_mode_t *mode)
 		drivername = com_argv[i + 1];
 	if (!GL_OpenLibrary(drivername))
 	{
-		Con_Printf("Unable to load GL driver \"%s\"\n", drivername);
+		Con_DPrintf("Unable to load GL driver \"%s\"\n", drivername);
 		return false;
 	}
 
@@ -1412,7 +1412,7 @@ static qboolean VID_InitModeGL(viddef_mode_t *mode)
 	 || (qglXSwapBuffers = (void (GLAPIENTRY *)(Display *dpy, GLXDrawable drawable))GL_GetProcAddress("glXSwapBuffers")) == NULL
 	 || (qglXQueryExtensionsString = (const char *(GLAPIENTRY *)(Display *dpy, int screen))GL_GetProcAddress("glXQueryExtensionsString")) == NULL)
 	{
-		Con_Printf("glX functions not found in %s\n", gl_driver);
+		Con_DPrintf("glX functions not found in %s\n", gl_driver);
 		return false;
 	}
 
@@ -1555,7 +1555,7 @@ static qboolean VID_InitModeGL(viddef_mode_t *mode)
 			}
 			else
 			{
-				Con_Printf("Skipping NETWM icon #%d because there is no space left\n", i);
+				Con_DPrintf("Skipping NETWM icon #%d because there is no space left\n", i);
 			}
 			++i;
 			Mem_Free(data);
@@ -1626,13 +1626,13 @@ static qboolean VID_InitModeGL(viddef_mode_t *mode)
 	XFree(visinfo); // glXChooseVisual man page says to use XFree to free visinfo
 	if (!ctx)
 	{
-		Con_Printf ("glXCreateContext failed\n");
+		Con_DPrintf ("glXCreateContext failed\n");
 		return false;
 	}
 
 	if (!qglXMakeCurrent(vidx11_display, win, ctx))
 	{
-		Con_Printf ("glXMakeCurrent failed\n");
+		Con_DPrintf ("glXMakeCurrent failed\n");
 		return false;
 	}
 
@@ -1640,7 +1640,7 @@ static qboolean VID_InitModeGL(viddef_mode_t *mode)
 
 	if ((qglGetString = (const GLubyte* (GLAPIENTRY *)(GLenum name))GL_GetProcAddress("glGetString")) == NULL)
 	{
-		Con_Printf ("glGetString not found in %s\n", gl_driver);
+		Con_DPrintf ("glGetString not found in %s\n", gl_driver);
 		return false;
 	}
 

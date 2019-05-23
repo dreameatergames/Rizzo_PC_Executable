@@ -369,7 +369,7 @@ void SV_ClientThink (void)
 	prvm_prog_t *prog = SVVM_prog;
 	vec3_t v_angle, angles, velocity;
 
-	//Con_Printf("clientthink for %ims\n", (int) (sv.frametime * 1000));
+	//Con_DPrintf("clientthink for %ims\n", (int) (sv.frametime * 1000));
 
 	SV_ApplyClientMove();
 	// make sure the velocity is sane (not a NaN)
@@ -455,17 +455,17 @@ static void SV_ReadClientMove (void)
 
 	memset(move, 0, sizeof(*move));
 
-	if (sv_message.badread) Con_Printf("SV_ReadClientMessage: badread at %s:%i\n", __FILE__, __LINE__);
+	if (sv_message.badread) Con_DPrintf("SV_ReadClientMessage: badread at %s:%i\n", __FILE__, __LINE__);
 
 	// read ping time
 	if (sv.protocol != PROTOCOL_QUAKE && sv.protocol != PROTOCOL_QUAKEDP && sv.protocol != PROTOCOL_NEHAHRAMOVIE && sv.protocol != PROTOCOL_NEHAHRABJP && sv.protocol != PROTOCOL_NEHAHRABJP2 && sv.protocol != PROTOCOL_NEHAHRABJP3 && sv.protocol != PROTOCOL_DARKPLACES1 && sv.protocol != PROTOCOL_DARKPLACES2 && sv.protocol != PROTOCOL_DARKPLACES3 && sv.protocol != PROTOCOL_DARKPLACES4 && sv.protocol != PROTOCOL_DARKPLACES5 && sv.protocol != PROTOCOL_DARKPLACES6)
 		move->sequence = MSG_ReadLong(&sv_message);
 	move->time = move->clienttime = MSG_ReadFloat(&sv_message);
-	if (sv_message.badread) Con_Printf("SV_ReadClientMessage: badread at %s:%i\n", __FILE__, __LINE__);
+	if (sv_message.badread) Con_DPrintf("SV_ReadClientMessage: badread at %s:%i\n", __FILE__, __LINE__);
 	move->receivetime = (float)sv.time;
 
 #if DEBUGMOVES
-	Con_Printf("%s move%i #%u %ims (%ims) %i %i '%i %i %i' '%i %i %i'\n", move->time > move->receivetime ? "^3read future" : "^4read normal", sv_numreadmoves + 1, move->sequence, (int)floor((move->time - host_client->cmd.time) * 1000.0 + 0.5), (int)floor(move->time * 1000.0 + 0.5), move->impulse, move->buttons, (int)move->viewangles[0], (int)move->viewangles[1], (int)move->viewangles[2], (int)move->forwardmove, (int)move->sidemove, (int)move->upmove);
+	Con_DPrintf("%s move%i #%u %ims (%ims) %i %i '%i %i %i' '%i %i %i'\n", move->time > move->receivetime ? "^3read future" : "^4read normal", sv_numreadmoves + 1, move->sequence, (int)floor((move->time - host_client->cmd.time) * 1000.0 + 0.5), (int)floor(move->time * 1000.0 + 0.5), move->impulse, move->buttons, (int)move->viewangles[0], (int)move->viewangles[1], (int)move->viewangles[2], (int)move->forwardmove, (int)move->sidemove, (int)move->upmove);
 #endif
 	// limit reported time to current time
 	// (incase the client is trying to cheat)
@@ -483,13 +483,13 @@ static void SV_ReadClientMove (void)
 		else
 			move->viewangles[i] = MSG_ReadAngle16i(&sv_message);
 	}
-	if (sv_message.badread) Con_Printf("SV_ReadClientMessage: badread at %s:%i\n", __FILE__, __LINE__);
+	if (sv_message.badread) Con_DPrintf("SV_ReadClientMessage: badread at %s:%i\n", __FILE__, __LINE__);
 
 	// read movement
 	move->forwardmove = MSG_ReadCoord16i(&sv_message);
 	move->sidemove = MSG_ReadCoord16i(&sv_message);
 	move->upmove = MSG_ReadCoord16i(&sv_message);
-	if (sv_message.badread) Con_Printf("SV_ReadClientMessage: badread at %s:%i\n", __FILE__, __LINE__);
+	if (sv_message.badread) Con_DPrintf("SV_ReadClientMessage: badread at %s:%i\n", __FILE__, __LINE__);
 
 	// read buttons
 	// be sure to bitwise OR them into the move->buttons because we want to
@@ -498,11 +498,11 @@ static void SV_ReadClientMove (void)
 		move->buttons = MSG_ReadByte(&sv_message);
 	else
 		move->buttons = MSG_ReadLong(&sv_message);
-	if (sv_message.badread) Con_Printf("SV_ReadClientMessage: badread at %s:%i\n", __FILE__, __LINE__);
+	if (sv_message.badread) Con_DPrintf("SV_ReadClientMessage: badread at %s:%i\n", __FILE__, __LINE__);
 
 	// read impulse
 	move->impulse = MSG_ReadByte(&sv_message);
-	if (sv_message.badread) Con_Printf("SV_ReadClientMessage: badread at %s:%i\n", __FILE__, __LINE__);
+	if (sv_message.badread) Con_DPrintf("SV_ReadClientMessage: badread at %s:%i\n", __FILE__, __LINE__);
 
 	// PRYDON_CLIENTCURSOR
 	if (sv.protocol != PROTOCOL_QUAKE && sv.protocol != PROTOCOL_QUAKEDP && sv.protocol != PROTOCOL_NEHAHRAMOVIE && sv.protocol != PROTOCOL_NEHAHRABJP && sv.protocol != PROTOCOL_NEHAHRABJP2 && sv.protocol != PROTOCOL_NEHAHRABJP3 && sv.protocol != PROTOCOL_DARKPLACES1 && sv.protocol != PROTOCOL_DARKPLACES2 && sv.protocol != PROTOCOL_DARKPLACES3 && sv.protocol != PROTOCOL_DARKPLACES4 && sv.protocol != PROTOCOL_DARKPLACES5)
@@ -526,7 +526,7 @@ static void SV_ReadClientMove (void)
 		// entity is free at time of receipt
 		if (PRVM_EDICT_NUM(move->cursor_entitynumber)->priv.server->free)
 			move->cursor_entitynumber = 0;
-		if (sv_message.badread) Con_Printf("SV_ReadClientMessage: badread at %s:%i\n", __FILE__, __LINE__);
+		if (sv_message.badread) Con_DPrintf("SV_ReadClientMessage: badread at %s:%i\n", __FILE__, __LINE__);
 	}
 
 	// if the previous move has not been applied yet, we need to accumulate
@@ -593,7 +593,7 @@ static void SV_ExecuteClientMoves(void)
 	if (!host_client->begun)
 		return;
 #if DEBUGMOVES
-	Con_Printf("SV_ExecuteClientMoves: read %i moves at sv.time %f\n", sv_numreadmoves, (float)sv.time);
+	Con_DPrintf("SV_ExecuteClientMoves: read %i moves at sv.time %f\n", sv_numreadmoves, (float)sv.time);
 #endif
 	// disable clientside movement prediction in some cases
 	if (ceil(max(sv_readmoves[sv_numreadmoves-1].receivetime - sv_readmoves[sv_numreadmoves-1].time, 0) * 1000.0) < sv_clmovement_minping.integer)
@@ -612,7 +612,7 @@ static void SV_ExecuteClientMoves(void)
 			if (host_client->movesequence < move->sequence || moveindex == sv_numreadmoves - 1)
 			{
 #if DEBUGMOVES
-				Con_Printf("%smove #%u %ims (%ims) %i %i '%i %i %i' '%i %i %i'\n", (move->time - host_client->cmd.time) > sv.frametime * 1.01 ? "^1" : "^2", move->sequence, (int)floor((move->time - host_client->cmd.time) * 1000.0 + 0.5), (int)floor(move->time * 1000.0 + 0.5), move->impulse, move->buttons, (int)move->viewangles[0], (int)move->viewangles[1], (int)move->viewangles[2], (int)move->forwardmove, (int)move->sidemove, (int)move->upmove);
+				Con_DPrintf("%smove #%u %ims (%ims) %i %i '%i %i %i' '%i %i %i'\n", (move->time - host_client->cmd.time) > sv.frametime * 1.01 ? "^1" : "^2", move->sequence, (int)floor((move->time - host_client->cmd.time) * 1000.0 + 0.5), (int)floor(move->time * 1000.0 + 0.5), move->impulse, move->buttons, (int)move->viewangles[0], (int)move->viewangles[1], (int)move->viewangles[2], (int)move->forwardmove, (int)move->sidemove, (int)move->upmove);
 #endif
 				// this is a new move
 				move->time = bound(sv.time - 1, move->time, sv.time); // prevent slowhack/speedhack combos
@@ -636,7 +636,7 @@ static void SV_ExecuteClientMoves(void)
 					continue;
 				}
 
-				//Con_Printf("movesequence = %i (%i lost), moveframetime = %f\n", move->sequence, move->sequence ? move->sequence - host_client->movesequence - 1 : 0, moveframetime);
+				//Con_DPrintf("movesequence = %i (%i lost), moveframetime = %f\n", move->sequence, move->sequence ? move->sequence - host_client->movesequence - 1 : 0, moveframetime);
 				host_client->cmd = *move;
 				host_client->movesequence = move->sequence;
 
@@ -837,7 +837,7 @@ void SV_ReadClientMessage(void)
 		switch (netcmd)
 		{
 		default:
-			Con_Printf("SV_ReadClientMessage: unknown command char %i (at offset 0x%x)\n", netcmd, sv_message.readcount);
+			Con_DPrintf("SV_ReadClientMessage: unknown command char %i (at offset 0x%x)\n", netcmd, sv_message.readcount);
 			if (developer_networking.integer)
 				Com_HexDumpToConsole(sv_message.data, sv_message.cursize);
 			SV_DropClient (false);
@@ -885,7 +885,7 @@ void SV_ReadClientMessage(void)
 			break;
 
 clc_stringcmd_invalid:
-			Con_Printf("Received invalid stringcmd from %s\n", host_client->name);
+			Con_DPrintf("Received invalid stringcmd from %s\n", host_client->name);
 			if(developer.integer > 0)
 				Com_HexDumpToConsole((unsigned char *) s, (int)strlen(s));
 			break;
@@ -951,11 +951,11 @@ clc_stringcmd_invalid:
 			break;
 
 		case clc_ackframe:
-			if (sv_message.badread) Con_Printf("SV_ReadClientMessage: badread at %s:%i\n", __FILE__, __LINE__);
+			if (sv_message.badread) Con_DPrintf("SV_ReadClientMessage: badread at %s:%i\n", __FILE__, __LINE__);
 			num = MSG_ReadLong(&sv_message);
-			if (sv_message.badread) Con_Printf("SV_ReadClientMessage: badread at %s:%i\n", __FILE__, __LINE__);
+			if (sv_message.badread) Con_DPrintf("SV_ReadClientMessage: badread at %s:%i\n", __FILE__, __LINE__);
 			if (developer_networkentities.integer >= 10)
-				Con_Printf("recv clc_ackframe %i\n", num);
+				Con_DPrintf("recv clc_ackframe %i\n", num);
 			// if the client hasn't progressed through signons yet,
 			// ignore any clc_ackframes we get (they're probably from the
 			// previous level)

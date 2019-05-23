@@ -517,12 +517,12 @@ static void GL_TextureMode_f (void)
 
 	if (Cmd_Argc() == 1)
 	{
-		Con_Printf("Texture mode is %sforced\n", gl_filter_force ? "" : "not ");
+		Con_DPrintf("Texture mode is %sforced\n", gl_filter_force ? "" : "not ");
 		for (i = 0;i < 6;i++)
 		{
 			if (gl_filter_min == modes[i].minification)
 			{
-				Con_Printf("%s\n", modes[i].name);
+				Con_DPrintf("%s\n", modes[i].name);
 				return;
 			}
 		}
@@ -771,10 +771,10 @@ void R_TextureStats_Print(qboolean printeach, qboolean printpool, qboolean print
 				poolloadedp += glt->inputdatasize;
 			}
 			if (printeach)
-				Con_Printf("%c%4i%c%c%4i%c %-24s %s %s %s %s\n", isloaded ? '[' : ' ', (glsize + 1023) / 1024, isloaded ? ']' : ' ', glt->inputtexels ? '[' : ' ', (glt->inputdatasize + 1023) / 1024, glt->inputtexels ? ']' : ' ', glt->textype->name, isloaded ? "loaded" : "      ", (glt->flags & TEXF_MIPMAP) ? "mip" : "   ", (glt->flags & TEXF_ALPHA) ? "alpha" : "     ", glt->identifier);
+				Con_DPrintf("%c%4i%c%c%4i%c %-24s %s %s %s %s\n", isloaded ? '[' : ' ', (glsize + 1023) / 1024, isloaded ? ']' : ' ', glt->inputtexels ? '[' : ' ', (glt->inputdatasize + 1023) / 1024, glt->inputtexels ? ']' : ' ', glt->textype->name, isloaded ? "loaded" : "      ", (glt->flags & TEXF_MIPMAP) ? "mip" : "   ", (glt->flags & TEXF_ALPHA) ? "alpha" : "     ", glt->identifier);
 		}
 		if (printpool)
-			Con_Printf("texturepool %10p total: %i (%.3fMB, %.3fMB original), uploaded %i (%.3fMB, %.3fMB original), upload on demand %i (%.3fMB, %.3fMB original)\n", (void *)pool, pooltotal, pooltotalt / 1048576.0, pooltotalp / 1048576.0, poolloaded, poolloadedt / 1048576.0, poolloadedp / 1048576.0, pooltotal - poolloaded, (pooltotalt - poolloadedt) / 1048576.0, (pooltotalp - poolloadedp) / 1048576.0);
+			Con_DPrintf("texturepool %10p total: %i (%.3fMB, %.3fMB original), uploaded %i (%.3fMB, %.3fMB original), upload on demand %i (%.3fMB, %.3fMB original)\n", (void *)pool, pooltotal, pooltotalt / 1048576.0, pooltotalp / 1048576.0, poolloaded, poolloadedt / 1048576.0, poolloadedp / 1048576.0, pooltotal - poolloaded, (pooltotalt - poolloadedt) / 1048576.0, (pooltotalp - poolloadedp) / 1048576.0);
 		sumtotal += pooltotal;
 		sumtotalt += pooltotalt;
 		sumtotalp += pooltotalp;
@@ -783,7 +783,7 @@ void R_TextureStats_Print(qboolean printeach, qboolean printpool, qboolean print
 		sumloadedp += poolloadedp;
 	}
 	if (printtotal)
-		Con_Printf("textures total: %i (%.3fMB, %.3fMB original), uploaded %i (%.3fMB, %.3fMB original), upload on demand %i (%.3fMB, %.3fMB original)\n", sumtotal, sumtotalt / 1048576.0, sumtotalp / 1048576.0, sumloaded, sumloadedt / 1048576.0, sumloadedp / 1048576.0, sumtotal - sumloaded, (sumtotalt - sumloadedt) / 1048576.0, (sumtotalp - sumloadedp) / 1048576.0);
+		Con_DPrintf("textures total: %i (%.3fMB, %.3fMB original), uploaded %i (%.3fMB, %.3fMB original), upload on demand %i (%.3fMB, %.3fMB original)\n", sumtotal, sumtotalt / 1048576.0, sumtotalp / 1048576.0, sumloaded, sumloadedt / 1048576.0, sumloadedp / 1048576.0, sumtotal - sumloaded, (sumtotalt - sumloadedt) / 1048576.0, (sumtotalp - sumloadedp) / 1048576.0);
 }
 
 static void R_TextureStats_f(void)
@@ -920,27 +920,27 @@ static void r_textures_devicerestored(void)
 				if (glt->d3disrendertargetsurface)
 				{
 					if (FAILED(d3dresult = IDirect3DDevice9_CreateRenderTarget(vid_d3d9dev, glt->tilewidth, glt->tileheight, (D3DFORMAT)glt->d3dformat, D3DMULTISAMPLE_NONE, 0, false, (IDirect3DSurface9 **)&glt->d3dsurface, NULL)))
-						Sys_Error("IDirect3DDevice9_CreateRenderTarget failed!");
+						Con_DPrintf("IDirect3DDevice9_CreateRenderTarget failed!");
 				}
 				else if (glt->d3disdepthstencilsurface)
 				{
 					if (FAILED(d3dresult = IDirect3DDevice9_CreateDepthStencilSurface(vid_d3d9dev, glt->tilewidth, glt->tileheight, (D3DFORMAT)glt->d3dformat, D3DMULTISAMPLE_NONE, 0, false, (IDirect3DSurface9 **)&glt->d3dsurface, NULL)))
-						Sys_Error("IDirect3DDevice9_CreateDepthStencilSurface failed!");
+						Con_DPrintf("IDirect3DDevice9_CreateDepthStencilSurface failed!");
 				}
 				else if (glt->tiledepth > 1)
 				{
 					if (FAILED(d3dresult = IDirect3DDevice9_CreateVolumeTexture(vid_d3d9dev, glt->tilewidth, glt->tileheight, glt->tiledepth, glt->miplevels, glt->d3dusage, (D3DFORMAT)glt->d3dformat, (D3DPOOL)glt->d3dpool, (IDirect3DVolumeTexture9 **)&glt->d3dtexture, NULL)))
-						Sys_Error("IDirect3DDevice9_CreateVolumeTexture failed!");
+						Con_DPrintf("IDirect3DDevice9_CreateVolumeTexture failed!");
 				}
 				else if (glt->sides == 6)
 				{
 					if (FAILED(d3dresult = IDirect3DDevice9_CreateCubeTexture(vid_d3d9dev, glt->tilewidth, glt->miplevels, glt->d3dusage, (D3DFORMAT)glt->d3dformat, (D3DPOOL)glt->d3dpool, (IDirect3DCubeTexture9 **)&glt->d3dtexture, NULL)))
-						Sys_Error("IDirect3DDevice9_CreateCubeTexture failed!");
+						Con_DPrintf("IDirect3DDevice9_CreateCubeTexture failed!");
 				}
 				else
 				{
 					if (FAILED(d3dresult = IDirect3DDevice9_CreateTexture(vid_d3d9dev, glt->tilewidth, glt->tileheight, glt->miplevels, glt->d3dusage, (D3DFORMAT)glt->d3dformat, (D3DPOOL)glt->d3dpool, (IDirect3DTexture9 **)&glt->d3dtexture, NULL)))
-						Sys_Error("IDirect3DDevice9_CreateTexture failed!");
+						Con_DPrintf("IDirect3DDevice9_CreateTexture failed!");
 				}
 			}
 #endif
@@ -1173,19 +1173,19 @@ static void GL_SetupTextureParameters(int flags, textype_t textype, int texturet
 static void R_UploadPartialTexture(gltexture_t *glt, const unsigned char *data, int fragx, int fragy, int fragz, int fragwidth, int fragheight, int fragdepth)
 {
 	if (data == NULL)
-		Sys_Error("R_UploadPartialTexture \"%s\": partial update with NULL pixels", glt->identifier);
+		Con_DPrintf("R_UploadPartialTexture \"%s\": partial update with NULL pixels", glt->identifier);
 
 	if (glt->texturetype != GLTEXTURETYPE_2D)
-		Sys_Error("R_UploadPartialTexture \"%s\": partial update of type other than 2D", glt->identifier);
+		Con_DPrintf("R_UploadPartialTexture \"%s\": partial update of type other than 2D", glt->identifier);
 
 	if (glt->textype->textype == TEXTYPE_PALETTE)
-		Sys_Error("R_UploadPartialTexture \"%s\": partial update of paletted texture", glt->identifier);
+		Con_DPrintf("R_UploadPartialTexture \"%s\": partial update of paletted texture", glt->identifier);
 
 	if (glt->flags & (TEXF_MIPMAP | TEXF_PICMIP))
-		Sys_Error("R_UploadPartialTexture \"%s\": partial update not supported with MIPMAP or PICMIP flags", glt->identifier);
+		Con_DPrintf("R_UploadPartialTexture \"%s\": partial update not supported with MIPMAP or PICMIP flags", glt->identifier);
 
 	if (glt->inputwidth != glt->tilewidth || glt->inputheight != glt->tileheight || glt->tiledepth != 1)
-		Sys_Error("R_UploadPartialTexture \"%s\": partial update not supported with stretched or special textures", glt->identifier);
+		Con_DPrintf("R_UploadPartialTexture \"%s\": partial update not supported with stretched or special textures", glt->identifier);
 
 	// update a portion of the image
 
@@ -1248,7 +1248,7 @@ static void R_UploadFullTexture(gltexture_t *glt, const unsigned char *data)
 
 	// error out if a stretch is needed on special texture types
 	if (glt->texturetype != GLTEXTURETYPE_2D && (glt->tilewidth != glt->inputwidth || glt->tileheight != glt->inputheight || glt->tiledepth != glt->inputdepth))
-		Sys_Error("R_UploadFullTexture \"%s\": stretch uploads allowed only on 2D textures\n", glt->identifier);
+		Con_DPrintf("R_UploadFullTexture \"%s\": stretch uploads allowed only on 2D textures\n", glt->identifier);
 
 	// when picmip or maxsize is applied, we scale up to a power of 2 multiple
 	// of the target size and then use the mipmap reduction function to get
@@ -1701,12 +1701,12 @@ static rtexture_t *R_SetupTexture(rtexturepool_t *rtexturepool, const char *iden
 
 	if (texturetype == GLTEXTURETYPE_CUBEMAP && !vid.support.arb_texture_cube_map)
 	{
-		Con_Printf ("R_LoadTexture: cubemap texture not supported by driver\n");
+		Con_DPrintf ("R_LoadTexture: cubemap texture not supported by driver\n");
 		return NULL;
 	}
 	if (texturetype == GLTEXTURETYPE_3D && !vid.support.ext_texture_3d)
 	{
-		Con_Printf ("R_LoadTexture: 3d texture not supported by driver\n");
+		Con_DPrintf ("R_LoadTexture: 3d texture not supported by driver\n");
 		return NULL;
 	}
 
@@ -1714,7 +1714,7 @@ static rtexture_t *R_SetupTexture(rtexturepool_t *rtexturepool, const char *iden
 	size = width * height * depth * sides * texinfo->inputbytesperpixel;
 	if (size < 1)
 	{
-		Con_Printf ("R_LoadTexture: bogus texture size (%dx%dx%dx%dbppx%dsides = %d bytes)\n", width, height, depth, texinfo->inputbytesperpixel * 8, sides, size);
+		Con_DPrintf ("R_LoadTexture: bogus texture size (%dx%dx%dx%dbppx%dsides = %d bytes)\n", width, height, depth, texinfo->inputbytesperpixel * 8, sides, size);
 		return NULL;
 	}
 
@@ -1784,14 +1784,14 @@ static rtexture_t *R_SetupTexture(rtexturepool_t *rtexturepool, const char *iden
 		flags |= TEXF_ALPHA;
 		break;
 	default:
-		Sys_Error("R_LoadTexture: unknown texture type");
+		Con_DPrintf("R_LoadTexture: unknown texture type");
 	}
 
 	texinfo2 = R_GetTexTypeInfo(textype, flags);
 	if(size == width * height * depth * sides * texinfo->inputbytesperpixel)
 		texinfo = texinfo2;
 	else
-		Con_Printf ("R_LoadTexture: input size changed after alpha fallback\n");
+		Con_DPrintf ("R_LoadTexture: input size changed after alpha fallback\n");
 
 	glt = (gltexture_t *)Mem_ExpandableArray_AllocRecord(&texturearray);
 	if (identifier)
@@ -1858,7 +1858,7 @@ static rtexture_t *R_SetupTexture(rtexturepool_t *rtexturepool, const char *iden
 			case TEXTYPE_COLORBUFFER16F: d3dformat = D3DFMT_A16B16G16R16F;break;
 			case TEXTYPE_COLORBUFFER32F: d3dformat = D3DFMT_A32B32G32R32F;break;
 			case TEXTYPE_ALPHA: d3dformat = D3DFMT_A8;break;
-			default: d3dformat = D3DFMT_A8R8G8B8;Sys_Error("R_LoadTexture: unsupported texture type %i when picking D3DFMT", (int)textype);break;
+			default: d3dformat = D3DFMT_A8R8G8B8;Con_DPrintf("R_LoadTexture: unsupported texture type %i when picking D3DFMT", (int)textype);break;
 			}
 			glt->d3dformat = d3dformat;
 			glt->d3dusage = d3dusage;
@@ -1868,17 +1868,17 @@ static rtexture_t *R_SetupTexture(rtexturepool_t *rtexturepool, const char *iden
 			if (glt->tiledepth > 1)
 			{
 				if (FAILED(d3dresult = IDirect3DDevice9_CreateVolumeTexture(vid_d3d9dev, glt->tilewidth, glt->tileheight, glt->tiledepth, glt->miplevels, glt->d3dusage, (D3DFORMAT)glt->d3dformat, (D3DPOOL)glt->d3dpool, (IDirect3DVolumeTexture9 **)&glt->d3dtexture, NULL)))
-					Sys_Error("IDirect3DDevice9_CreateVolumeTexture failed!");
+					Con_DPrintf("IDirect3DDevice9_CreateVolumeTexture failed!");
 			}
 			else if (glt->sides == 6)
 			{
 				if (FAILED(d3dresult = IDirect3DDevice9_CreateCubeTexture(vid_d3d9dev, glt->tilewidth, glt->miplevels, glt->d3dusage, (D3DFORMAT)glt->d3dformat, (D3DPOOL)glt->d3dpool, (IDirect3DCubeTexture9 **)&glt->d3dtexture, NULL)))
-					Sys_Error("IDirect3DDevice9_CreateCubeTexture failed!");
+					Con_DPrintf("IDirect3DDevice9_CreateCubeTexture failed!");
 			}
 			else
 			{
 				if (FAILED(d3dresult = IDirect3DDevice9_CreateTexture(vid_d3d9dev, glt->tilewidth, glt->tileheight, glt->miplevels, glt->d3dusage, (D3DFORMAT)glt->d3dformat, (D3DPOOL)glt->d3dpool, (IDirect3DTexture9 **)&glt->d3dtexture, NULL)))
-					Sys_Error("IDirect3DDevice9_CreateTexture failed!");
+					Con_DPrintf("IDirect3DDevice9_CreateTexture failed!");
 			}
 		}
 #endif
@@ -1908,7 +1908,7 @@ static rtexture_t *R_SetupTexture(rtexturepool_t *rtexturepool, const char *iden
 			case TEXTYPE_DEPTHBUFFER24:
 			case TEXTYPE_DEPTHBUFFER24STENCIL8: tflags = DPSOFTRAST_TEXTURE_FORMAT_DEPTH;break;
 			case TEXTYPE_ALPHA: tflags = DPSOFTRAST_TEXTURE_FORMAT_ALPHA8;break;
-			default: Sys_Error("R_LoadTexture: unsupported texture type %i when picking DPSOFTRAST_TEXTURE_FLAGS", (int)textype);
+			default: Con_DPrintf("R_LoadTexture: unsupported texture type %i when picking DPSOFTRAST_TEXTURE_FLAGS", (int)textype);
 			}
 			if (glt->miplevels > 1) tflags |= DPSOFTRAST_TEXTURE_FLAG_MIPMAP;
 			if (flags & TEXF_ALPHA) tflags |= DPSOFTRAST_TEXTURE_FLAG_USEALPHA;
@@ -2026,7 +2026,7 @@ rtexture_t *R_LoadTextureRenderBuffer(rtexturepool_t *rtexturepool, const char *
 			case TEXTYPE_DEPTHBUFFER16: d3dformat = D3DFMT_D16;glt->d3disdepthstencilsurface = true;break;
 			case TEXTYPE_DEPTHBUFFER24: d3dformat = D3DFMT_D24X8;glt->d3disdepthstencilsurface = true;break;
 			case TEXTYPE_DEPTHBUFFER24STENCIL8: d3dformat = D3DFMT_D24S8;glt->d3disdepthstencilsurface = true;break;
-			default: d3dformat = D3DFMT_A8R8G8B8;Sys_Error("R_LoadTextureRenderbuffer: unsupported texture type %i when picking D3DFMT", (int)textype);break;
+			default: d3dformat = D3DFMT_A8R8G8B8;Con_DPrintf("R_LoadTextureRenderbuffer: unsupported texture type %i when picking D3DFMT", (int)textype);break;
 			}
 			glt->d3dformat = d3dformat;
 			glt->d3dusage = 0;
@@ -2034,12 +2034,12 @@ rtexture_t *R_LoadTextureRenderBuffer(rtexturepool_t *rtexturepool, const char *
 			if (glt->d3disrendertargetsurface)
 			{
 				if (FAILED(d3dresult = IDirect3DDevice9_CreateRenderTarget(vid_d3d9dev, glt->tilewidth, glt->tileheight, (D3DFORMAT)glt->d3dformat, D3DMULTISAMPLE_NONE, 0, false, (IDirect3DSurface9 **)&glt->d3dsurface, NULL)))
-					Sys_Error("IDirect3DDevice9_CreateRenderTarget failed!");
+					Con_DPrintf("IDirect3DDevice9_CreateRenderTarget failed!");
 			}
 			else if (glt->d3disdepthstencilsurface)
 			{
 				if (FAILED(d3dresult = IDirect3DDevice9_CreateDepthStencilSurface(vid_d3d9dev, glt->tilewidth, glt->tileheight, (D3DFORMAT)glt->d3dformat, D3DMULTISAMPLE_NONE, 0, false, (IDirect3DSurface9 **)&glt->d3dsurface, NULL)))
-					Sys_Error("IDirect3DDevice9_CreateDepthStencilSurface failed!");
+					Con_DPrintf("IDirect3DDevice9_CreateDepthStencilSurface failed!");
 			}
 		}
 #endif
@@ -2061,7 +2061,7 @@ rtexture_t *R_LoadTextureRenderBuffer(rtexturepool_t *rtexturepool, const char *
 			case TEXTYPE_DEPTHBUFFER16:
 			case TEXTYPE_DEPTHBUFFER24:
 			case TEXTYPE_DEPTHBUFFER24STENCIL8: tflags = DPSOFTRAST_TEXTURE_FORMAT_DEPTH | DPSOFTRAST_TEXTURE_FLAG_CLAMPTOEDGE;break;
-			default: Sys_Error("R_LoadTextureRenderbuffer: unsupported texture type %i when picking DPSOFTRAST_TEXTURE_FLAGS", (int)textype);
+			default: Con_DPrintf("R_LoadTextureRenderbuffer: unsupported texture type %i when picking DPSOFTRAST_TEXTURE_FLAGS", (int)textype);
 			}
 			glt->texnum = DPSOFTRAST_Texture_New(tflags, glt->tilewidth, glt->tileheight, glt->tiledepth);
 		}
@@ -2390,7 +2390,7 @@ rtexture_t *R_LoadTextureDDSFile(rtexturepool_t *rtexturepool, const char *filen
 	if (ddsfilesize <= 128 || memcmp(dds, "DDS ", 4) || ddssize < (unsigned int)BuffLittleLong(dds+4) || BuffLittleLong(dds+76) != 32)
 	{
 		Mem_Free(dds);
-		Con_Printf("^1%s: not a DDS image\n", filename);
+		Con_DPrintf("^1%s: not a DDS image\n", filename);
 		return NULL;
 	}
 
@@ -2417,7 +2417,7 @@ rtexture_t *R_LoadTextureDDSFile(rtexturepool_t *rtexturepool, const char *filen
 		if(INTOVERFLOW_ADD(128, size) > INTOVERFLOW_NORMALIZE(ddsfilesize))
 		{
 			Mem_Free(dds);
-			Con_Printf("^1%s: invalid BGRA DDS image\n", filename);
+			Con_DPrintf("^1%s: invalid BGRA DDS image\n", filename);
 			return NULL;
 		}
 		if((r_texture_dds_load_alphamode.integer == 1) && (flags & TEXF_ALPHA))
@@ -2443,7 +2443,7 @@ rtexture_t *R_LoadTextureDDSFile(rtexturepool_t *rtexturepool, const char *filen
 		if(INTOVERFLOW_ADD(128, size) > INTOVERFLOW_NORMALIZE(ddsfilesize))
 		{
 			Mem_Free(dds);
-			Con_Printf("^1%s: invalid DXT1 DDS image\n", filename);
+			Con_DPrintf("^1%s: invalid DXT1 DDS image\n", filename);
 			return NULL;
 		}
 		if (flags & TEXF_ALPHA)
@@ -2479,14 +2479,14 @@ rtexture_t *R_LoadTextureDDSFile(rtexturepool_t *rtexturepool, const char *filen
 		{
 			if(!(flags & TEXF_RGBMULTIPLYBYALPHA))
 			{
-				Con_Printf("^1%s: expecting DXT3 image without premultiplied alpha, got DXT2 image with premultiplied alpha\n", filename);
+				Con_DPrintf("^1%s: expecting DXT3 image without premultiplied alpha, got DXT2 image with premultiplied alpha\n", filename);
 			}
 		}
 		else
 		{
 			if(flags & TEXF_RGBMULTIPLYBYALPHA)
 			{
-				Con_Printf("^1%s: expecting DXT2 image without premultiplied alpha, got DXT3 image without premultiplied alpha\n", filename);
+				Con_DPrintf("^1%s: expecting DXT2 image without premultiplied alpha, got DXT3 image without premultiplied alpha\n", filename);
 			}
 		}
 		textype = TEXTYPE_DXT3;
@@ -2496,7 +2496,7 @@ rtexture_t *R_LoadTextureDDSFile(rtexturepool_t *rtexturepool, const char *filen
 		if(INTOVERFLOW_ADD(128, size) > INTOVERFLOW_NORMALIZE(ddsfilesize))
 		{
 			Mem_Free(dds);
-			Con_Printf("^1%s: invalid DXT3 DDS image\n", filename);
+			Con_DPrintf("^1%s: invalid DXT3 DDS image\n", filename);
 			return NULL;
 		}
 		// we currently always assume alpha
@@ -2507,14 +2507,14 @@ rtexture_t *R_LoadTextureDDSFile(rtexturepool_t *rtexturepool, const char *filen
 		{
 			if(!(flags & TEXF_RGBMULTIPLYBYALPHA))
 			{
-				Con_Printf("^1%s: expecting DXT5 image without premultiplied alpha, got DXT4 image with premultiplied alpha\n", filename);
+				Con_DPrintf("^1%s: expecting DXT5 image without premultiplied alpha, got DXT4 image with premultiplied alpha\n", filename);
 			}
 		}
 		else
 		{
 			if(flags & TEXF_RGBMULTIPLYBYALPHA)
 			{
-				Con_Printf("^1%s: expecting DXT4 image without premultiplied alpha, got DXT5 image without premultiplied alpha\n", filename);
+				Con_DPrintf("^1%s: expecting DXT4 image without premultiplied alpha, got DXT5 image without premultiplied alpha\n", filename);
 			}
 		}
 		textype = TEXTYPE_DXT5;
@@ -2524,7 +2524,7 @@ rtexture_t *R_LoadTextureDDSFile(rtexturepool_t *rtexturepool, const char *filen
 		if(INTOVERFLOW_ADD(128, size) > INTOVERFLOW_NORMALIZE(ddsfilesize))
 		{
 			Mem_Free(dds);
-			Con_Printf("^1%s: invalid DXT5 DDS image\n", filename);
+			Con_DPrintf("^1%s: invalid DXT5 DDS image\n", filename);
 			return NULL;
 		}
 		// we currently always assume alpha
@@ -2532,7 +2532,7 @@ rtexture_t *R_LoadTextureDDSFile(rtexturepool_t *rtexturepool, const char *filen
 	else
 	{
 		Mem_Free(dds);
-		Con_Printf("^1%s: unrecognized/unsupported DDS format\n", filename);
+		Con_DPrintf("^1%s: unrecognized/unsupported DDS format\n", filename);
 		return NULL;
 	}
 
@@ -3087,7 +3087,7 @@ void R_UpdateTexture(rtexture_t *rt, const unsigned char *data, int x, int y, in
 		const unsigned char *input = data;
 		unsigned char *output = glt->bufferpixels;
 		if (glt->inputdepth != 1 || glt->sides != 1)
-			Sys_Error("R_UpdateTexture on buffered texture that is not 2D\n");
+			Con_DPrintf("R_UpdateTexture on buffered texture that is not 2D\n");
 		if (x < 0)
 		{
 			width += x;

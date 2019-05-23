@@ -207,7 +207,7 @@ void VID_Finish (void)
 			Con_DPrintf("Vsync %s\n", vid_usevsync ? "activated" : "deactivated");
 		}
 		else
-			Con_Printf("ERROR: can't %s vsync\n", vid_usevsync ? "activate" : "deactivate");
+			Con_DPrintf("ERROR: can't %s vsync\n", vid_usevsync ? "activate" : "deactivate");
 	}
 
 	if (!vid_hidden)
@@ -230,13 +230,13 @@ void VID_Finish (void)
 					multithreadedgl = true;
 				else
 				{
-					Con_Printf("WARNING: can't enable multithreaded GL, error %d\n", (int) e);
+					Con_DPrintf("WARNING: can't enable multithreaded GL, error %d\n", (int) e);
 					Cvar_SetValueQuick(&apple_multithreadedgl, 0);
 				}
 			}
 			else
 			{
-				Con_Printf("WARNING: can't enable multithreaded GL, CGL functions not present\n");
+				Con_DPrintf("WARNING: can't enable multithreaded GL, CGL functions not present\n");
 				Cvar_SetValueQuick(&apple_multithreadedgl, 0);
 			}
 		}
@@ -295,7 +295,7 @@ int VID_GetGamma(unsigned short *ramps, int rampsize)
 	}
 	if (actualsize != (unsigned int)rampsize)
 	{
-		Con_Printf("VID_GetGamma: ERROR: invalid gamma table size (%u != %u)\n", actualsize, rampsize);
+		Con_DPrintf("VID_GetGamma: ERROR: invalid gamma table size (%u != %u)\n", actualsize, rampsize);
 		return false;
 	}
 
@@ -363,18 +363,18 @@ static int GL_OpenLibrary(void)
 	const char *name = "/System/Library/Frameworks/AGL.framework/AGL";
 	const char *name2 = "/System/Library/Frameworks/OpenGL.framework/OpenGL";
 
-	Con_Printf("Loading OpenGL driver %s\n", name);
+	Con_DPrintf("Loading OpenGL driver %s\n", name);
 	GL_CloseLibrary();
 	if (!(prjobj = dlopen(name, RTLD_LAZY)))
 	{
-		Con_Printf("Unable to open symbol list for %s\n", name);
+		Con_DPrintf("Unable to open symbol list for %s\n", name);
 		return false;
 	}
 	strlcpy(gl_driver, name, sizeof(gl_driver));
 
-	Con_Printf("Loading OpenGL driver %s\n", name2);
+	Con_DPrintf("Loading OpenGL driver %s\n", name2);
 	if (!(cglobj = dlopen(name2, RTLD_LAZY)))
-		Con_Printf("Unable to open symbol list for %s; multithreaded GL disabled\n", name);
+		Con_DPrintf("Unable to open symbol list for %s; multithreaded GL disabled\n", name);
 
 	return true;
 }
@@ -545,7 +545,7 @@ qboolean VID_InitMode(viddef_mode_t *mode)
 
 	if (!GL_OpenLibrary())
 	{
-		Con_Printf("Unable to load GL driver\n");
+		Con_DPrintf("Unable to load GL driver\n");
 		return false;
 	}
 
@@ -562,7 +562,7 @@ qboolean VID_InitMode(viddef_mode_t *mode)
 	 || (qaglSwapBuffers = (void (*) (AGLContext ctx))GL_GetProcAddress("aglSwapBuffers")) == NULL
 	)
 	{
-		Con_Printf("AGL functions not found\n");
+		Con_DPrintf("AGL functions not found\n");
 		ReleaseWindow(window);
 		return false;
 	}
@@ -571,7 +571,7 @@ qboolean VID_InitMode(viddef_mode_t *mode)
 	qCGLDisable = (CGLError (*) (CGLContextObj ctx, CGLContextEnable pname)) CGL_GetProcAddress("CGLDisable");
 	qCGLGetCurrentContext = (CGLContextObj (*) (void)) CGL_GetProcAddress("CGLGetCurrentContext");
 	if(!qCGLEnable || !qCGLDisable || !qCGLGetCurrentContext)
-		Con_Printf("CGL functions not found; disabling multithreaded OpenGL\n");
+		Con_DPrintf("CGL functions not found; disabling multithreaded OpenGL\n");
 
 	// Ignore the events from the previous window
 	AsyncEvent_Quitting = false;
@@ -585,7 +585,7 @@ qboolean VID_InitMode(viddef_mode_t *mode)
 	carbonError = CreateNewWindow(kDocumentWindowClass, kWindowStandardFloatingAttributes | kWindowStandardHandlerAttribute, &windowBounds, &window);
 	if (carbonError != noErr || window == NULL)
 	{
-		Con_Printf("Unable to create window (error %u)\n", (unsigned)carbonError);
+		Con_DPrintf("Unable to create window (error %u)\n", (unsigned)carbonError);
 		return false;
 	}
 
@@ -608,7 +608,7 @@ qboolean VID_InitMode(viddef_mode_t *mode)
 		error = qaglGetError();
 		if (error != AGL_NO_ERROR)
 		{
-			Con_Printf("qaglChoosePixelFormat FAILED: %s\n",
+			Con_DPrintf("qaglChoosePixelFormat FAILED: %s\n",
 					(char *)qaglErrorString(error));
 			ReleaseWindow(window);
 			return false;
@@ -636,7 +636,7 @@ qboolean VID_InitMode(viddef_mode_t *mode)
 		error = qaglGetError();
 		if (error != AGL_NO_ERROR)
 		{
-			Con_Printf("qaglChoosePixelFormat FAILED: %s\n",
+			Con_DPrintf("qaglChoosePixelFormat FAILED: %s\n",
 						(char *)qaglErrorString(error));
 			ReleaseWindow(window);
 			return false;
@@ -648,7 +648,7 @@ qboolean VID_InitMode(viddef_mode_t *mode)
 	error = qaglGetError();
 	if (error != AGL_NO_ERROR)
 	{
-		Con_Printf("qaglCreateContext FAILED: %s\n",
+		Con_DPrintf("qaglCreateContext FAILED: %s\n",
 					(char *)qaglErrorString(error));
 	}
 
@@ -657,7 +657,7 @@ qboolean VID_InitMode(viddef_mode_t *mode)
 	error = qaglGetError();
 	if (error != AGL_NO_ERROR)
 	{
-		Con_Printf("qaglSetCurrentContext FAILED: %s\n",
+		Con_DPrintf("qaglSetCurrentContext FAILED: %s\n",
 					(char *)qaglErrorString(error));
 		ReleaseWindow(window);
 		return false;
@@ -673,7 +673,7 @@ qboolean VID_InitMode(viddef_mode_t *mode)
 		error = qaglGetError();
 		if (error != AGL_NO_ERROR)
 		{
-			Con_Printf("qaglSetFullScreen FAILED: %s\n",
+			Con_DPrintf("qaglSetFullScreen FAILED: %s\n",
 						(char *)qaglErrorString(error));
 			return false;
 		}
@@ -685,7 +685,7 @@ qboolean VID_InitMode(viddef_mode_t *mode)
 		error = qaglGetError();
 		if (error != AGL_NO_ERROR)
 		{
-			Con_Printf("qaglSetDrawable FAILED: %s\n",
+			Con_DPrintf("qaglSetDrawable FAILED: %s\n",
 						(char *)qaglErrorString(error));
 			ReleaseWindow(window);
 			return false;
@@ -693,7 +693,7 @@ qboolean VID_InitMode(viddef_mode_t *mode)
 	}
 
 	if ((qglGetString = (const GLubyte* (GLAPIENTRY *)(GLenum name))GL_GetProcAddress("glGetString")) == NULL)
-		Sys_Error("glGetString not found in %s", gl_driver);
+		Con_DPrintf("glGetString not found in %s", gl_driver);
 
 	gl_platformextensions = "";
 	gl_platform = "AGL";
@@ -998,7 +998,7 @@ void Sys_SendKeyEvents(void)
 					}
 
 					default:
-						Con_Printf (">> kEventClassMouse (UNKNOWN eventKind: %u) <<\n", (unsigned)eventKind);
+						Con_DPrintf (">> kEventClassMouse (UNKNOWN eventKind: %u) <<\n", (unsigned)eventKind);
 						break;
 				}
 			}
@@ -1043,14 +1043,14 @@ void Sys_SendKeyEvents(void)
 						break;
 
 					default:
-						Con_Printf (">> kEventClassKeyboard (UNKNOWN eventKind: %u) <<\n", (unsigned)eventKind);
+						Con_DPrintf (">> kEventClassKeyboard (UNKNOWN eventKind: %u) <<\n", (unsigned)eventKind);
 						break;
 				}
 				break;
 			}
 
 			case kEventClassTextInput:
-				Con_Printf(">> kEventClassTextInput (%d) <<\n", (int)eventKind);
+				Con_DPrintf(">> kEventClassTextInput (%d) <<\n", (int)eventKind);
 				break;
 
 			case kEventClassApplication:
@@ -1068,7 +1068,7 @@ void Sys_SendKeyEvents(void)
 					case kEventAppActiveWindowChanged:
 						break;
 					default:
-						Con_Printf(">> kEventClassApplication (UNKNOWN eventKind: %u) <<\n", (unsigned)eventKind);
+						Con_DPrintf(">> kEventClassApplication (UNKNOWN eventKind: %u) <<\n", (unsigned)eventKind);
 						break;
 				}
 				break;
@@ -1079,7 +1079,7 @@ void Sys_SendKeyEvents(void)
 					case kEventAppleEvent :
 						break;
 					default:
-						Con_Printf(">> kEventClassAppleEvent (UNKNOWN eventKind: %u) <<\n", (unsigned)eventKind);
+						Con_DPrintf(">> kEventClassAppleEvent (UNKNOWN eventKind: %u) <<\n", (unsigned)eventKind);
 						break;
 				}
 				break;
@@ -1090,7 +1090,7 @@ void Sys_SendKeyEvents(void)
 					case kEventWindowUpdate :
 						break;
 					default:
-						Con_Printf(">> kEventClassWindow (UNKNOWN eventKind: %u) <<\n", (unsigned)eventKind);
+						Con_DPrintf(">> kEventClassWindow (UNKNOWN eventKind: %u) <<\n", (unsigned)eventKind);
 						break;
 				}
 				break;
@@ -1099,7 +1099,7 @@ void Sys_SendKeyEvents(void)
 				break;
 
 			default:
-				/*Con_Printf(">> UNKNOWN eventClass: %c%c%c%c, eventKind: %d <<\n",
+				/*Con_DPrintf(">> UNKNOWN eventClass: %c%c%c%c, eventKind: %d <<\n",
 							eventClass >> 24, (eventClass >> 16) & 0xFF,
 							(eventClass >> 8) & 0xFF, eventClass & 0xFF,
 							eventKind);*/

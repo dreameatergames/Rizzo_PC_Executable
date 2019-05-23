@@ -296,7 +296,7 @@
 1 bug darkplaces server: decide on an extension name for .ent loading and report it, also document in dpextensions (FrikaC, Gleeb, wiki)
 1 bug darkplaces server: figure out what's breaking RenegadeC's TAOV monster jump code (RenegadeC)
 1 bug darkplaces server: silver key missing in the map Menkalinan at http://quakemaps.nm.ru/maps2.html (zarquon)
-1 bug darkplaces: if progdefs.h is out of date it causes a Sys_Error, after clicking OK on the message box the engine crashes, probably something to do with partially loaded progs
+1 bug darkplaces: if progdefs.h is out of date it causes a Con_DPrintf, after clicking OK on the message box the engine crashes, probably something to do with partially loaded progs
 1 bug hmap: qbsp dies from runaway allocations if a duplicate plane is found on a brush (Tomaz)
 1 change darkplaces protocol: document the TEI stuff used in Nexuiz
 1 change darkplaces protocol: send additional stats for movement parameters and slowmo and gravity, replacing the rather silly cl_movement and cl_slowmo and cl_gravity cvars (Vermeulen)
@@ -768,7 +768,7 @@ d darkplaces SDL client: add key repeat
 d darkplaces WGL client: if gamma setting fails, restore system gamma (RenegadeC)
 d darkplaces cleanup: clean up Collision_TraceBrushBrush to have another temp variable besides f and clean up the enterfrac2 handling (Vic)
 d darkplaces cleanup: make memory pools have a flag to print them as temporary pools (I.E. consider them leaks if anything is in them) (Vicious)
-d darkplaces cleanup: make sure engine dumps log file to disk if there is a Sys_Error (VorteX)
+d darkplaces cleanup: make sure engine dumps log file to disk if there is a Con_DPrintf (VorteX)
 d darkplaces cleanup: merge model format handling (mdl/md2/md3/zym)
 d darkplaces cleanup: nodestack[nodestackindex++] = node->children[0]; and similar things should skip the node if stack is full (Vic)
 d darkplaces cleanup: port DarkWar polygon.c to darkplaces, as it is more optimized than winding.c

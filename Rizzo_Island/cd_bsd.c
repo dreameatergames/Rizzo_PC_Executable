@@ -118,7 +118,7 @@ void CDAudio_SysSetVolume (float volume)
 	vol.vol[2] = vol.vol[3] = 0;
 
 	if (ioctl (cdfile, CDIOCSETVOL, &vol) == -1)
-		Con_Printf ("ioctl CDIOCSETVOL failed\n");
+		Con_DPrintf ("ioctl CDIOCSETVOL failed\n");
 }
 
 
@@ -143,7 +143,7 @@ int CDAudio_SysPlay (int track)
 	}
 	if (entry.control & 4)  // if it's a data track
 	{
-		Con_Printf("CDAudio: track %i is not audio\n", track);
+		Con_DPrintf("CDAudio: track %i is not audio\n", track);
 		return -1;
 	}
 
@@ -178,7 +178,7 @@ int CDAudio_SysStop (void)
 
 	if (ioctl(cdfile, CDIOCSTOP) == -1)
 	{
-		Con_Printf("ioctl CDIOCSTOP failed (%d)\n", errno);
+		Con_DPrintf("ioctl CDIOCSTOP failed (%d)\n", errno);
 		return -1;
 	}
 	ioctl(cdfile, CDIOCALLOW);
@@ -267,7 +267,7 @@ int CDAudio_SysStartup (void)
 	if ((cdfile = open(cd_dev, O_RDONLY)) < 0)
 #endif
 	{
-		Con_Printf("CDAudio_SysStartup: open of \"%s\" failed (%i)\n",
+		Con_DPrintf("CDAudio_SysStartup: open of \"%s\" failed (%i)\n",
 					cd_dev, errno);
 		cdfile = -1;
 		return -1;

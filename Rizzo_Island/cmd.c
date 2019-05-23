@@ -78,10 +78,10 @@ static void Cmd_Defer_f (void)
 	{
 		cmddeferred_t *next = cmd_deferred_list;
 		if(!next)
-			Con_Printf("No commands are pending.\n");
+			Con_DPrintf("No commands are pending.\n");
 		while(next)
 		{
-			Con_Printf("-> In %9.2f: %s\n", next->delay, next->value);
+			Con_DPrintf("-> In %9.2f: %s\n", next->delay, next->value);
 			next = next->next;
 		}
 	} else if(Cmd_Argc() == 2 && !strcasecmp("clear", Cmd_Argv(1)))
@@ -116,7 +116,7 @@ static void Cmd_Defer_f (void)
 		  defcmd->next = cmd_deferred_list;
 		  cmd_deferred_list = defcmd;*/
 	} else {
-		Con_Printf("usage: defer <seconds> <command>\n"
+		Con_DPrintf("usage: defer <seconds> <command>\n"
 			   "       defer clear\n");
 		return;
 	}
@@ -323,7 +323,7 @@ void Cbuf_Execute (void)
 		// better than CRASHING on overlong input lines that may SOMEHOW enter the buffer
 		if(i >= MAX_INPUTLINE)
 		{
-			Con_Printf("Warning: console input buffer had an overlong line. Ignored.\n");
+			Con_DPrintf("Warning: console input buffer had an overlong line. Ignored.\n");
 			line[0] = 0;
 		}
 		else
@@ -475,10 +475,10 @@ static void Cmd_Exec(const char *filename)
 	f = (char *)FS_LoadFile (filename, tempmempool, false, NULL);
 	if (!f)
 	{
-		Con_Printf("couldn't exec %s\n",filename);
+		Con_DPrintf("couldn't exec %s\n",filename);
 		return;
 	}
-	Con_Printf("execing %s\n",filename);
+	Con_DPrintf("execing %s\n",filename);
 
 	// if executing default.cfg for the first time, lock the cvar defaults
 	// it may seem backwards to insert this text BEFORE the default.cfg
@@ -717,7 +717,7 @@ static void Cmd_Exec_f (void)
 	s = FS_Search(Cmd_Argv(1), true, true);
 	if(!s || !s->numfilenames)
 	{
-		Con_Printf("couldn't exec %s\n",Cmd_Argv(1));
+		Con_DPrintf("couldn't exec %s\n",Cmd_Argv(1));
 		return;
 	}
 
@@ -740,7 +740,7 @@ static void Cmd_Echo_f (void)
 	int		i;
 
 	for (i=1 ; i<Cmd_Argc() ; i++)
-		Con_Printf("%s ",Cmd_Argv(i));
+		Con_DPrintf("%s ",Cmd_Argv(i));
 	Con_Print("\n");
 }
 
@@ -819,7 +819,7 @@ static void Cmd_Toggle_f(void)
 		}
 		else
 		{ // Invalid CVar
-			Con_Printf("ERROR : CVar '%s' not found\n", Cmd_Argv(1) );
+			Con_DPrintf("ERROR : CVar '%s' not found\n", Cmd_Argv(1) );
 		}
 	}
 }
@@ -843,7 +843,7 @@ static void Cmd_Alias_f (void)
 	{
 		Con_Print("Current alias commands:\n");
 		for (a = cmd_alias ; a ; a=a->next)
-			Con_Printf("%s : %s", a->name, a->value);
+			Con_DPrintf("%s : %s", a->name, a->value);
 		return;
 	}
 
@@ -939,7 +939,7 @@ static void Cmd_UnAlias_f (void)
 			}
 		}
 		if(!a)
-			Con_Printf("unalias: %s alias not found\n", s);
+			Con_DPrintf("unalias: %s alias not found\n", s);
 	}
 }
 
@@ -1123,9 +1123,9 @@ static const char *Cmd_GetCvarValue(const char *var, size_t varlen, cmdalias_t *
 	{
 		// empty cvar name?
 		if(alias)
-			Con_Printf("Warning: Could not expand $ in alias %s\n", alias->name);
+			Con_DPrintf("Warning: Could not expand $ in alias %s\n", alias->name);
 		else
-			Con_Printf("Warning: Could not expand $\n");
+			Con_DPrintf("Warning: Could not expand $\n");
 		return "$";
 	}
 
@@ -1171,9 +1171,9 @@ static const char *Cmd_GetCvarValue(const char *var, size_t varlen, cmdalias_t *
 		if(required)
 		{
 			if(alias)
-				Con_Printf("Error: Could not expand $%s in alias %s\n", varname, alias->name);
+				Con_DPrintf("Error: Could not expand $%s in alias %s\n", varname, alias->name);
 			else
-				Con_Printf("Error: Could not expand $%s\n", varname);
+				Con_DPrintf("Error: Could not expand $%s\n", varname);
 			return NULL;
 		}
 		else if(optional)
@@ -1183,9 +1183,9 @@ static const char *Cmd_GetCvarValue(const char *var, size_t varlen, cmdalias_t *
 		else
 		{
 			if(alias)
-				Con_Printf("Warning: Could not expand $%s in alias %s\n", varname, alias->name);
+				Con_DPrintf("Warning: Could not expand $%s in alias %s\n", varname, alias->name);
 			else
-				Con_Printf("Warning: Could not expand $%s\n", varname);
+				Con_DPrintf("Warning: Could not expand $%s\n", varname);
 			dpsnprintf(varval, sizeof(varval), "$%s", varname);
 			return varval;
 		}
@@ -1203,7 +1203,7 @@ static const char *Cmd_GetCvarValue(const char *var, size_t varlen, cmdalias_t *
 		return varstr;
 	}
 	else
-		Con_Printf("Unknown variable function %s\n", varfunc);
+		Con_DPrintf("Unknown variable function %s\n", varfunc);
 
 	return varstr;
 }
@@ -1394,19 +1394,19 @@ static void Cmd_List_f (void)
 	{
 		if (partial && (ispattern ? !matchpattern_with_separator(cmd->name, partial, false, "", false) : strncmp(partial, cmd->name, len)))
 			continue;
-		Con_Printf("%s : %s\n", cmd->name, cmd->description);
+		Con_DPrintf("%s : %s\n", cmd->name, cmd->description);
 		count++;
 	}
 
 	if (len)
 	{
 		if(ispattern)
-			Con_Printf("%i Command%s matching \"%s\"\n\n", count, (count > 1) ? "s" : "", partial);
+			Con_DPrintf("%i Command%s matching \"%s\"\n\n", count, (count > 1) ? "s" : "", partial);
 		else
-			Con_Printf("%i Command%s beginning with \"%s\"\n\n", count, (count > 1) ? "s" : "", partial);
+			Con_DPrintf("%i Command%s beginning with \"%s\"\n\n", count, (count > 1) ? "s" : "", partial);
 	}
 	else
-		Con_Printf("%i Command%s\n\n", count, (count > 1) ? "s" : "");
+		Con_DPrintf("%i Command%s\n\n", count, (count > 1) ? "s" : "");
 }
 
 static void Cmd_Apropos_f(void)
@@ -1423,7 +1423,7 @@ static void Cmd_Apropos_f(void)
 		partial = Cmd_Args();
 	else
 	{
-		Con_Printf("usage: apropos <string>\n");
+		Con_DPrintf("usage: apropos <string>\n");
 		return;
 	}
 
@@ -1437,7 +1437,7 @@ static void Cmd_Apropos_f(void)
 		if (!matchpattern_with_separator(cvar->name, partial, true, "", false))
 		if (!matchpattern_with_separator(cvar->description, partial, true, "", false))
 			continue;
-		Con_Printf ("cvar ^3%s^7 is \"%s\" [\"%s\"] %s\n", cvar->name, cvar->string, cvar->defstring, cvar->description);
+		Con_DPrintf ("cvar ^3%s^7 is \"%s\" [\"%s\"] %s\n", cvar->name, cvar->string, cvar->defstring, cvar->description);
 		count++;
 	}
 	for (cmd = cmd_functions; cmd; cmd = cmd->next)
@@ -1445,7 +1445,7 @@ static void Cmd_Apropos_f(void)
 		if (!matchpattern_with_separator(cmd->name, partial, true, "", false))
 		if (!matchpattern_with_separator(cmd->description, partial, true, "", false))
 			continue;
-		Con_Printf("command ^2%s^7: %s\n", cmd->name, cmd->description);
+		Con_DPrintf("command ^2%s^7: %s\n", cmd->name, cmd->description);
 		count++;
 	}
 	for (alias = cmd_alias; alias; alias = alias->next)
@@ -1454,10 +1454,10 @@ static void Cmd_Apropos_f(void)
 		if (!matchpattern_with_separator(alias->name, partial, true, "", false))
 		if (!matchpattern_with_separator(alias->value, partial, true, "\n", false)) // when \n is as separator wildcards don't match it
 			continue;
-		Con_Printf("alias ^5%s^7: %s", alias->name, alias->value); // do not print an extra \n
+		Con_DPrintf("alias ^5%s^7: %s", alias->name, alias->value); // do not print an extra \n
 		count++;
 	}
-	Con_Printf("%i result%s\n\n", count, (count > 1) ? "s" : "");
+	Con_DPrintf("%i result%s\n\n", count, (count > 1) ? "s" : "");
 }
 
 /*
@@ -1614,7 +1614,7 @@ static void Cmd_TokenizeString (const char *text)
 			l = (int)strlen(com_token) + 1;
 			if (cmd_tokenizebufferpos + l > CMD_TOKENIZELENGTH)
 			{
-				Con_Printf("Cmd_TokenizeString: ran out of %i character buffer space for command arguements\n", CMD_TOKENIZELENGTH);
+				Con_DPrintf("Cmd_TokenizeString: ran out of %i character buffer space for command arguements\n", CMD_TOKENIZELENGTH);
 				break;
 			}
 			memcpy (cmd_tokenizebuffer + cmd_tokenizebufferpos, com_token, l);
@@ -1639,7 +1639,7 @@ void Cmd_AddCommand_WithClientCommand (const char *cmd_name, xcommand_t consolef
 // fail if the command is a variable name
 	if (Cvar_FindVar( cmd_name ))
 	{
-		Con_Printf("Cmd_AddCommand: %s already defined as a var\n", cmd_name);
+		Con_DPrintf("Cmd_AddCommand: %s already defined as a var\n", cmd_name);
 		return;
 	}
 
@@ -1650,7 +1650,7 @@ void Cmd_AddCommand_WithClientCommand (const char *cmd_name, xcommand_t consolef
 		{
 			if (consolefunction || clientfunction)
 			{
-				Con_Printf("Cmd_AddCommand: %s already defined\n", cmd_name);
+				Con_DPrintf("Cmd_AddCommand: %s already defined\n", cmd_name);
 				return;
 			}
 			else	//[515]: csqc
@@ -1791,7 +1791,7 @@ void Cmd_CompleteCommandPrint (const char *partial)
 	// Loop through the command list and print all matches
 	for (cmd = cmd_functions; cmd; cmd = cmd->next)
 		if (!strncasecmp(partial, cmd->name, len))
-			Con_Printf("^2%s^7: %s\n", cmd->name, cmd->description);
+			Con_DPrintf("^2%s^7: %s\n", cmd->name, cmd->description);
 }
 
 /*
@@ -1829,7 +1829,7 @@ void Cmd_CompleteAliasPrint (const char *partial)
 	// Loop through the alias list and print all matches
 	for (alias = cmd_alias; alias; alias = alias->next)
 		if (!strncasecmp(partial, alias->name, len))
-			Con_Printf("^5%s^7: %s", alias->name, alias->value);
+			Con_DPrintf("^5%s^7: %s", alias->name, alias->value);
 }
 
 
@@ -1944,10 +1944,10 @@ void Cmd_ExecuteString (const char *text, cmd_source_t src, qboolean lockmutex)
 						Cmd_ForwardToServer();
 					}
 					else
-						Con_Printf("Can not send command \"%s\", not connected.\n", Cmd_Argv(0));
+						Con_DPrintf("Can not send command \"%s\", not connected.\n", Cmd_Argv(0));
 				}
 				else
-					Con_Printf("Command \"%s\" can not be executed\n", Cmd_Argv(0));
+					Con_DPrintf("Command \"%s\" can not be executed\n", Cmd_Argv(0));
 				found = true;
 				goto command_found;
 			case src_client:
@@ -1966,7 +1966,7 @@ command_found:
 	// if it's a client command and no command was found, say so.
 	if (cmd_source == src_client)
 	{
-		Con_Printf("player \"%s\" tried to %s\n", host_client->name, text);
+		Con_DPrintf("player \"%s\" tried to %s\n", host_client->name, text);
 		goto done;
 	}
 
@@ -1985,7 +1985,7 @@ command_found:
 
 // check cvars
 	if (!Cvar_Command () && host_framecount > 0)
-		Con_Printf("Unknown command \"%s\"\n", Cmd_Argv(0));
+		Con_DPrintf("Unknown command \"%s\"\n", Cmd_Argv(0));
 
 done:
 	cmd_tokenizebufferpos = oldpos;
@@ -2006,7 +2006,7 @@ void Cmd_ForwardStringToServer (const char *s)
 	char temp[128];
 	if (cls.state != ca_connected)
 	{
-		Con_Printf("Can't \"%s\", not connected\n", s);
+		Con_DPrintf("Can't \"%s\", not connected\n", s);
 		return;
 	}
 
@@ -2164,7 +2164,7 @@ int Cmd_CheckParm (const char *parm)
 
 	if (!parm)
 	{
-		Con_Printf ("Cmd_CheckParm: NULL");
+		Con_DPrintf ("Cmd_CheckParm: NULL");
 		return 0;
 	}
 

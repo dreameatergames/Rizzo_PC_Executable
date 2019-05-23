@@ -261,7 +261,7 @@ static void PNG_fReadData(void *png, unsigned char *data, size_t length)
 	l = my_png.tmpBuflength - my_png.tmpi;
 	if (l < length)
 	{
-		Con_Printf("PNG_fReadData: overrun by %i bytes\n", (int)(length - l));
+		Con_DPrintf("PNG_fReadData: overrun by %i bytes\n", (int)(length - l));
 		// a read going past the end of the file, fill in the remaining bytes
 		// with 0 just to be consistent
 		memset(data + l, 0, length - l);
@@ -283,12 +283,12 @@ static void PNG_fFlushData(void *png)
 
 static void PNG_error_fn(void *png, const char *message)
 {
-	Con_Printf("PNG_LoadImage: error: %s\n", message);
+	Con_DPrintf("PNG_LoadImage: error: %s\n", message);
 }
 
 static void PNG_warning_fn(void *png, const char *message)
 {
-	Con_Printf("PNG_LoadImage: warning: %s\n", message);
+	Con_DPrintf("PNG_LoadImage: warning: %s\n", message);
 }
 
 unsigned char *PNG_LoadImage_BGRA (const unsigned char *raw, int filesize, int *miplevel)
@@ -403,7 +403,7 @@ unsigned char *PNG_LoadImage_BGRA (const unsigned char *raw, int filesize, int *
 		}
 		else
 		{
-			Con_Printf("PNG_LoadImage : not enough memory\n");
+			Con_DPrintf("PNG_LoadImage : not enough memory\n");
 			qpng_destroy_read_struct(&png, &pnginfo, 0);
 			Mem_Free(my_png.FRowPtrs);
 			return NULL;
@@ -413,7 +413,7 @@ unsigned char *PNG_LoadImage_BGRA (const unsigned char *raw, int filesize, int *
 	}
 	else
 	{
-		Con_Printf("PNG_LoadImage : not enough memory\n");
+		Con_DPrintf("PNG_LoadImage : not enough memory\n");
 		qpng_destroy_read_struct(&png, &pnginfo, 0);
 		return NULL;
 	}
@@ -426,7 +426,7 @@ unsigned char *PNG_LoadImage_BGRA (const unsigned char *raw, int filesize, int *
 
 	if (my_png.BitDepth != 8)
 	{
-		Con_Printf ("PNG_LoadImage : bad color depth\n");
+		Con_DPrintf ("PNG_LoadImage : bad color depth\n");
 		Mem_Free(imagedata);
 		return NULL;
 	}

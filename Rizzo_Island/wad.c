@@ -168,7 +168,7 @@ void W_LoadTextureWadFile (char *filename, int complain)
 	if (!file)
 	{
 		if (complain)
-			Con_Printf("W_LoadTextureWadFile: couldn't find %s\n", filename);
+			Con_DPrintf("W_LoadTextureWadFile: couldn't find %s\n", filename);
 		return;
 	}
 
@@ -176,11 +176,11 @@ void W_LoadTextureWadFile (char *filename, int complain)
 	{Con_Print("W_LoadTextureWadFile: unable to read wad header\n");FS_Close(file);file = NULL;return;}
 
 	if(memcmp(header.identification, "WAD3", 4))
-	{Con_Printf("W_LoadTextureWadFile: Wad file %s doesn't have WAD3 id\n",filename);FS_Close(file);file = NULL;return;}
+	{Con_DPrintf("W_LoadTextureWadFile: Wad file %s doesn't have WAD3 id\n",filename);FS_Close(file);file = NULL;return;}
 
 	numlumps = LittleLong(header.numlumps);
 	if (numlumps < 1 || numlumps > 65536)
-	{Con_Printf("W_LoadTextureWadFile: invalid number of lumps (%i)\n", numlumps);FS_Close(file);file = NULL;return;}
+	{Con_DPrintf("W_LoadTextureWadFile: invalid number of lumps (%i)\n", numlumps);FS_Close(file);file = NULL;return;}
 	infotableofs = LittleLong(header.infotableofs);
 	if (FS_Seek (file, infotableofs, SEEK_SET))
 	{Con_Print("W_LoadTextureWadFile: unable to seek to lump table\n");FS_Close(file);file = NULL;return;}

@@ -259,7 +259,7 @@ void Cvar_CompleteCvarPrint (const char *partial)
 	// Loop through the command list and print all matches
 	for (cvar = cvar_vars; cvar; cvar = cvar->next)
 		if (!strncasecmp(partial, cvar->name, len))
-			Con_Printf ("^3%s^7 is \"%s\" [\"%s\"] %s\n", cvar->name, cvar->string, cvar->defstring, cvar->description);
+			Con_DPrintf ("^3%s^7 is \"%s\" [\"%s\"] %s\n", cvar->name, cvar->string, cvar->defstring, cvar->description);
 }
 
 // check if a cvar is held by some progs
@@ -440,7 +440,7 @@ void Cvar_Set (const char *var_name, const char *value)
 	var = Cvar_FindVar (var_name);
 	if (var == NULL)
 	{
-		Con_Printf("Cvar_Set: variable %s not found\n", var_name);
+		Con_DPrintf("Cvar_Set: variable %s not found\n", var_name);
 		return;
 	}
 	Cvar_SetQuick(var, value);
@@ -540,7 +540,7 @@ void Cvar_RegisterVariable (cvar_t *variable)
 // check for overlap with a command
 	if (Cmd_Exists (variable->name))
 	{
-		Con_Printf("Cvar_RegisterVariable: %s is a command\n", variable->name);
+		Con_DPrintf("Cvar_RegisterVariable: %s is a command\n", variable->name);
 		return;
 	}
 
@@ -613,14 +613,14 @@ cvar_t *Cvar_Get (const char *name, const char *value, int flags, const char *ne
 // check for pure evil
 	if (!*name)
 	{
-		Con_Printf("Cvar_Get: invalid variable name\n");
+		Con_DPrintf("Cvar_Get: invalid variable name\n");
 		return NULL;
 	}
 
 // check for overlap with a command
 	if (Cmd_Exists (name))
 	{
-		Con_Printf("Cvar_Get: %s is a command\n", name);
+		Con_DPrintf("Cvar_Get: %s is a command\n", name);
 		return NULL;
 	}
 
@@ -682,7 +682,7 @@ qboolean	Cvar_Command (void)
 // perform a variable print or set
 	if (Cmd_Argc() == 1)
 	{
-		Con_Printf("\"%s\" is \"%s\" [\"%s\"]\n", v->name, ((v->flags & CVAR_PRIVATE) ? "********"/*hunter2*/ : v->string), v->defstring);
+		Con_DPrintf("\"%s\" is \"%s\" [\"%s\"]\n", v->name, ((v->flags & CVAR_PRIVATE) ? "********"/*hunter2*/ : v->string), v->defstring);
 		return true;
 	}
 
@@ -691,7 +691,7 @@ qboolean	Cvar_Command (void)
 
 	if (v->flags & CVAR_READONLY)
 	{
-		Con_Printf("%s is read-only\n", v->name);
+		Con_DPrintf("%s is read-only\n", v->name);
 		return true;
 	}
 	Cvar_Set (v->name, Cmd_Argv(1));
@@ -720,7 +720,7 @@ void Cvar_LockDefaults_f (void)
 		{
 			size_t alloclen;
 
-			//Con_Printf("locking cvar %s (%s -> %s)\n", var->name, var->string, var->defstring);
+			//Con_DPrintf("locking cvar %s (%s -> %s)\n", var->name, var->string, var->defstring);
 			var->flags |= CVAR_DEFAULTSET;
 			Z_Free((char *)var->defstring);
 			alloclen = strlen(var->string) + 1;
@@ -910,19 +910,19 @@ void Cvar_List_f (void)
 		if (len && (ispattern ? !matchpattern_with_separator(cvar->name, partial, false, "", false) : strncmp (partial,cvar->name,len)))
 			continue;
 
-		Con_Printf("%s is \"%s\" [\"%s\"] %s\n", cvar->name, ((cvar->flags & CVAR_PRIVATE) ? "********"/*hunter2*/ : cvar->string), cvar->defstring, cvar->description);
+		Con_DPrintf("%s is \"%s\" [\"%s\"] %s\n", cvar->name, ((cvar->flags & CVAR_PRIVATE) ? "********"/*hunter2*/ : cvar->string), cvar->defstring, cvar->description);
 		count++;
 	}
 
 	if (len)
 	{
 		if(ispattern)
-			Con_Printf("%i cvar%s matching \"%s\"\n", count, (count > 1) ? "s" : "", partial);
+			Con_DPrintf("%i cvar%s matching \"%s\"\n", count, (count > 1) ? "s" : "", partial);
 		else
-			Con_Printf("%i cvar%s beginning with \"%s\"\n", count, (count > 1) ? "s" : "", partial);
+			Con_DPrintf("%i cvar%s beginning with \"%s\"\n", count, (count > 1) ? "s" : "", partial);
 	}
 	else
-		Con_Printf("%i cvar(s)\n", count);
+		Con_DPrintf("%i cvar(s)\n", count);
 }
 // 2000-01-09 CvarList command by Maddes
 
@@ -933,7 +933,7 @@ void Cvar_Set_f (void)
 	// make sure it's the right number of parameters
 	if (Cmd_Argc() < 3)
 	{
-		Con_Printf("Set: wrong number of parameters, usage: set <variablename> <value> [<description>]\n");
+		Con_DPrintf("Set: wrong number of parameters, usage: set <variablename> <value> [<description>]\n");
 		return;
 	}
 
@@ -941,7 +941,7 @@ void Cvar_Set_f (void)
 	cvar = Cvar_FindVar(Cmd_Argv(1));
 	if (cvar && cvar->flags & CVAR_READONLY)
 	{
-		Con_Printf("Set: %s is read-only\n", cvar->name);
+		Con_DPrintf("Set: %s is read-only\n", cvar->name);
 		return;
 	}
 
@@ -959,7 +959,7 @@ void Cvar_SetA_f (void)
 	// make sure it's the right number of parameters
 	if (Cmd_Argc() < 3)
 	{
-		Con_Printf("SetA: wrong number of parameters, usage: seta <variablename> <value> [<description>]\n");
+		Con_DPrintf("SetA: wrong number of parameters, usage: seta <variablename> <value> [<description>]\n");
 		return;
 	}
 
@@ -967,7 +967,7 @@ void Cvar_SetA_f (void)
 	cvar = Cvar_FindVar(Cmd_Argv(1));
 	if (cvar && cvar->flags & CVAR_READONLY)
 	{
-		Con_Printf("SetA: %s is read-only\n", cvar->name);
+		Con_DPrintf("SetA: %s is read-only\n", cvar->name);
 		return;
 	}
 
@@ -985,7 +985,7 @@ void Cvar_Del_f (void)
 
 	if(Cmd_Argc() < 2)
 	{
-		Con_Printf("Del: wrong number of parameters, useage: unset <variablename1> [<variablename2> ...]\n");
+		Con_DPrintf("Del: wrong number of parameters, useage: unset <variablename1> [<variablename2> ...]\n");
 		return;
 	}
 	for(i = 1; i < Cmd_Argc(); ++i)
@@ -993,17 +993,17 @@ void Cvar_Del_f (void)
 		cvar = Cvar_FindVarLink(Cmd_Argv(i), &parent, &link, &prev);
 		if(!cvar)
 		{
-			Con_Printf("Del: %s is not defined\n", Cmd_Argv(i));
+			Con_DPrintf("Del: %s is not defined\n", Cmd_Argv(i));
 			continue;
 		}
 		if(cvar->flags & CVAR_READONLY)
 		{
-			Con_Printf("Del: %s is read-only\n", cvar->name);
+			Con_DPrintf("Del: %s is read-only\n", cvar->name);
 			continue;
 		}
 		if(!(cvar->flags & CVAR_ALLOCATED))
 		{
-			Con_Printf("Del: %s is static and cannot be deleted\n", cvar->name);
+			Con_DPrintf("Del: %s is static and cannot be deleted\n", cvar->name);
 			continue;
 		}
 		if(cvar == cvar_vars)
@@ -1041,8 +1041,8 @@ void Cvar_FillAll_f()
 	qboolean verify;
 	if(Cmd_Argc() != 2)
 	{
-		Con_Printf("Usage: %s length to plant rubbish\n", Cmd_Argv(0));
-		Con_Printf("Usage: %s -length to verify that the rubbish is still there\n", Cmd_Argv(0));
+		Con_DPrintf("Usage: %s length to plant rubbish\n", Cmd_Argv(0));
+		Con_DPrintf("Usage: %s -length to verify that the rubbish is still there\n", Cmd_Argv(0));
 		return;
 	}
 	n = atoi(Cmd_Argv(1));
@@ -1061,7 +1061,7 @@ void Cvar_FillAll_f()
 		}
 		if(verify && strcmp(var->string, buf))
 		{
-			Con_Printf("\n%s does not contain the right rubbish, either this is the first run or a possible overrun was detected, or something changed it intentionally; it DOES contain: %s\n", var->name, var->string);
+			Con_DPrintf("\n%s does not contain the right rubbish, either this is the first run or a possible overrun was detected, or something changed it intentionally; it DOES contain: %s\n", var->name, var->string);
 		}
 		Cvar_SetQuick(var, buf);
 	}

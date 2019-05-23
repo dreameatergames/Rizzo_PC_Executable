@@ -128,21 +128,21 @@ static void PRVM_PrintStatement(prvm_prog_t *prog, mstatement_t *s)
 	int opnum = (int)(s - prog->statements);
 	char valuebuf[MAX_INPUTLINE];
 
-	Con_Printf("s%i: ", opnum);
+	Con_DPrintf("s%i: ", opnum);
 	if( prog->statement_linenums )
 	{
 		if ( prog->statement_columnnums )
-			Con_Printf( "%s:%i:%i: ", PRVM_GetString( prog, prog->xfunction->s_file ), prog->statement_linenums[ opnum ], prog->statement_columnnums[ opnum ] );
+			Con_DPrintf( "%s:%i:%i: ", PRVM_GetString( prog, prog->xfunction->s_file ), prog->statement_linenums[ opnum ], prog->statement_columnnums[ opnum ] );
 		else
-			Con_Printf( "%s:%i: ", PRVM_GetString( prog, prog->xfunction->s_file ), prog->statement_linenums[ opnum ] );
+			Con_DPrintf( "%s:%i: ", PRVM_GetString( prog, prog->xfunction->s_file ), prog->statement_linenums[ opnum ] );
 	}
 
 	if (prvm_statementprofiling.integer)
-		Con_Printf("%7.0f ", prog->statement_profile[s - prog->statements]);
+		Con_DPrintf("%7.0f ", prog->statement_profile[s - prog->statements]);
 
 	if ( (unsigned)s->op < sizeof(prvm_opnames)/sizeof(prvm_opnames[0]))
 	{
-		Con_Printf("%s ",  prvm_opnames[s->op]);
+		Con_DPrintf("%s ",  prvm_opnames[s->op]);
 		i = strlen(prvm_opnames[s->op]);
 		// don't count a preceding color tag when padding the name
 		if (prvm_opnames[s->op][0] == STRING_COLOR_TAG)
@@ -150,10 +150,10 @@ static void PRVM_PrintStatement(prvm_prog_t *prog, mstatement_t *s)
 		for ( ; i<10 ; i++)
 			Con_Print(" ");
 	}
-	if (s->operand[0] >= 0) Con_Printf(  "%s", PRVM_GlobalString(prog, s->operand[0], valuebuf, sizeof(valuebuf)));
-	if (s->operand[1] >= 0) Con_Printf(", %s", PRVM_GlobalString(prog, s->operand[1], valuebuf, sizeof(valuebuf)));
-	if (s->operand[2] >= 0) Con_Printf(", %s", PRVM_GlobalString(prog, s->operand[2], valuebuf, sizeof(valuebuf)));
-	if (s->jumpabsolute >= 0) Con_Printf(", statement %i", s->jumpabsolute);
+	if (s->operand[0] >= 0) Con_DPrintf(  "%s", PRVM_GlobalString(prog, s->operand[0], valuebuf, sizeof(valuebuf)));
+	if (s->operand[1] >= 0) Con_DPrintf(", %s", PRVM_GlobalString(prog, s->operand[1], valuebuf, sizeof(valuebuf)));
+	if (s->operand[2] >= 0) Con_DPrintf(", %s", PRVM_GlobalString(prog, s->operand[2], valuebuf, sizeof(valuebuf)));
+	if (s->jumpabsolute >= 0) Con_DPrintf(", statement %i", s->jumpabsolute);
 	Con_Print("\n");
 }
 
@@ -164,13 +164,13 @@ void PRVM_PrintFunctionStatements (prvm_prog_t *prog, const char *name)
 	func = PRVM_ED_FindFunction (prog, name);
 	if (!func)
 	{
-		Con_Printf("%s progs: no function named %s\n", prog->name, name);
+		Con_DPrintf("%s progs: no function named %s\n", prog->name, name);
 		return;
 	}
 	firststatement = func->first_statement;
 	if (firststatement < 0)
 	{
-		Con_Printf("%s progs: function %s is builtin #%i\n", prog->name, name, -firststatement);
+		Con_DPrintf("%s progs: function %s is builtin #%i\n", prog->name, name, -firststatement);
 		return;
 	}
 
@@ -181,7 +181,7 @@ void PRVM_PrintFunctionStatements (prvm_prog_t *prog, const char *name)
 			endstatement = prog->functions[i].first_statement;
 
 	// now print the range of statements
-	Con_Printf("%s progs: disassembly of function %s (statements %i-%i, locals %i-%i):\n", prog->name, name, firststatement, endstatement, func->parm_start, func->parm_start + func->locals - 1);
+	Con_DPrintf("%s progs: disassembly of function %s (statements %i-%i, locals %i-%i):\n", prog->name, name, firststatement, endstatement, func->parm_start, func->parm_start + func->locals - 1);
 	prog->xfunction = func;
 	for (i = firststatement;i < endstatement;i++)
 	{
@@ -190,7 +190,7 @@ void PRVM_PrintFunctionStatements (prvm_prog_t *prog, const char *name)
 			prog->statement_profile[i] = 0;
 	}
 	if (prvm_coverage.integer & 4)
-		Con_Printf("Collecting statement coverage, not flushing statement profile.\n");
+		Con_DPrintf("Collecting statement coverage, not flushing statement profile.\n");
 }
 
 /*
@@ -204,7 +204,7 @@ void PRVM_PrintFunction_f (void)
 	prvm_prog_t *prog;
 	if (Cmd_Argc() != 3)
 	{
-		Con_Printf("usage: prvm_printfunction <program name> <function name>\n");
+		Con_DPrintf("usage: prvm_printfunction <program name> <function name>\n");
 		return;
 	}
 
@@ -237,12 +237,12 @@ void PRVM_StackTrace (prvm_prog_t *prog)
 			if (prog->statement_linenums)
 			{
 				if (prog->statement_columnnums)
-					Con_Printf("%12s:%i:%i : %s : statement %i\n", PRVM_GetString(prog, f->s_file), prog->statement_linenums[prog->stack[i].s], prog->statement_columnnums[prog->stack[i].s], PRVM_GetString(prog, f->s_name), prog->stack[i].s - f->first_statement);
+					Con_DPrintf("%12s:%i:%i : %s : statement %i\n", PRVM_GetString(prog, f->s_file), prog->statement_linenums[prog->stack[i].s], prog->statement_columnnums[prog->stack[i].s], PRVM_GetString(prog, f->s_name), prog->stack[i].s - f->first_statement);
 				else
-					Con_Printf("%12s:%i : %s : statement %i\n", PRVM_GetString(prog, f->s_file), prog->statement_linenums[prog->stack[i].s], PRVM_GetString(prog, f->s_name), prog->stack[i].s - f->first_statement);
+					Con_DPrintf("%12s:%i : %s : statement %i\n", PRVM_GetString(prog, f->s_file), prog->statement_linenums[prog->stack[i].s], PRVM_GetString(prog, f->s_name), prog->stack[i].s - f->first_statement);
 			}
 			else
-				Con_Printf("%12s : %s : statement %i\n", PRVM_GetString(prog, f->s_file), PRVM_GetString(prog, f->s_name), prog->stack[i].s - f->first_statement);
+				Con_DPrintf("%12s : %s : statement %i\n", PRVM_GetString(prog, f->s_file), PRVM_GetString(prog, f->s_name), prog->stack[i].s - f->first_statement);
 		}
 	}
 }
@@ -288,7 +288,7 @@ static void PRVM_CallProfile (prvm_prog_t *prog)
 	double sum;
 	double newprofiletime;
 
-	Con_Printf( "%s Call Profile:\n", prog->name );
+	Con_DPrintf( "%s Call Profile:\n", prog->name );
 
 	sum = 0;
 	do
@@ -307,14 +307,14 @@ static void PRVM_CallProfile (prvm_prog_t *prog)
 		if (best)
 		{
 			sum += best->totaltime;
-			Con_Printf("%9.4f %s\n", best->totaltime, PRVM_GetString(prog, best->s_name));
+			Con_DPrintf("%9.4f %s\n", best->totaltime, PRVM_GetString(prog, best->s_name));
 			best->totaltime = 0;
 		}
 	} while (best);
 
 	newprofiletime = Sys_DirtyTime();
-	Con_Printf("Total time since last profile reset: %9.4f\n", newprofiletime - prog->profiletime);
-	Con_Printf("       - used by QC code of this VM: %9.4f\n", sum);
+	Con_DPrintf("Total time since last profile reset: %9.4f\n", newprofiletime - prog->profiletime);
+	Con_DPrintf("       - used by QC code of this VM: %9.4f\n", sum);
 
 	prog->profiletime = newprofiletime;
 }
@@ -329,10 +329,10 @@ void PRVM_Profile (prvm_prog_t *prog, int maxfunctions, double mintime, int sort
 		mintime *= 10000000; // count each statement as about 0.1µs
 
 	if(prvm_timeprofiling.integer)
-		Con_Printf( "%s Profile:\n[CallCount]      [Time] [BuiltinTm] [Statement] [BuiltinCt] [TimeTotal] [StmtTotal] [BltnTotal] [self]\n", prog->name );
+		Con_DPrintf( "%s Profile:\n[CallCount]      [Time] [BuiltinTm] [Statement] [BuiltinCt] [TimeTotal] [StmtTotal] [BltnTotal] [self]\n", prog->name );
 		//                        12345678901 12345678901 12345678901 12345678901 12345678901 12345678901 12345678901 123.45%
 	else
-		Con_Printf( "%s Profile:\n[CallCount] [Statement] [BuiltinCt] [StmtTotal] [BltnTotal] [self]\n", prog->name );
+		Con_DPrintf( "%s Profile:\n[CallCount] [Statement] [BuiltinCt] [StmtTotal] [BltnTotal] [self]\n", prog->name );
 		//                        12345678901 12345678901 12345678901 12345678901 12345678901 123.45%
 
 	num = 0;
@@ -400,18 +400,18 @@ void PRVM_Profile (prvm_prog_t *prog, int maxfunctions, double mintime, int sort
 				if(prvm_timeprofiling.integer)
 				{
 					if (best->first_statement < 0)
-						Con_Printf("%11.0f %11.6f ------------- builtin ------------- %11.6f ----------- builtin ----------- %s\n", best->callcount, best->tprofile, best->tprofile, PRVM_GetString(prog, best->s_name));
+						Con_DPrintf("%11.0f %11.6f ------------- builtin ------------- %11.6f ----------- builtin ----------- %s\n", best->callcount, best->tprofile, best->tprofile, PRVM_GetString(prog, best->s_name));
 					//                 %11.6f 12345678901 12345678901 12345678901 %11.6f 12345678901 12345678901 123.45%
 					else
-						Con_Printf("%11.0f %11.6f %11.6f %11.0f %11.0f %11.6f %11.0f %11.0f %6.2f%% %s\n", best->callcount, best->tprofile, best->tbprofile, best->profile, best->builtinsprofile, best->tprofile_total, best->profile_total, best->builtinsprofile_total, (best->tprofile_total > 0) ? ((best->tprofile) * 100.0 / (best->tprofile_total)) : -99.99, PRVM_GetString(prog, best->s_name));
+						Con_DPrintf("%11.0f %11.6f %11.6f %11.0f %11.0f %11.6f %11.0f %11.0f %6.2f%% %s\n", best->callcount, best->tprofile, best->tbprofile, best->profile, best->builtinsprofile, best->tprofile_total, best->profile_total, best->builtinsprofile_total, (best->tprofile_total > 0) ? ((best->tprofile) * 100.0 / (best->tprofile_total)) : -99.99, PRVM_GetString(prog, best->s_name));
 				}
 				else
 				{
 					if (best->first_statement < 0)
-						Con_Printf("%11.0f ----------------------- builtin ----------------------- %s\n", best->callcount, PRVM_GetString(prog, best->s_name));
+						Con_DPrintf("%11.0f ----------------------- builtin ----------------------- %s\n", best->callcount, PRVM_GetString(prog, best->s_name));
 					//                 12345678901 12345678901 12345678901 12345678901 123.45%
 					else
-						Con_Printf("%11.0f %11.0f %11.0f %11.0f %11.0f %6.2f%% %s\n", best->callcount, best->profile, best->builtinsprofile, best->profile_total, best->builtinsprofile_total, (best->profile + best->builtinsprofile) * 100.0 / (best->profile_total + best->builtinsprofile_total), PRVM_GetString(prog, best->s_name));
+						Con_DPrintf("%11.0f %11.0f %11.0f %11.0f %11.0f %6.2f%% %s\n", best->callcount, best->profile, best->builtinsprofile, best->profile_total, best->builtinsprofile_total, (best->profile + best->builtinsprofile) * 100.0 / (best->profile_total + best->builtinsprofile_total), PRVM_GetString(prog, best->s_name));
 				}
 			}
 			num++;
@@ -461,7 +461,7 @@ void PRVM_Profile_f (void)
 
 	if (prvm_coverage.integer & 1)
 	{
-		Con_Printf("Collecting function coverage, cannot profile - sorry!\n");
+		Con_DPrintf("Collecting function coverage, cannot profile - sorry!\n");
 		return;
 	}
 
@@ -487,7 +487,7 @@ void PRVM_ChildProfile_f (void)
 
 	if (prvm_coverage.integer & 1)
 	{
-		Con_Printf("Collecting function coverage, cannot profile - sorry!\n");
+		Con_DPrintf("Collecting function coverage, cannot profile - sorry!\n");
 		return;
 	}
 
@@ -518,7 +518,7 @@ void PRVM_PrintState(prvm_prog_t *prog, int stack_index)
 	}
 	if (prog->statestring)
 	{
-		Con_Printf("Caller-provided information: %s\n", prog->statestring);
+		Con_DPrintf("Caller-provided information: %s\n", prog->statestring);
 	}
 	if (func)
 	{
@@ -542,7 +542,7 @@ void PRVM_Crash(prvm_prog_t *prog)
 
 	if( prog->depth > 0 )
 	{
-		Con_Printf("QuakeC crash report for %s:\n", prog->name);
+		Con_DPrintf("QuakeC crash report for %s:\n", prog->name);
 		PRVM_PrintState(prog, 0);
 	}
 
@@ -701,19 +701,19 @@ static const char *PRVM_WhereAmI(char *buf, size_t bufsize, prvm_prog_t *prog, m
 static void PRVM_FunctionCoverageEvent(prvm_prog_t *prog, mfunction_t *func)
 {
 	++prog->functions_covered;
-	Con_Printf("prvm_coverage: %s just called %s for the first time. Coverage: %.2f%%.\n", prog->name, PRVM_GetString(prog, func->s_name), prog->functions_covered * 100.0 / prog->numfunctions);
+	Con_DPrintf("prvm_coverage: %s just called %s for the first time. Coverage: %.2f%%.\n", prog->name, PRVM_GetString(prog, func->s_name), prog->functions_covered * 100.0 / prog->numfunctions);
 }
 void PRVM_ExplicitCoverageEvent(prvm_prog_t *prog, mfunction_t *func, int statement)
 {
 	char vabuf[128];
 	++prog->explicit_covered;
-	Con_Printf("prvm_coverage: %s just executed a coverage() statement at %s for the first time. Coverage: %.2f%%.\n", prog->name, PRVM_WhereAmI(vabuf, sizeof(vabuf), prog, func, statement), prog->explicit_covered * 100.0 / prog->numexplicitcoveragestatements);
+	Con_DPrintf("prvm_coverage: %s just executed a coverage() statement at %s for the first time. Coverage: %.2f%%.\n", prog->name, PRVM_WhereAmI(vabuf, sizeof(vabuf), prog, func, statement), prog->explicit_covered * 100.0 / prog->numexplicitcoveragestatements);
 }
 static void PRVM_StatementCoverageEvent(prvm_prog_t *prog, mfunction_t *func, int statement)
 {
 	char vabuf[128];
 	++prog->statements_covered;
-	Con_Printf("prvm_coverage: %s just executed a statement at %s for the first time. Coverage: %.2f%%.\n", prog->name, PRVM_WhereAmI(vabuf, sizeof(vabuf), prog, func, statement), prog->statements_covered * 100.0 / prog->numstatements);
+	Con_DPrintf("prvm_coverage: %s just executed a statement at %s for the first time. Coverage: %.2f%%.\n", prog->name, PRVM_WhereAmI(vabuf, sizeof(vabuf), prog, func, statement), prog->statements_covered * 100.0 / prog->numstatements);
 }
 
 #ifdef __GNUC__

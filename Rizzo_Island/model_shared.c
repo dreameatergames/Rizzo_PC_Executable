@@ -194,7 +194,7 @@ void Mod_UnloadModel (dp_model_t *mod)
 	dp_model_t *parentmodel;
 
 	if (developer_loading.integer)
-		Con_Printf("unloading model %s\n", mod->name);
+		Con_DPrintf("unloading model %s\n", mod->name);
 
 	strlcpy(name, mod->name, sizeof(name));
 	parentmodel = mod->brush.parentmodel;
@@ -258,7 +258,7 @@ static int Mod_FrameGroupify_ParseGroups(const char *buf, mod_framegroupify_pars
 		COM_ParseToken_Simple(&bufptr, true, false, true);
 		if (!bufptr || !strcmp(com_token, "\n"))
 		{
-			Con_Printf("framegroups file: missing number of frames\n");
+			Con_DPrintf("framegroups file: missing number of frames\n");
 			continue;
 		}
 		len = atoi(com_token);
@@ -294,7 +294,7 @@ static int Mod_FrameGroupify_ParseGroups(const char *buf, mod_framegroupify_pars
 		while (bufptr && strcmp(com_token, "\n"))
 			COM_ParseToken_Simple(&bufptr, true, false, true);
 
-		//Con_Printf("data: %d %d %d %f %d (%s)\n", i, start, len, fps, loop, name);
+		//Con_DPrintf("data: %d %d %d %f %d (%s)\n", i, start, len, fps, loop, name);
 
 		if(cb)
 			cb(i, start, len, fps, loop, (name[0] ? name : NULL), pass);
@@ -316,7 +316,7 @@ static void Mod_FrameGroupify_ParseGroups_Store (unsigned int i, int start, int 
 	anim->framecount = bound(1, len, mod->num_poses - anim->firstframe);
 	anim->framerate = max(1, fps);
 	anim->loop = !!loop;
-	//Con_Printf("frame group %d is %d %d %f %d\n", i, start, len, fps, loop);
+	//Con_DPrintf("frame group %d is %d %d %f %d\n", i, start, len, fps, loop);
 }
 
 static void Mod_FrameGroupify(dp_model_t *mod, const char *buf)
@@ -327,7 +327,7 @@ static void Mod_FrameGroupify(dp_model_t *mod, const char *buf)
 	cnt = Mod_FrameGroupify_ParseGroups(buf, NULL, NULL);
 	if(!cnt)
 	{
-		Con_Printf("no scene found in framegroups file, aborting\n");
+		Con_DPrintf("no scene found in framegroups file, aborting\n");
 		return;
 	}
 	mod->numframes = cnt;
@@ -396,7 +396,7 @@ dp_model_t *Mod_LoadModel(dp_model_t *mod, qboolean crash, qboolean checkdisk)
 			Mod_UnloadModel(mod);
 
 		if (developer_loading.integer)
-			Con_Printf("loading model %s\n", mod->name);
+			Con_DPrintf("loading model %s\n", mod->name);
 
 		mod->used = true;
 		mod->crc = (unsigned int)-1;
@@ -450,7 +450,7 @@ dp_model_t *Mod_LoadModel(dp_model_t *mod, qboolean crash, qboolean checkdisk)
 	}
 
 	if (developer_loading.integer)
-		Con_Printf("loading model %s\n", mod->name);
+		Con_DPrintf("loading model %s\n", mod->name);
 	
 	SCR_PushLoadingScreen(true, mod->name, 1);
 
@@ -505,7 +505,7 @@ dp_model_t *Mod_LoadModel(dp_model_t *mod, qboolean crash, qboolean checkdisk)
 		else if (!memcmp(buf, "INTERQUAKEMODEL", 16)) Mod_INTERQUAKEMODEL_Load(mod, buf, bufend);
 		else if (strlen(mod->name) >= 4 && !strcmp(mod->name + strlen(mod->name) - 4, ".map")) Mod_MAP_Load(mod, buf, bufend);
 		else if (num == BSPVERSION || num == 30 || !memcmp(buf, "BSP2", 4) || !memcmp(buf, "2PSB", 4)) Mod_Q1BSP_Load(mod, buf, bufend);
-		else Con_Printf("Mod_LoadModel: model \"%s\" is of unknown/unsupported type\n", mod->name);
+		else Con_DPrintf("Mod_LoadModel: model \"%s\" is of unknown/unsupported type\n", mod->name);
 		Mem_Free(buf);
 
 		Mod_FindPotentialDeforms(mod);
@@ -521,8 +521,8 @@ dp_model_t *Mod_LoadModel(dp_model_t *mod, qboolean crash, qboolean checkdisk)
 	}
 	else if (crash)
 	{
-		// LordHavoc: Sys_Error was *ANNOYING*
-		Con_Printf ("Mod_LoadModel: %s not found\n", mod->name);
+		// LordHavoc: Con_DPrintf was *ANNOYING*
+		Con_DPrintf ("Mod_LoadModel: %s not found\n", mod->name);
 	}
 
 	// no fatal errors occurred, so this model is ready to use.
@@ -669,9 +669,9 @@ static void Mod_Print(void)
 		if ((mod = (dp_model_t *) Mem_ExpandableArray_RecordAtIndex(&models, i)) && mod->name[0] && mod->name[0] != '*')
 		{
 			if (mod->brush.numsubmodels)
-				Con_Printf("%4iK %s (%i submodels)\n", mod->mempool ? (int)((mod->mempool->totalsize + 1023) / 1024) : 0, mod->name, mod->brush.numsubmodels);
+				Con_DPrintf("%4iK %s (%i submodels)\n", mod->mempool ? (int)((mod->mempool->totalsize + 1023) / 1024) : 0, mod->name, mod->brush.numsubmodels);
 			else
-				Con_Printf("%4iK %s\n", mod->mempool ? (int)((mod->mempool->totalsize + 1023) / 1024) : 0, mod->name);
+				Con_DPrintf("%4iK %s\n", mod->mempool ? (int)((mod->mempool->totalsize + 1023) / 1024) : 0, mod->name);
 		}
 	}
 }
@@ -826,7 +826,7 @@ void Mod_ValidateElements(int *elements, int numtriangles, int firstvertex, int 
 			if (!warned)
 			{
 				warned = true;
-				Con_Printf("Mod_ValidateElements: out of bounds elements detected at %s:%d\n", filename, fileline);
+				Con_DPrintf("Mod_ValidateElements: out of bounds elements detected at %s:%d\n", filename, fileline);
 			}
 			elements[i] = firstvertex;
 		}
@@ -1691,7 +1691,7 @@ void Mod_LoadQ3Shaders(void)
 					// register surfaceflag
 					if (numcustsurfaceflags >= 256)
 					{
-						Con_Printf("scripts/custinfoparms.txt: surfaceflags section parsing error - max 256 surfaceflags exceeded\n");
+						Con_DPrintf("scripts/custinfoparms.txt: surfaceflags section parsing error - max 256 surfaceflags exceeded\n");
 						break;
 					}
 					// name
@@ -2449,7 +2449,7 @@ texture_shaderpass_t *Mod_CreateShaderPassFromQ3ShaderLayer(q3shaderinfo_layer_t
 		}
 		else if (!(shaderpass->skinframes[j] = R_SkinFrame_LoadExternal(layer->texturename[j], texflags, false)))
 		{
-			Con_Printf("^1%s:^7 could not load texture ^3\"%s\"^7 (frame %i) for layer %i of shader ^2\"%s\"\n", loadmodel->name, layer->texturename[j], j, layerindex, texturename);
+			Con_DPrintf("^1%s:^7 could not load texture ^3\"%s\"^7 (frame %i) for layer %i of shader ^2\"%s\"\n", loadmodel->name, layer->texturename[j], j, layerindex, texturename);
 			shaderpass->skinframes[j] = R_SkinFrame_LoadMissing();
 		}
 	}
@@ -2491,7 +2491,7 @@ qboolean Mod_LoadTextureFromQ3Shader(texture_t *texture, const char *name, qbool
 	if (shader)
 	{
 		if (developer_loading.integer)
-			Con_Printf("%s: loaded shader for %s\n", loadmodel->name, name);
+			Con_DPrintf("%s: loaded shader for %s\n", loadmodel->name, name);
 
 		// allow disabling of picmip or compression by defaulttexflags
 		texture->textureflags = (shader->textureflags & texflagsmask) | texflagsor;
@@ -2825,7 +2825,7 @@ nothing                GL_ZERO GL_ONE
 			else
 				success = false;
 			if (!success && warnmissing)
-				Con_Printf("^1%s:^7 could not load texture ^3\"%s\"\n", loadmodel->name, texture->name);
+				Con_DPrintf("^1%s:^7 could not load texture ^3\"%s\"\n", loadmodel->name, texture->name);
 		}
 	}
 	// init the animation variables
@@ -2899,7 +2899,7 @@ tag_torso,
 			while (COM_ParseToken_QuakeC(&data, true) && strcmp(com_token, "\n"));
 			if (wordsoverflow)
 			{
-				Con_Printf("Mod_LoadSkinFiles: parsing error in file \"%s_%i.skin\" on line #%i: line with too many statements, skipping\n", loadmodel->name, i, line);
+				Con_DPrintf("Mod_LoadSkinFiles: parsing error in file \"%s_%i.skin\" on line #%i: line with too many statements, skipping\n", loadmodel->name, i, line);
 				continue;
 			}
 			// words is always >= 1
@@ -2908,7 +2908,7 @@ tag_torso,
 				if (words == 3)
 				{
 					if (developer_loading.integer)
-						Con_Printf("Mod_LoadSkinFiles: parsed mesh \"%s\" shader replacement \"%s\"\n", word[1], word[2]);
+						Con_DPrintf("Mod_LoadSkinFiles: parsed mesh \"%s\" shader replacement \"%s\"\n", word[1], word[2]);
 					skinfileitem = (skinfileitem_t *)Mem_Alloc(loadmodel->mempool, sizeof(skinfileitem_t));
 					skinfileitem->next = skinfile->items;
 					skinfile->items = skinfileitem;
@@ -2916,7 +2916,7 @@ tag_torso,
 					strlcpy (skinfileitem->replacement, word[2], sizeof (skinfileitem->replacement));
 				}
 				else
-					Con_Printf("Mod_LoadSkinFiles: parsing error in file \"%s_%i.skin\" on line #%i: wrong number of parameters to command \"%s\", see documentation in DP_GFX_SKINFILES extension in dpextensions.qc\n", loadmodel->name, i, line, word[0]);
+					Con_DPrintf("Mod_LoadSkinFiles: parsing error in file \"%s_%i.skin\" on line #%i: wrong number of parameters to command \"%s\", see documentation in DP_GFX_SKINFILES extension in dpextensions.qc\n", loadmodel->name, i, line, word[0]);
 			}
 			else if (words >= 2 && !strncmp(word[0], "tag_", 4))
 			{
@@ -2927,7 +2927,7 @@ tag_torso,
 			{
 				// mesh shader name, like "U_RArm,models/players/Legoman/BikerA1.tga"
 				if (developer_loading.integer)
-					Con_Printf("Mod_LoadSkinFiles: parsed mesh \"%s\" shader replacement \"%s\"\n", word[0], word[2]);
+					Con_DPrintf("Mod_LoadSkinFiles: parsed mesh \"%s\" shader replacement \"%s\"\n", word[0], word[2]);
 				skinfileitem = (skinfileitem_t *)Mem_Alloc(loadmodel->mempool, sizeof(skinfileitem_t));
 				skinfileitem->next = skinfile->items;
 				skinfile->items = skinfileitem;
@@ -2935,7 +2935,7 @@ tag_torso,
 				strlcpy (skinfileitem->replacement, word[2], sizeof (skinfileitem->replacement));
 			}
 			else
-				Con_Printf("Mod_LoadSkinFiles: parsing error in file \"%s_%i.skin\" on line #%i: does not look like tag or mesh specification, or replace command, see documentation in DP_GFX_SKINFILES extension in dpextensions.qc\n", loadmodel->name, i, line);
+				Con_DPrintf("Mod_LoadSkinFiles: parsing error in file \"%s_%i.skin\" on line #%i: does not look like tag or mesh specification, or replace command, see documentation in DP_GFX_SKINFILES extension in dpextensions.qc\n", loadmodel->name, i, line);
 		}
 		Mem_Free(text);
 	}
@@ -3066,7 +3066,7 @@ void Mod_BuildVBOs(void)
 		{
 			if (loadmodel->surfmesh.data_element3s[i] != loadmodel->surfmesh.data_element3i[i])
 			{
-				Con_Printf("Mod_BuildVBOs: element %u is incorrect (%u should be %u)\n", i, loadmodel->surfmesh.data_element3s[i], loadmodel->surfmesh.data_element3i[i]);
+				Con_DPrintf("Mod_BuildVBOs: element %u is incorrect (%u should be %u)\n", i, loadmodel->surfmesh.data_element3s[i], loadmodel->surfmesh.data_element3i[i]);
 				loadmodel->surfmesh.data_element3s[i] = loadmodel->surfmesh.data_element3i[i];
 			}
 		}
@@ -3262,7 +3262,7 @@ static void Mod_Decompile_OBJ(dp_model_t *model, const char *filename, const cha
 	Z_Free(texturenames);
 
 	// print some stats
-	Con_Printf("Wrote %s (%i bytes, %i vertices, %i faces, %i surfaces with %i distinct textures)\n", filename, (int)outbufferpos, countvertices, countfaces, countsurfaces, counttextures);
+	Con_DPrintf("Wrote %s (%i bytes, %i vertices, %i faces, %i surfaces with %i distinct textures)\n", filename, (int)outbufferpos, countvertices, countfaces, countsurfaces, counttextures);
 }
 
 static void Mod_Decompile_SMD(dp_model_t *model, const char *filename, int firstpose, int numposes, qboolean writetriangles)
@@ -3419,7 +3419,7 @@ static void Mod_Decompile_SMD(dp_model_t *model, const char *filename, int first
 	FS_WriteFile(filename, outbuffer, outbufferpos);
 	Z_Free(outbuffer);
 
-	Con_Printf("Wrote %s (%i bytes, %i nodes, %i frames, %i triangles)\n", filename, (int)outbufferpos, countnodes, countframes, counttriangles);
+	Con_DPrintf("Wrote %s (%i bytes, %i nodes, %i frames, %i triangles)\n", filename, (int)outbufferpos, countnodes, countframes, counttriangles);
 }
 
 /*
@@ -4373,7 +4373,7 @@ static void Mod_GenerateLightmaps_CreateLightmaps(dp_model_t *model)
 				samplecenter[axis1] = (t2f[0]*lm_texturesize-triangle->lmoffset[0])*lmiscale[0] + triangle->lmbase[0];
 				samplecenter[axis2] = (t2f[1]*lm_texturesize-triangle->lmoffset[1])*lmiscale[1] + triangle->lmbase[1];
 				samplecenter[axis] = samplecenter[axis1]*slopex + samplecenter[axis2]*slopey + slopebase;
-				Con_Printf("%f:%f %f:%f %f:%f = %f %f\n", triangle->vertex[j][axis1], samplecenter[axis1], triangle->vertex[j][axis2], samplecenter[axis2], triangle->vertex[j][axis], samplecenter[axis], t2f[0], t2f[1]);
+				Con_DPrintf("%f:%f %f:%f %f:%f = %f %f\n", triangle->vertex[j][axis1], samplecenter[axis1], triangle->vertex[j][axis2], samplecenter[axis2], triangle->vertex[j][axis], samplecenter[axis], t2f[0], t2f[1]);
 #endif
 			}
 
@@ -4534,12 +4534,12 @@ static void Mod_GenerateLightmaps_f(void)
 {
 	if (Cmd_Argc() != 1)
 	{
-		Con_Printf("usage: mod_generatelightmaps\n");
+		Con_DPrintf("usage: mod_generatelightmaps\n");
 		return;
 	}
 	if (!cl.worldmodel)
 	{
-		Con_Printf("no worldmodel loaded\n");
+		Con_DPrintf("no worldmodel loaded\n");
 		return;
 	}
 	Mod_GenerateLightmaps(cl.worldmodel);

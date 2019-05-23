@@ -90,7 +90,7 @@ ENTITY AREA CHECKING
 
 void World_PrintAreaStats(world_t *world, const char *worldname)
 {
-	Con_Printf("%s areagrid check stats: %d calls %d nodes (%f per call) %d entities (%f per call)\n", worldname, world->areagrid_stats_calls, world->areagrid_stats_nodechecks, (double) world->areagrid_stats_nodechecks / (double) world->areagrid_stats_calls, world->areagrid_stats_entitychecks, (double) world->areagrid_stats_entitychecks / (double) world->areagrid_stats_calls);
+	Con_DPrintf("%s areagrid check stats: %d calls %d nodes (%f per call) %d entities (%f per call)\n", worldname, world->areagrid_stats_calls, world->areagrid_stats_nodechecks, (double) world->areagrid_stats_nodechecks / (double) world->areagrid_stats_calls, world->areagrid_stats_entitychecks, (double) world->areagrid_stats_entitychecks / (double) world->areagrid_stats_calls);
 	world->areagrid_stats_calls = 0;
 	world->areagrid_stats_nodechecks = 0;
 	world->areagrid_stats_entitychecks = 0;
@@ -253,7 +253,7 @@ int World_EntitiesInBox(world_t *world, const vec3_t requestmins, const vec3_t r
 								list[numlist] = ent;
 							numlist++;
 						}
-						//Con_Printf("%d %f %f %f %f %f %f : %d : %f %f %f %f %f %f\n", BoxesOverlap(mins, maxs, ent->priv.server->areamins, ent->priv.server->areamaxs), ent->priv.server->areamins[0], ent->priv.server->areamins[1], ent->priv.server->areamins[2], ent->priv.server->areamaxs[0], ent->priv.server->areamaxs[1], ent->priv.server->areamaxs[2], PRVM_NUM_FOR_EDICT(ent), mins[0], mins[1], mins[2], maxs[0], maxs[1], maxs[2]);
+						//Con_DPrintf("%d %f %f %f %f %f %f : %d : %f %f %f %f %f %f\n", BoxesOverlap(mins, maxs, ent->priv.server->areamins, ent->priv.server->areamaxs), ent->priv.server->areamins[0], ent->priv.server->areamins[1], ent->priv.server->areamins[2], ent->priv.server->areamaxs[0], ent->priv.server->areamaxs[1], ent->priv.server->areamaxs[2], PRVM_NUM_FOR_EDICT(ent), mins[0], mins[1], mins[2], maxs[0], maxs[1], maxs[2]);
 					}
 					world->areagrid_stats_entitychecks++;
 				}
@@ -271,7 +271,7 @@ static void World_LinkEdict_AreaGrid(world_t *world, prvm_edict_t *ent)
 
 	if (entitynumber <= 0 || entitynumber >= prog->max_edicts || PRVM_EDICT_NUM(entitynumber) != ent)
 	{
-		Con_Printf ("World_LinkEdict_AreaGrid: invalid edict %p (edicts is %p, edict compared to prog->edicts is %i)\n", (void *)ent, (void *)prog->edicts, entitynumber);
+		Con_DPrintf ("World_LinkEdict_AreaGrid: invalid edict %p (edicts is %p, edict compared to prog->edicts is %i)\n", (void *)ent, (void *)prog->edicts, entitynumber);
 		return;
 	}
 
@@ -1535,9 +1535,9 @@ static void World_Physics_Init(void)
 # endif
 		{
 # ifdef dSINGLE
-			Con_Printf("ODE library not compiled for single precision - incompatible!  Not using ODE physics.\n");
+			Con_DPrintf("ODE library not compiled for single precision - incompatible!  Not using ODE physics.\n");
 # else
-			Con_Printf("ODE library not compiled for double precision - incompatible!  Not using ODE physics.\n");
+			Con_DPrintf("ODE library not compiled for double precision - incompatible!  Not using ODE physics.\n");
 # endif
 			Sys_UnloadLibrary(&ode_dll);
 			ode_dll = NULL;
@@ -1545,11 +1545,11 @@ static void World_Physics_Init(void)
 		else
 		{
 # ifdef dSINGLE
-			Con_Printf("ODE library loaded with single precision.\n");
+			Con_DPrintf("ODE library loaded with single precision.\n");
 # else
-			Con_Printf("ODE library loaded with double precision.\n");
+			Con_DPrintf("ODE library loaded with double precision.\n");
 # endif
-			Con_Printf("ODE configuration list: %s\n", dGetConfiguration());
+			Con_DPrintf("ODE configuration list: %s\n", dGetConfiguration());
 		}
 #endif
 	}
@@ -1981,7 +1981,7 @@ static void World_Physics_Frame_JointFromEntity(world_t *world, prvm_edict_t *ed
 	}
 	if(ed->priv.server->ode_joint)
 	{
-		//Con_Printf("deleted old joint %i\n", (int) (ed - prog->edicts));
+		//Con_DPrintf("deleted old joint %i\n", (int) (ed - prog->edicts));
 		dJointAttach((dJointID)ed->priv.server->ode_joint, 0, 0);
 		dJointDestroy((dJointID)ed->priv.server->ode_joint);
 	}
@@ -1995,7 +1995,7 @@ static void World_Physics_Frame_JointFromEntity(world_t *world, prvm_edict_t *ed
 	VectorCopy(movedir, ed->priv.server->ode_joint_movedir);
 	if(j)
 	{
-		//Con_Printf("made new joint %i\n", (int) (ed - prog->edicts));
+		//Con_DPrintf("made new joint %i\n", (int) (ed - prog->edicts));
 		dJointSetData(j, (void *) ed);
 		if(enemy)
 			b1 = (dBodyID)prog->edicts[enemy].priv.server->ode_body;
@@ -2065,7 +2065,7 @@ static void World_Physics_Frame_JointFromEntity(world_t *world, prvm_edict_t *ed
 				break;
 			case 0:
 			default:
-				Sys_Error("what? but above the joint was valid...\n");
+				Con_DPrintf("what? but above the joint was valid...\n");
 				break;
 		}
 #undef SETPARAMS
@@ -2223,7 +2223,7 @@ static void World_Physics_Frame_BodyFromEntity(world_t *world, prvm_edict_t *ed)
 		}
 		else
 		{
-			Con_Printf("entity %i (classname %s) has no model\n", PRVM_NUM_FOR_EDICT(ed), PRVM_GetString(prog, PRVM_gameedictstring(ed, classname)));
+			Con_DPrintf("entity %i (classname %s) has no model\n", PRVM_NUM_FOR_EDICT(ed), PRVM_GetString(prog, PRVM_gameedictstring(ed, classname)));
 			geomtype = GEOMTYPE_BOX;
 			VectorCopy(PRVM_gameedictvector(ed, mins), entmins);
 			VectorCopy(PRVM_gameedictvector(ed, maxs), entmaxs);
@@ -2271,7 +2271,7 @@ static void World_Physics_Frame_BodyFromEntity(world_t *world, prvm_edict_t *ed)
 		if (geomsize[0] * geomsize[1] * geomsize[2] == 0)
 		{
 			if (movetype == MOVETYPE_PHYSICS)
-				Con_Printf("entity %i (classname %s) .mass * .size_x * .size_y * .size_z == 0\n", PRVM_NUM_FOR_EDICT(ed), PRVM_GetString(prog, PRVM_gameedictstring(ed, classname)));
+				Con_DPrintf("entity %i (classname %s) .mass * .size_x * .size_y * .size_z == 0\n", PRVM_NUM_FOR_EDICT(ed), PRVM_GetString(prog, PRVM_gameedictstring(ed, classname)));
 			VectorSet(geomsize, 1.0f, 1.0f, 1.0f);
 		}
 
@@ -2284,7 +2284,7 @@ static void World_Physics_Frame_BodyFromEntity(world_t *world, prvm_edict_t *ed)
 				Mod_CreateCollisionMesh(model);
 			if (!model->brush.collisionmesh)
 			{
-				Con_Printf("entity %i (classname %s) has no geometry\n", PRVM_NUM_FOR_EDICT(ed), PRVM_GetString(prog, PRVM_gameedictstring(ed, classname)));
+				Con_DPrintf("entity %i (classname %s) has no geometry\n", PRVM_NUM_FOR_EDICT(ed), PRVM_GetString(prog, PRVM_gameedictstring(ed, classname)));
 				goto treatasbox;
 			}
 
@@ -2334,7 +2334,7 @@ static void World_Physics_Frame_BodyFromEntity(world_t *world, prvm_edict_t *ed)
 			if (VectorLength2(geomsize) == 0)
 			{
 				if (movetype == MOVETYPE_PHYSICS)
-					Con_Printf("entity %i collision mesh has null geomsize\n", PRVM_NUM_FOR_EDICT(ed));
+					Con_DPrintf("entity %i collision mesh has null geomsize\n", PRVM_NUM_FOR_EDICT(ed));
 				VectorSet(geomsize, 1.0f, 1.0f, 1.0f);
 			}
 			ed->priv.server->ode_numtriangles = numtriangles = model->brush.collisionmesh->numtriangles;
@@ -2363,7 +2363,7 @@ static void World_Physics_Frame_BodyFromEntity(world_t *world, prvm_edict_t *ed)
 				// - triangles that shares same edge and havee sam plane are not merget into poly
 				// so, currently it only works for geosphere meshes with no UV
 
-				Con_Printf("Build convex hull for model %s...\n", model->name);
+				Con_DPrintf("Build convex hull for model %s...\n", model->name);
 				// build convex geometry from trimesh data
 				// this ensures that trimesh's triangles can form correct convex geometry
 				// not many of error checking is performed
@@ -2381,7 +2381,7 @@ static void World_Physics_Frame_BodyFromEntity(world_t *world, prvm_edict_t *ed)
 				numplanes = numpoints = polyvert = 0;
 				// build convex hull
 				// todo: merge duplicated verts here
-				Con_Printf("Building...\n");
+				Con_DPrintf("Building...\n");
 				iv = ed->priv.server->ode_vertex3f;
 				for (triangleindex = 0; triangleindex < numtriangles; triangleindex++)
 				{
@@ -2432,32 +2432,32 @@ static void World_Physics_Frame_BodyFromEntity(world_t *world, prvm_edict_t *ed)
 					}
 				}
 				Mem_Free(mapped);
-				Con_Printf("Points: \n");
+				Con_DPrintf("Points: \n");
 				for (i = 0; i < (int)numpoints; i++)
-					Con_Printf("%3i: %3.1f %3.1f %3.1f\n", i, pointsData[i*3], pointsData[i*3+1], pointsData[i*3+2]);
+					Con_DPrintf("%3i: %3.1f %3.1f %3.1f\n", i, pointsData[i*3], pointsData[i*3+1], pointsData[i*3+2]);
 				// save planes
 				planes = planesData;
 				planesData = pointsData + numpoints*3;
 				memcpy(planesData, planes, numplanes*sizeof(dReal)*4);
 				Mem_Free(planes);
-				Con_Printf("planes...\n");
+				Con_DPrintf("planes...\n");
 				for (i = 0; i < numplanes; i++)
-					Con_Printf("%3i: %1.1f %1.1f %1.1f %1.1f\n", i, planesData[i*4], planesData[i*4 + 1], planesData[i*4 + 2], planesData[i*4 + 3]);
+					Con_DPrintf("%3i: %1.1f %1.1f %1.1f %1.1f\n", i, planesData[i*4], planesData[i*4 + 1], planesData[i*4 + 2], planesData[i*4 + 3]);
 				// save polygons
 				polyvert = polygons - polygonsData;
 				polygons = polygonsData;
 				polygonsData = (unsigned int *)Mem_Alloc(mempool, polyvert*sizeof(int));
 				memcpy(polygonsData, polygons, polyvert*sizeof(int));
 				Mem_Free(polygons);
-				Con_Printf("Polygons: \n");
+				Con_DPrintf("Polygons: \n");
 				polygons = polygonsData;
 				for (i = 0; i < numplanes; i++)
 				{
-					Con_Printf("%3i : %i ", i, polygons[0]);
+					Con_DPrintf("%3i : %i ", i, polygons[0]);
 					for (triangleindex = 1; triangleindex <= (int)polygons[0]; triangleindex++)
-						Con_Printf("%3i ", polygons[triangleindex]);
+						Con_DPrintf("%3i ", polygons[triangleindex]);
 					polygons += (polygons[0]+1);
-					Con_Printf("\n");
+					Con_DPrintf("\n");
 				}
 				Mem_Free(ed->priv.server->ode_element3i);
 				ed->priv.server->ode_element3i = (int *)polygonsData;
@@ -2465,7 +2465,7 @@ static void World_Physics_Frame_BodyFromEntity(world_t *world, prvm_edict_t *ed)
 				ed->priv.server->ode_vertex3f = (float *)pointsData;
 				// check for properly build polygons by calculating the determinant of the 3x3 matrix composed of the first 3 points in the polygon
 				// this code is picked from ODE Source
-				Con_Printf("Check...\n");
+				Con_DPrintf("Check...\n");
 				polygons = polygonsData;
 				for (i = 0; i < numplanes; i++)
 				{
@@ -2475,16 +2475,16 @@ static void World_Physics_Frame_BodyFromEntity(world_t *world, prvm_edict_t *ed)
 						pointsData[(polygons[1]*3)+2]*pointsData[(polygons[2]*3)+1]*pointsData[(polygons[3]*3)+0] -
 						pointsData[(polygons[1]*3)+1]*pointsData[(polygons[2]*3)+0]*pointsData[(polygons[3]*3)+2] -
 						pointsData[(polygons[1]*3)+0]*pointsData[(polygons[2]*3)+2]*pointsData[(polygons[3]*3)+1]) < 0)
-						Con_Printf("WARNING: Polygon %d is not defined counterclockwise\n", i);
+						Con_DPrintf("WARNING: Polygon %d is not defined counterclockwise\n", i);
 					if (planesData[(i*4)+3] < 0)
-						Con_Printf("WARNING: Plane %d does not contain the origin\n", i);
+						Con_DPrintf("WARNING: Plane %d does not contain the origin\n", i);
 					polygons += (*polygons + 1);
 				}
 				// create geom
-				Con_Printf("Create geom...\n");
+				Con_DPrintf("Create geom...\n");
 				ed->priv.server->ode_geom = (void *)dCreateConvex((dSpaceID)world->physics.ode_space, planesData, numplanes, pointsData, numpoints, polygonsData);
 				dMassSetBoxTotal(&mass, massval, geomsize[0], geomsize[1], geomsize[2]);
-				Con_Printf("Done!\n");
+				Con_DPrintf("Done!\n");
 			}
 			break;
 		case GEOMTYPE_BOX:
@@ -2626,7 +2626,7 @@ treatasbox:
 			dMassSetCylinderTotal(&mass, massval, 3, radius, length);
 			break;
 		default:
-			Sys_Error("World_Physics_BodyFromEntity: unrecognized geomtype value %i was accepted by filter\n", solid);
+			Con_DPrintf("World_Physics_BodyFromEntity: unrecognized geomtype value %i was accepted by filter\n", solid);
 			// this goto only exists to prevent warnings from the compiler
 			// about uninitialized variables (mass), while allowing it to
 			// catch legitimate uninitialized variable warnings
@@ -2738,9 +2738,9 @@ treatasbox:
 		if (VEC_IS_NAN(test))
 		{
 			modified = true;
-			//Con_Printf("Fixing NAN values on entity %i : .classname = \"%s\" .origin = '%f %f %f' .velocity = '%f %f %f' .axis_forward = '%f %f %f' .axis_left = '%f %f %f' .axis_up = %f %f %f' .spinvelocity = '%f %f %f'\n", PRVM_NUM_FOR_EDICT(ed), PRVM_GetString(PRVM_gameedictstring(ed, classname)), origin[0], origin[1], origin[2], velocity[0], velocity[1], velocity[2], forward[0], forward[1], forward[2], left[0], left[1], left[2], up[0], up[1], up[2], spinvelocity[0], spinvelocity[1], spinvelocity[2]);
+			//Con_DPrintf("Fixing NAN values on entity %i : .classname = \"%s\" .origin = '%f %f %f' .velocity = '%f %f %f' .axis_forward = '%f %f %f' .axis_left = '%f %f %f' .axis_up = %f %f %f' .spinvelocity = '%f %f %f'\n", PRVM_NUM_FOR_EDICT(ed), PRVM_GetString(PRVM_gameedictstring(ed, classname)), origin[0], origin[1], origin[2], velocity[0], velocity[1], velocity[2], forward[0], forward[1], forward[2], left[0], left[1], left[2], up[0], up[1], up[2], spinvelocity[0], spinvelocity[1], spinvelocity[2]);
 			if (physics_ode_trick_fixnan.integer >= 2)
-				Con_Printf("Fixing NAN values on entity %i : .classname = \"%s\" .origin = '%f %f %f' .velocity = '%f %f %f' .angles = '%f %f %f' .avelocity = '%f %f %f'\n", PRVM_NUM_FOR_EDICT(ed), PRVM_GetString(prog, PRVM_gameedictstring(ed, classname)), origin[0], origin[1], origin[2], velocity[0], velocity[1], velocity[2], angles[0], angles[1], angles[2], avelocity[0], avelocity[1], avelocity[2]);
+				Con_DPrintf("Fixing NAN values on entity %i : .classname = \"%s\" .origin = '%f %f %f' .velocity = '%f %f %f' .angles = '%f %f %f' .avelocity = '%f %f %f'\n", PRVM_NUM_FOR_EDICT(ed), PRVM_GetString(prog, PRVM_gameedictstring(ed, classname)), origin[0], origin[1], origin[2], velocity[0], velocity[1], velocity[2], angles[0], angles[1], angles[2], avelocity[0], avelocity[1], avelocity[2]);
 			test = VectorLength2(origin);
 			if (VEC_IS_NAN(test))
 				VectorClear(origin);
@@ -2781,17 +2781,17 @@ treatasbox:
 		matrix4x4_t bodymatrix;
 
 #if 0
-		Con_Printf("entity %i got changed by QC\n", (int) (ed - prog->edicts));
+		Con_DPrintf("entity %i got changed by QC\n", (int) (ed - prog->edicts));
 		if(!VectorCompare(origin, ed->priv.server->ode_origin))
-			Con_Printf("  origin: %f %f %f -> %f %f %f\n", ed->priv.server->ode_origin[0], ed->priv.server->ode_origin[1], ed->priv.server->ode_origin[2], origin[0], origin[1], origin[2]);
+			Con_DPrintf("  origin: %f %f %f -> %f %f %f\n", ed->priv.server->ode_origin[0], ed->priv.server->ode_origin[1], ed->priv.server->ode_origin[2], origin[0], origin[1], origin[2]);
 		if(!VectorCompare(velocity, ed->priv.server->ode_velocity))
-			Con_Printf("  velocity: %f %f %f -> %f %f %f\n", ed->priv.server->ode_velocity[0], ed->priv.server->ode_velocity[1], ed->priv.server->ode_velocity[2], velocity[0], velocity[1], velocity[2]);
+			Con_DPrintf("  velocity: %f %f %f -> %f %f %f\n", ed->priv.server->ode_velocity[0], ed->priv.server->ode_velocity[1], ed->priv.server->ode_velocity[2], velocity[0], velocity[1], velocity[2]);
 		if(!VectorCompare(angles, ed->priv.server->ode_angles))
-			Con_Printf("  angles: %f %f %f -> %f %f %f\n", ed->priv.server->ode_angles[0], ed->priv.server->ode_angles[1], ed->priv.server->ode_angles[2], angles[0], angles[1], angles[2]);
+			Con_DPrintf("  angles: %f %f %f -> %f %f %f\n", ed->priv.server->ode_angles[0], ed->priv.server->ode_angles[1], ed->priv.server->ode_angles[2], angles[0], angles[1], angles[2]);
 		if(!VectorCompare(avelocity, ed->priv.server->ode_avelocity))
-			Con_Printf("  avelocity: %f %f %f -> %f %f %f\n", ed->priv.server->ode_avelocity[0], ed->priv.server->ode_avelocity[1], ed->priv.server->ode_avelocity[2], avelocity[0], avelocity[1], avelocity[2]);
+			Con_DPrintf("  avelocity: %f %f %f -> %f %f %f\n", ed->priv.server->ode_avelocity[0], ed->priv.server->ode_avelocity[1], ed->priv.server->ode_avelocity[2], avelocity[0], avelocity[1], avelocity[2]);
 		if(gravity != ed->priv.server->ode_gravity)
-			Con_Printf("  gravity: %i -> %i\n", ed->priv.server->ode_gravity, gravity);
+			Con_DPrintf("  gravity: %i -> %i\n", ed->priv.server->ode_gravity, gravity);
 #endif
 		// values for BodyFromEntity to check if the qc modified anything later
 		VectorCopy(origin, ed->priv.server->ode_origin);
@@ -3115,7 +3115,7 @@ void World_Physics_Frame(world_t *world, double frametime, double gravity)
 					if (dBodyIsEnabled(body))
 						world->physics.ode_activeovjects++;
 				}
-				Con_Printf("ODE Stats(%s): %i iterations, %3.01f (%3.01f collision) %3.01f total : %i objects %i active %i disabled\n", prog->name, world->physics.ode_iterations, simulationtime, collisiontime, (Sys_DirtyTime() - tdelta)*10000, world->physics.ode_numobjects, world->physics.ode_activeovjects, (world->physics.ode_numobjects - world->physics.ode_activeovjects));
+				Con_DPrintf("ODE Stats(%s): %i iterations, %3.01f (%3.01f collision) %3.01f total : %i objects %i active %i disabled\n", prog->name, world->physics.ode_iterations, simulationtime, collisiontime, (Sys_DirtyTime() - tdelta)*10000, world->physics.ode_numobjects, world->physics.ode_activeovjects, (world->physics.ode_numobjects - world->physics.ode_activeovjects));
 			}
 		}
 	}

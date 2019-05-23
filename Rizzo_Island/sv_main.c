@@ -720,19 +720,19 @@ void SV_StartSound (prvm_edict_t *entity, int channel, const char *sample, int n
 
 	if (nvolume < 0 || nvolume > 255)
 	{
-		Con_Printf ("SV_StartSound: volume = %i\n", nvolume);
+		Con_DPrintf ("SV_StartSound: volume = %i\n", nvolume);
 		return;
 	}
 
 	if (attenuation < 0 || attenuation > 4)
 	{
-		Con_Printf ("SV_StartSound: attenuation = %f\n", attenuation);
+		Con_DPrintf ("SV_StartSound: attenuation = %f\n", attenuation);
 		return;
 	}
 
 	if (!IS_CHAN(channel))
 	{
-		Con_Printf ("SV_StartSound: channel = %i\n", channel);
+		Con_DPrintf ("SV_StartSound: channel = %i\n", channel);
 		return;
 	}
 
@@ -808,13 +808,13 @@ void SV_StartPointSound (vec3_t origin, const char *sample, int nvolume, float a
 
 	if (nvolume < 0 || nvolume > 255)
 	{
-		Con_Printf ("SV_StartPointSound: volume = %i\n", nvolume);
+		Con_DPrintf ("SV_StartPointSound: volume = %i\n", nvolume);
 		return;
 	}
 
 	if (attenuation < 0 || attenuation > 4)
 	{
-		Con_Printf ("SV_StartPointSound: attenuation = %f\n", attenuation);
+		Con_DPrintf ("SV_StartPointSound: attenuation = %f\n", attenuation);
 		return;
 	}
 
@@ -1087,7 +1087,7 @@ void SV_ConnectClient (int clientnum, netconn_t *netconnection)
 
 	if(client->netconnection && client->netconnection->crypto.authenticated)
 	{
-		Con_Printf("%s connection to %s has been established: client is %s@%s%.*s, I am %.*s@%s%.*s\n",
+		Con_DPrintf("%s connection to %s has been established: client is %s@%s%.*s, I am %.*s@%s%.*s\n",
 				client->netconnection->crypto.use_aes ? "Encrypted" : "Authenticated",
 				client->netconnection->address,
 				client->netconnection->crypto.client_idfp[0] ? client->netconnection->crypto.client_idfp : "-",
@@ -1537,7 +1537,7 @@ qboolean SV_CanSeeBox(int numtraces, vec_t enlarge, vec3_t eye, vec3_t entboxmin
 	if (numtouchedicts > MAX_EDICTS)
 	{
 		// this never happens
-		Con_Printf("SV_EntitiesInBox returned %i edicts, max was %i\n", numtouchedicts, MAX_EDICTS);
+		Con_DPrintf("SV_EntitiesInBox returned %i edicts, max was %i\n", numtouchedicts, MAX_EDICTS);
 		numtouchedicts = MAX_EDICTS;
 	}
 	// iterate the entities found in the sweep box and filter them
@@ -1790,7 +1790,7 @@ static void SV_AddCameraEyes(void)
 			{
 				eye_levels[sv.writeentitiestoclient_numeyes] = eye_levels[k] + 1;
 				VectorCopy(camera_origins[j], sv.writeentitiestoclient_eyes[sv.writeentitiestoclient_numeyes]);
-				// Con_Printf("added eye %d: %f %f %f because we can see %f %f %f .. %f %f %f from eye %d\n", j, sv.writeentitiestoclient_eyes[sv.writeentitiestoclient_numeyes][0], sv.writeentitiestoclient_eyes[sv.writeentitiestoclient_numeyes][1], sv.writeentitiestoclient_eyes[sv.writeentitiestoclient_numeyes][2], mi[0], mi[1], mi[2], ma[0], ma[1], ma[2], k);
+				// Con_DPrintf("added eye %d: %f %f %f because we can see %f %f %f .. %f %f %f from eye %d\n", j, sv.writeentitiestoclient_eyes[sv.writeentitiestoclient_numeyes][0], sv.writeentitiestoclient_eyes[sv.writeentitiestoclient_numeyes][1], sv.writeentitiestoclient_eyes[sv.writeentitiestoclient_numeyes][2], mi[0], mi[1], mi[2], ma[0], ma[1], ma[2], k);
 				sv.writeentitiestoclient_numeyes++;
 				cameras[j] = 0;
 				i = 0;
@@ -1889,12 +1889,12 @@ static void SV_WriteEntitiesToClient(client_t *client, prvm_edict_t *clent, size
 			else if(sv.sendentities[i].active == ACTIVE_SHARED)
 				sv.writeentitiestoclient_csqcsendstates[numcsqcsendstates++] = s->number;
 			else
-				Con_Printf("entity %d is in sv.sendentities and marked, but not active, please breakpoint me\n", s->number);
+				Con_DPrintf("entity %d is in sv.sendentities and marked, but not active, please breakpoint me\n", s->number);
 		}
 	}
 
 	if (sv_cullentities_stats.integer)
-		Con_Printf("client \"%s\" entities: %d total, %d visible, %d culled by: %d pvs %d trace\n", client->name, sv.writeentitiestoclient_stats_totalentities, sv.writeentitiestoclient_stats_visibleentities, sv.writeentitiestoclient_stats_culled_pvs + sv.writeentitiestoclient_stats_culled_trace, sv.writeentitiestoclient_stats_culled_pvs, sv.writeentitiestoclient_stats_culled_trace);
+		Con_DPrintf("client \"%s\" entities: %d total, %d visible, %d culled by: %d pvs %d trace\n", client->name, sv.writeentitiestoclient_stats_totalentities, sv.writeentitiestoclient_stats_visibleentities, sv.writeentitiestoclient_stats_culled_pvs + sv.writeentitiestoclient_stats_culled_trace, sv.writeentitiestoclient_stats_culled_pvs, sv.writeentitiestoclient_stats_culled_trace);
 
 	if(client->entitydatabase5)
 		need_empty = EntityFrameCSQC_WriteFrame(msg, maxsize, numcsqcsendstates, sv.writeentitiestoclient_csqcsendstates, client->entitydatabase5->latestframenum + 1);
@@ -2577,7 +2577,7 @@ void SV_SendClientMessages(void)
 	int i, prepared = false;
 
 	if (sv.protocol == PROTOCOL_QUAKEWORLD)
-		Sys_Error("SV_SendClientMessages: no quakeworld support\n");
+		Con_DPrintf("SV_SendClientMessages: no quakeworld support\n");
 
 	SV_FlushBroadcastMessages();
 
@@ -2880,11 +2880,11 @@ int SV_ModelIndex(const char *s, int precachemode)
 			{
 				if (sv.state != ss_loading && (sv.protocol == PROTOCOL_QUAKE || sv.protocol == PROTOCOL_QUAKEDP || sv.protocol == PROTOCOL_NEHAHRAMOVIE || sv.protocol == PROTOCOL_NEHAHRABJP || sv.protocol == PROTOCOL_NEHAHRABJP2 || sv.protocol == PROTOCOL_NEHAHRABJP3 || sv.protocol == PROTOCOL_DARKPLACES1 || sv.protocol == PROTOCOL_DARKPLACES2 || sv.protocol == PROTOCOL_DARKPLACES3 || sv.protocol == PROTOCOL_DARKPLACES4 || sv.protocol == PROTOCOL_DARKPLACES5))
 				{
-					Con_Printf("SV_ModelIndex(\"%s\"): precache_model can only be done in spawn functions\n", filename);
+					Con_DPrintf("SV_ModelIndex(\"%s\"): precache_model can only be done in spawn functions\n", filename);
 					return 0;
 				}
 				if (precachemode == 1)
-					Con_Printf("SV_ModelIndex(\"%s\"): not precached (fix your code), precaching anyway\n", filename);
+					Con_DPrintf("SV_ModelIndex(\"%s\"): not precached (fix your code), precaching anyway\n", filename);
 				strlcpy(sv.model_precache[i], filename, sizeof(sv.model_precache[i]));
 				if (sv.state == ss_loading)
 				{
@@ -2909,13 +2909,13 @@ int SV_ModelIndex(const char *s, int precachemode)
 				}
 				return i;
 			}
-			Con_Printf("SV_ModelIndex(\"%s\"): not precached\n", filename);
+			Con_DPrintf("SV_ModelIndex(\"%s\"): not precached\n", filename);
 			return 0;
 		}
 		if (!strcmp(sv.model_precache[i], filename))
 			return i;
 	}
-	Con_Printf("SV_ModelIndex(\"%s\"): i (%i) == MAX_MODELS (%i)\n", filename, i, MAX_MODELS);
+	Con_DPrintf("SV_ModelIndex(\"%s\"): i (%i) == MAX_MODELS (%i)\n", filename, i, MAX_MODELS);
 	return 0;
 }
 
@@ -2943,11 +2943,11 @@ int SV_SoundIndex(const char *s, int precachemode)
 			{
 				if (sv.state != ss_loading && (sv.protocol == PROTOCOL_QUAKE || sv.protocol == PROTOCOL_QUAKEDP || sv.protocol == PROTOCOL_NEHAHRAMOVIE || sv.protocol == PROTOCOL_NEHAHRABJP || sv.protocol == PROTOCOL_NEHAHRABJP2 || sv.protocol == PROTOCOL_NEHAHRABJP3 || sv.protocol == PROTOCOL_DARKPLACES1 || sv.protocol == PROTOCOL_DARKPLACES2 || sv.protocol == PROTOCOL_DARKPLACES3 || sv.protocol == PROTOCOL_DARKPLACES4 || sv.protocol == PROTOCOL_DARKPLACES5))
 				{
-					Con_Printf("SV_SoundIndex(\"%s\"): precache_sound can only be done in spawn functions\n", filename);
+					Con_DPrintf("SV_SoundIndex(\"%s\"): precache_sound can only be done in spawn functions\n", filename);
 					return 0;
 				}
 				if (precachemode == 1)
-					Con_Printf("SV_SoundIndex(\"%s\"): not precached (fix your code), precaching anyway\n", filename);
+					Con_DPrintf("SV_SoundIndex(\"%s\"): not precached (fix your code), precaching anyway\n", filename);
 				strlcpy(sv.sound_precache[i], filename, sizeof(sv.sound_precache[i]));
 				if (sv.state != ss_loading)
 				{
@@ -2957,13 +2957,13 @@ int SV_SoundIndex(const char *s, int precachemode)
 				}
 				return i;
 			}
-			Con_Printf("SV_SoundIndex(\"%s\"): not precached\n", filename);
+			Con_DPrintf("SV_SoundIndex(\"%s\"): not precached\n", filename);
 			return 0;
 		}
 		if (!strcmp(sv.sound_precache[i], filename))
 			return i;
 	}
-	Con_Printf("SV_SoundIndex(\"%s\"): i (%i) == MAX_SOUNDS (%i)\n", filename, i, MAX_SOUNDS);
+	Con_DPrintf("SV_SoundIndex(\"%s\"): i (%i) == MAX_SOUNDS (%i)\n", filename, i, MAX_SOUNDS);
 	return 0;
 }
 
@@ -3041,7 +3041,7 @@ int SV_ParticleEffectIndex(const char *name)
 						// if we run out of names, abort
 						if (effectnameindex == MAX_PARTICLEEFFECTNAME)
 						{
-							Con_Printf("%s:%i: too many effects!\n", filename, linenumber);
+							Con_DPrintf("%s:%i: too many effects!\n", filename, linenumber);
 							break;
 						}
 					}
@@ -3260,7 +3260,7 @@ void SV_SpawnServer (const char *server)
 		dpsnprintf (modelname, sizeof(modelname), "maps/%s", server);
 		if (!FS_FileExists(modelname))
 		{
-			Con_Printf("SpawnServer: no map file named maps/%s.bsp\n", server);
+			Con_DPrintf("SpawnServer: no map file named maps/%s.bsp\n", server);
 			return;
 		}
 	}
@@ -3294,7 +3294,7 @@ void SV_SpawnServer (const char *server)
 	worldmodel = Mod_ForName(modelname, false, developer.integer > 0, NULL);
 	if (!worldmodel || !worldmodel->TraceBox)
 	{
-		Con_Printf("Couldn't load map %s\n", modelname);
+		Con_DPrintf("Couldn't load map %s\n", modelname);
 
 		if(cls.state == ca_dedicated)
 			Sys_MakeProcessMean();
@@ -3363,7 +3363,7 @@ void SV_SpawnServer (const char *server)
 	if(*sv_random_seed.string)
 	{
 		srand(sv_random_seed.integer);
-		Con_Printf("NOTE: random seed is %d; use for debugging/benchmarking only!\nUnset sv_random_seed to get real random numbers again.\n", sv_random_seed.integer);
+		Con_DPrintf("NOTE: random seed is %d; use for debugging/benchmarking only!\nUnset sv_random_seed to get real random numbers again.\n", sv_random_seed.integer);
 	}
 
 	SV_VM_Setup();
@@ -3385,7 +3385,7 @@ void SV_SpawnServer (const char *server)
 	{
 		char buffer[1024];
 		Protocol_Names(buffer, sizeof(buffer));
-		Con_Printf("Unknown sv_protocolname \"%s\", valid values are:\n%s\n", sv_protocolname.string, buffer);
+		Con_DPrintf("Unknown sv_protocolname \"%s\", valid values are:\n%s\n", sv_protocolname.string, buffer);
 		sv.protocol = PROTOCOL_QUAKE;
 	}
 
@@ -3435,7 +3435,7 @@ void SV_SpawnServer (const char *server)
 		sv.models[i+1] = Mod_ForName (sv.model_precache[i+1], false, false, sv.worldname);
 	}
 	if(i < sv.worldmodel->brush.numsubmodels)
-		Con_Printf("Too many submodels (MAX_MODELS is %i)\n", MAX_MODELS);
+		Con_DPrintf("Too many submodels (MAX_MODELS is %i)\n", MAX_MODELS);
 
 //
 // load the rest of the entities
@@ -3477,7 +3477,7 @@ void SV_SpawnServer (const char *server)
 	// load replacement entity file if found
 	if (sv_entpatch.integer && (entities = (char *)FS_LoadFile(va(vabuf, sizeof(vabuf), "%s.ent", sv.worldnamenoextension), tempmempool, true, NULL)))
 	{
-		Con_Printf("Loaded %s.ent\n", sv.worldnamenoextension);
+		Con_DPrintf("Loaded %s.ent\n", sv.worldnamenoextension);
 		PRVM_ED_LoadFromFile(prog, entities);
 		Mem_Free(entities);
 	}
@@ -3676,11 +3676,11 @@ static void SVVM_count_edicts(prvm_prog_t *prog)
 			step++;
 	}
 
-	Con_Printf("num_edicts:%3i\n", prog->num_edicts);
-	Con_Printf("active    :%3i\n", active);
-	Con_Printf("view      :%3i\n", models);
-	Con_Printf("touch     :%3i\n", solid);
-	Con_Printf("step      :%3i\n", step);
+	Con_DPrintf("num_edicts:%3i\n", prog->num_edicts);
+	Con_DPrintf("active    :%3i\n", active);
+	Con_DPrintf("view      :%3i\n", models);
+	Con_DPrintf("touch     :%3i\n", solid);
+	Con_DPrintf("step      :%3i\n", step);
 }
 
 static qboolean SVVM_load_edict(prvm_prog_t *prog, prvm_edict_t *ent)

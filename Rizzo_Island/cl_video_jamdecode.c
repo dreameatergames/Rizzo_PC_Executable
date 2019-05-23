@@ -302,21 +302,21 @@ readframe:
 	// read frame header
 	if (!FS_Read(s->file, &frameHead, 16))
 	{
-		Con_Printf("JamDecoder: unexpected EOF on frame %i\n", s->framenum);
+		Con_DPrintf("JamDecoder: unexpected EOF on frame %i\n", s->framenum);
 		return 1;
 	}
 	compsize = LittleLong(*(frameHead + 8)) - 16;
 	outsize = LittleLong(*(frameHead + 12));
 	if (compsize > s->framesize || outsize > s->framesize)
 	{
-		Con_Printf("JamDecoder: got bogus header on frame %i\n", s->framenum);
+		Con_DPrintf("JamDecoder: got bogus header on frame %i\n", s->framenum);
 		return 1;
 	}
 
 	// read frame contents
 	if (!FS_Read(s->file, s->frame_compressed, compsize))
 	{
-		Con_Printf("JamDecoder: unexpected EOF on frame %i\n", s->framenum);
+		Con_DPrintf("JamDecoder: unexpected EOF on frame %i\n", s->framenum);
 		return 1;
 	}
 
@@ -355,11 +355,11 @@ readframe:
 		SwsContext *scale_context = SwScale_GetCachedContext(NULL, s->framewidth, s->frameheight, PIX_FMT_BGRA, s->info_imagewidth, s->info_imageheight, PIX_FMT_BGRA, libavcodec_scalers[max(0, min(LIBAVCODEC_SCALERS, cl_video_libavcodec_scaler.integer))], NULL, NULL, NULL); 
 		if (!scale_context)
 		{
-			Con_Printf("JamDecoder: LibAvcodec: error creating scale context frame %i\n", s->framenum);
+			Con_DPrintf("JamDecoder: LibAvcodec: error creating scale context frame %i\n", s->framenum);
 			return 1;
 		}
 		if (!SwScale_Scale(scale_context, s->frame_output->data, s->frame_output->linesize, 0, s->frameheight, s->frame_output_scale->data, s->frame_output_scale->linesize))
-			Con_Printf("JamDecoder: LibAvcodec : error scaling frame\n", s->framenum);
+			Con_DPrintf("JamDecoder: LibAvcodec : error scaling frame\n", s->framenum);
 		SwScale_FreeContext(scale_context); 
 #else
 		// make BGRA imagepixels from 8bit palettized frame

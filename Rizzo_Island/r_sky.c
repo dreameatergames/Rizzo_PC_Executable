@@ -88,7 +88,7 @@ static void R_UnloadSkyBox(void)
 		skyboxskinframe[i] = NULL;
 	}
 	if (c && developer_loading.integer)
-		Con_Printf("unloading skybox\n");
+		Con_DPrintf("unloading skybox\n");
 }
 
 static int R_LoadSkyBox(void)
@@ -137,7 +137,7 @@ static int R_LoadSkyBox(void)
 		return false;
 
 	if (developer_loading.integer)
-		Con_Printf("loading skybox \"%s\"\n", name);
+		Con_DPrintf("loading skybox \"%s\"\n", name);
 
 	return true;
 }
@@ -149,7 +149,7 @@ int R_SetSkyBox(const char *sky)
 
 	if (strlen(sky) > 1000)
 	{
-		Con_Printf("sky name too long (%i, max is 1000)\n", (int)strlen(sky));
+		Con_DPrintf("sky name too long (%i, max is 1000)\n", (int)strlen(sky));
 		return false;
 	}
 
@@ -165,7 +165,7 @@ static void LoadSky_f (void)
 	{
 	case 1:
 		if (skyname[0])
-			Con_Printf("current sky: %s\n", skyname);
+			Con_DPrintf("current sky: %s\n", skyname);
 		else
 			Con_Print("no skybox has been set\n");
 		break;
@@ -173,12 +173,12 @@ static void LoadSky_f (void)
 		if (R_SetSkyBox(Cmd_Argv(1)))
 		{
 			if (skyname[0])
-				Con_Printf("skybox set to %s\n", skyname);
+				Con_DPrintf("skybox set to %s\n", skyname);
 			else
 				Con_Print("skybox disabled\n");
 		}
 		else
-			Con_Printf("failed to load skybox %s\n", Cmd_Argv(1));
+			Con_DPrintf("failed to load skybox %s\n", Cmd_Argv(1));
 		break;
 	default:
 		Con_Print("usage: loadsky skyname\n");

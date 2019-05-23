@@ -147,7 +147,7 @@ void CL_CutDemo (unsigned char **buf, fs_offset_t *filesize)
 	// restart the demo recording
 	cls.demofile = FS_OpenRealFile(cls.demoname, "wb", false);
 	if(!cls.demofile)
-		Sys_Error("failed to reopen the demo file");
+		Con_DPrintf("failed to reopen the demo file");
 	FS_Printf(cls.demofile, "%i\n", cls.forcetrack);
 }
 
@@ -257,7 +257,7 @@ void CL_ReadDemoMessage(void)
 		}
 		if (cl_message.cursize > cl_message.maxsize)
 		{
-			Con_Printf("Demo message (%i) > cl_message.maxsize (%i)", cl_message.cursize, cl_message.maxsize);
+			Con_DPrintf("Demo message (%i) > cl_message.maxsize (%i)", cl_message.cursize, cl_message.maxsize);
 			cl_message.cursize = 0;
 			CL_Disconnect();
 			return;
@@ -371,7 +371,7 @@ void CL_Record_f (void)
 	if (c == 4)
 	{
 		track = atoi(Cmd_Argv(3));
-		Con_Printf("Forcing CD track to %i\n", cls.forcetrack);
+		Con_DPrintf("Forcing CD track to %i\n", cls.forcetrack);
 	}
 	else
 		track = -1;
@@ -385,7 +385,7 @@ void CL_Record_f (void)
 		Cmd_ExecuteString ( va(vabuf, sizeof(vabuf), "map %s", Cmd_Argv(2)), src_command, false);
 
 	// open the demo file
-	Con_Printf("recording to %s.\n", name);
+	Con_DPrintf("recording to %s.\n", name);
 	cls.demofile = FS_OpenRealFile(name, "wb", false);
 	if (!cls.demofile)
 	{
@@ -429,7 +429,7 @@ void CL_PlayDemo_f (void)
 	f = FS_OpenVirtualFile(name, false);
 	if (!f)
 	{
-		Con_Printf("ERROR: couldn't open %s.\n", name);
+		Con_DPrintf("ERROR: couldn't open %s.\n", name);
 		cls.demonum = -1;		// stop demo loop
 		return;
 	}
@@ -445,7 +445,7 @@ void CL_PlayDemo_f (void)
 
 	cls.protocol = PROTOCOL_QUAKE;
 
-	Con_Printf("Playing demo %s.\n", name);
+	Con_DPrintf("Playing demo %s.\n", name);
 	cls.demofile = f;
 	strlcpy(cls.demoname, name, sizeof(cls.demoname));
 
@@ -508,7 +508,7 @@ static void CL_FinishTimeDemo (void)
 	fpsavg = cls.td_onesecondavgcount ? cls.td_onesecondavgfps / cls.td_onesecondavgcount : 0;
 	fpsmax = cls.td_onesecondmaxfps;
 	// LordHavoc: timedemo now prints out 7 digits of fraction, and min/avg/max
-	Con_Printf("%i frames %5.7f seconds %5.7f fps, one-second fps min/avg/max: %.0f %.0f %.0f (%i seconds)\n", frames, time, totalfpsavg, fpsmin, fpsavg, fpsmax, cls.td_onesecondavgcount);
+	Con_DPrintf("%i frames %5.7f seconds %5.7f fps, one-second fps min/avg/max: %.0f %.0f %.0f (%i seconds)\n", frames, time, totalfpsavg, fpsmin, fpsavg, fpsmax, cls.td_onesecondavgcount);
 	Log_Printf("benchmark.log", "date %s | enginedate %s | demo %s | commandline %s | run %d | result %i frames %5.7f seconds %5.7f fps, one-second fps min/avg/max: %.0f %.0f %.0f (%i seconds)\n", Sys_TimeString("%Y-%m-%d %H:%M:%S"), buildstring, cls.demoname, cmdline.string, benchmark_runs + 1, frames, time, totalfpsavg, fpsmin, fpsavg, fpsmax, cls.td_onesecondavgcount);
 	if (COM_CheckParm("-benchmark"))
 	{
@@ -559,7 +559,7 @@ static void CL_FinishTimeDemo (void)
 					DO_MIN(fpsmin);
 					DO_MIN(fpsavg);
 					DO_MIN(fpsmax);
-					Con_Printf("MIN: %i frames %5.7f seconds %5.7f fps, one-second fps min/avg/max: %.0f %.0f %.0f (%i seconds)\n", frames, time, totalfpsavg, fpsmin, fpsavg, fpsmax, cls.td_onesecondavgcount);
+					Con_DPrintf("MIN: %i frames %5.7f seconds %5.7f fps, one-second fps min/avg/max: %.0f %.0f %.0f (%i seconds)\n", frames, time, totalfpsavg, fpsmin, fpsavg, fpsmax, cls.td_onesecondavgcount);
 
 					DO_MED(frames);
 					DO_MED(time);
@@ -567,7 +567,7 @@ static void CL_FinishTimeDemo (void)
 					DO_MED(fpsmin);
 					DO_MED(fpsavg);
 					DO_MED(fpsmax);
-					Con_Printf("MED: %i frames %5.7f seconds %5.7f fps, one-second fps min/avg/max: %.0f %.0f %.0f (%i seconds)\n", frames, time, totalfpsavg, fpsmin, fpsavg, fpsmax, cls.td_onesecondavgcount);
+					Con_DPrintf("MED: %i frames %5.7f seconds %5.7f fps, one-second fps min/avg/max: %.0f %.0f %.0f (%i seconds)\n", frames, time, totalfpsavg, fpsmin, fpsavg, fpsmax, cls.td_onesecondavgcount);
 
 					DO_MAX(frames);
 					DO_MIN(time);
@@ -575,7 +575,7 @@ static void CL_FinishTimeDemo (void)
 					DO_MAX(fpsmin);
 					DO_MAX(fpsavg);
 					DO_MAX(fpsmax);
-					Con_Printf("MAX: %i frames %5.7f seconds %5.7f fps, one-second fps min/avg/max: %.0f %.0f %.0f (%i seconds)\n", frames, time, totalfpsavg, fpsmin, fpsavg, fpsmax, cls.td_onesecondavgcount);
+					Con_DPrintf("MAX: %i frames %5.7f seconds %5.7f fps, one-second fps min/avg/max: %.0f %.0f %.0f (%i seconds)\n", frames, time, totalfpsavg, fpsmin, fpsavg, fpsmax, cls.td_onesecondavgcount);
 				}
 				Z_Free(history);
 				history = NULL;

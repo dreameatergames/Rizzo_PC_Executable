@@ -278,13 +278,13 @@ static void CL_ParseStartSoundPacket(int largesoundindex)
 
 	if (sound_num < 0 || sound_num >= MAX_SOUNDS)
 	{
-		Con_Printf("CL_ParseStartSoundPacket: sound_num (%i) >= MAX_SOUNDS (%i)\n", sound_num, MAX_SOUNDS);
+		Con_DPrintf("CL_ParseStartSoundPacket: sound_num (%i) >= MAX_SOUNDS (%i)\n", sound_num, MAX_SOUNDS);
 		return;
 	}
 
 	if (ent >= MAX_EDICTS)
 	{
-		Con_Printf("CL_ParseStartSoundPacket: ent = %i", ent);
+		Con_DPrintf("CL_ParseStartSoundPacket: ent = %i", ent);
 		return;
 	}
 
@@ -549,7 +549,7 @@ static qboolean QW_CL_CheckOrDownloadFile(const char *filename)
 	// download messages in a demo would be bad
 	if (cls.demorecording)
 	{
-		Con_Printf("Unable to download \"%s\" when recording.\n", filename);
+		Con_DPrintf("Unable to download \"%s\" when recording.\n", filename);
 		return true;
 	}
 
@@ -558,7 +558,7 @@ static qboolean QW_CL_CheckOrDownloadFile(const char *filename)
 		return true;
 
 	strlcpy(cls.qw_downloadname, filename, sizeof(cls.qw_downloadname));
-	Con_Printf("Downloading %s\n", filename);
+	Con_DPrintf("Downloading %s\n", filename);
 
 	if (!cls.qw_downloadmemory)
 	{
@@ -598,7 +598,7 @@ static void QW_CL_RequestNextDownload(void)
 		break;
 	case dl_skin:
 		if (cls.qw_downloadnumber == 0)
-			Con_Printf("Checking skins...\n");
+			Con_DPrintf("Checking skins...\n");
 		for (;cls.qw_downloadnumber < cl.maxclients;cls.qw_downloadnumber++)
 		{
 			if (!cl.scores[cls.qw_downloadnumber].name[0])
@@ -626,7 +626,7 @@ static void QW_CL_RequestNextDownload(void)
 	case dl_model:
 		if (cls.qw_downloadnumber == 0)
 		{
-			Con_Printf("Checking models...\n");
+			Con_DPrintf("Checking models...\n");
 			cls.qw_downloadnumber = 1;
 		}
 
@@ -670,12 +670,12 @@ static void QW_CL_RequestNextDownload(void)
 		// world model
 		cl.model_precache[1] = Mod_ForName(cl.model_name[1], false, false, NULL);
 		if (cl.model_precache[1]->Draw == NULL)
-			Con_Printf("Map %s could not be found or downloaded\n", cl.model_name[1]);
+			Con_DPrintf("Map %s could not be found or downloaded\n", cl.model_name[1]);
 
 		// normal models
 		for (i = 2;i < MAX_MODELS && cl.model_name[i][0];i++)
 			if ((cl.model_precache[i] = Mod_ForName(cl.model_name[i], false, false, cl.model_name[i][0] == '*' ? cl.model_name[1] : NULL))->Draw == NULL)
-				Con_Printf("Model %s could not be found or downloaded\n", cl.model_name[i]);
+				Con_DPrintf("Model %s could not be found or downloaded\n", cl.model_name[i]);
 
 		// check memory integrity
 		Mem_CheckSentinelsGlobal();
@@ -704,7 +704,7 @@ static void QW_CL_RequestNextDownload(void)
 	case dl_sound:
 		if (cls.qw_downloadnumber == 0)
 		{
-			Con_Printf("Checking sounds...\n");
+			Con_DPrintf("Checking sounds...\n");
 			cls.qw_downloadnumber = 1;
 		}
 
@@ -745,7 +745,7 @@ static void QW_CL_RequestNextDownload(void)
 		break;
 	case dl_none:
 	default:
-		Con_Printf("Unknown download type.\n");
+		Con_DPrintf("Unknown download type.\n");
 	}
 }
 
@@ -754,7 +754,7 @@ static void QW_CL_ParseDownload(void)
 	int size = (signed short)MSG_ReadShort(&cl_message);
 	int percent = MSG_ReadByte(&cl_message);
 
-	//Con_Printf("download %i %i%% (%i/%i)\n", size, percent, cls.qw_downloadmemorycursize, cls.qw_downloadmemorymaxsize);
+	//Con_DPrintf("download %i %i%% (%i/%i)\n", size, percent, cls.qw_downloadmemorycursize, cls.qw_downloadmemorymaxsize);
 
 	// skip the download fragment if playing a demo
 	if (!cls.netcon)
@@ -766,7 +766,7 @@ static void QW_CL_ParseDownload(void)
 
 	if (size == -1)
 	{
-		Con_Printf("File not found.\n");
+		Con_DPrintf("File not found.\n");
 		QW_CL_RequestNextDownload();
 		return;
 	}
@@ -805,7 +805,7 @@ static void QW_CL_ParseDownload(void)
 	else
 	{
 		// finished file
-		Con_Printf("Downloaded \"%s\"\n", cls.qw_downloadname);
+		Con_DPrintf("Downloaded \"%s\"\n", cls.qw_downloadname);
 
 		FS_WriteFile(cls.qw_downloadname, cls.qw_downloadmemory, cls.qw_downloadmemorycursize);
 
@@ -902,7 +902,7 @@ static void QW_CL_Changing_f(void)
 	S_StopAllSounds();
 	cl.intermission = 0;
 	cls.signon = 1;	// not active anymore, but not disconnected
-	Con_Printf("\nChanging map...\n");
+	Con_DPrintf("\nChanging map...\n");
 }
 
 void QW_CL_NextUpload(void)
@@ -930,7 +930,7 @@ void QW_CL_NextUpload(void)
 	if (cls.qw_uploadpos < cls.qw_uploadsize)
 		return;
 
-	Con_Printf("Upload completed\n");
+	Con_DPrintf("Upload completed\n");
 
 	QW_CL_StopUpload();
 }
@@ -993,7 +993,7 @@ static void QW_CL_UpdateUserInfo(void)
 	slot = MSG_ReadByte(&cl_message);
 	if (slot >= cl.maxclients)
 	{
-		Con_Printf("svc_updateuserinfo >= cl.maxclients\n");
+		Con_DPrintf("svc_updateuserinfo >= cl.maxclients\n");
 		MSG_ReadLong(&cl_message);
 		MSG_ReadString(&cl_message, cl_readstring, sizeof(cl_readstring));
 		return;
@@ -1014,7 +1014,7 @@ static void QW_CL_SetInfo(void)
 	strlcpy(value, MSG_ReadString(&cl_message, cl_readstring, sizeof(cl_readstring)), sizeof(value));
 	if (slot >= cl.maxclients)
 	{
-		Con_Printf("svc_setinfo >= cl.maxclients\n");
+		Con_DPrintf("svc_setinfo >= cl.maxclients\n");
 		return;
 	}
 	InfoString_SetValue(cl.scores[slot].qw_userinfo, sizeof(cl.scores[slot].qw_userinfo), key, value);
@@ -1117,7 +1117,7 @@ static void CL_BeginDownloads(qboolean aborteddownload)
 		 && (FS_CRCFile(csqc_progname.string, &progsize) != csqc_progcrc.integer || ((int)progsize != csqc_progsize.integer && csqc_progsize.integer != -1))
 		 && !FS_FileExists(va(vabuf, sizeof(vabuf), "dlcache/%s.%i.%i", csqc_progname.string, csqc_progsize.integer, csqc_progcrc.integer)))
 		{
-			Con_Printf("Downloading new CSQC code to dlcache/%s.%i.%i\n", csqc_progname.string, csqc_progsize.integer, csqc_progcrc.integer);
+			Con_DPrintf("Downloading new CSQC code to dlcache/%s.%i.%i\n", csqc_progname.string, csqc_progsize.integer, csqc_progcrc.integer);
 			if(cl_serverextension_download.integer == 2 && FS_HasZlib())
 				Cmd_ForwardStringToServer(va(vabuf, sizeof(vabuf), "download %s deflate", csqc_progname.string));
 			else
@@ -1283,9 +1283,9 @@ static void CL_BeginDownloads(qboolean aborteddownload)
 			if (cl.model_name[cl.downloadmodel_current][0] != '*' && strcmp(cl.model_name[cl.downloadmodel_current], "null") && !FS_FileExists(cl.model_name[cl.downloadmodel_current]))
 			{
 				if (cl.downloadmodel_current == 1)
-					Con_Printf("Map %s not found\n", cl.model_name[cl.downloadmodel_current]);
+					Con_DPrintf("Map %s not found\n", cl.model_name[cl.downloadmodel_current]);
 				else
-					Con_Printf("Model %s not found\n", cl.model_name[cl.downloadmodel_current]);
+					Con_DPrintf("Model %s not found\n", cl.model_name[cl.downloadmodel_current]);
 				// regarding the * check: don't try to download submodels
 				if (cl_serverextension_download.integer && cls.netcon && cl.model_name[cl.downloadmodel_current][0] != '*' && !sv.active)
 				{
@@ -1339,7 +1339,7 @@ static void CL_BeginDownloads(qboolean aborteddownload)
 			dpsnprintf(soundname, sizeof(soundname), "sound/%s", cl.sound_name[cl.downloadsound_current]);
 			if (!FS_FileExists(soundname) && !FS_FileExists(cl.sound_name[cl.downloadsound_current]))
 			{
-				Con_Printf("Sound %s not found\n", soundname);
+				Con_DPrintf("Sound %s not found\n", soundname);
 				if (cl_serverextension_download.integer && cls.netcon && !sv.active)
 				{
 					Cmd_ForwardStringToServer(va(vabuf, sizeof(vabuf), "download %s", soundname));
@@ -1373,7 +1373,7 @@ static void CL_BeginDownloads_f(void)
 	// prevent cl_begindownloads from being issued multiple times in one match
 	// to prevent accidentally cancelled downloads
 	if(cl.loadbegun)
-		Con_Printf("cl_begindownloads is only valid once per match\n");
+		Con_DPrintf("cl_begindownloads is only valid once per match\n");
 	else
 		CL_BeginDownloads(false);
 }
@@ -1394,7 +1394,7 @@ static void CL_StopDownload(int size, int crc)
 			Mem_Free(cls.qw_downloadmemory);
 			if(out)
 			{
-				Con_Printf("Inflated download: new size: %u (%g%%)\n", (unsigned)inflated_size, 100.0 - 100.0*(cls.qw_downloadmemorycursize / (float)inflated_size));
+				Con_DPrintf("Inflated download: new size: %u (%g%%)\n", (unsigned)inflated_size, 100.0 - 100.0*(cls.qw_downloadmemorycursize / (float)inflated_size));
 				cls.qw_downloadmemory = out;
 				cls.qw_downloadmemorycursize = (int)inflated_size;
 			}
@@ -1402,13 +1402,13 @@ static void CL_StopDownload(int size, int crc)
 			{
 				cls.qw_downloadmemory = NULL;
 				cls.qw_downloadmemorycursize = 0;
-				Con_Printf("Cannot inflate download, possibly corrupt or zlib not present\n");
+				Con_DPrintf("Cannot inflate download, possibly corrupt or zlib not present\n");
 			}
 		}
 
 		if(!cls.qw_downloadmemory)
 		{
-			Con_Printf("Download \"%s\" is corrupt (see above!)\n", cls.qw_downloadname);
+			Con_DPrintf("Download \"%s\" is corrupt (see above!)\n", cls.qw_downloadname);
 		}
 		else
 		{
@@ -1428,7 +1428,7 @@ static void CL_StopDownload(int size, int crc)
 					dpsnprintf(name, sizeof(name), "dlcache/%s.%i.%i", cls.qw_downloadname, size, crc);
 					if (!FS_FileExists(name))
 					{
-						Con_Printf("Downloaded \"%s\" (%i bytes, %i CRC)\n", name, size, crc);
+						Con_DPrintf("Downloaded \"%s\" (%i bytes, %i CRC)\n", name, size, crc);
 						FS_WriteFile(name, cls.qw_downloadmemory, cls.qw_downloadmemorycursize);
 						if(!strcmp(cls.qw_downloadname, csqc_progname.string))
 						{
@@ -1449,7 +1449,7 @@ static void CL_StopDownload(int size, int crc)
 				// but if we already have a mismatching file we need to rename
 				// this new one, and if we already have this file in renamed form,
 				// we do nothing
-				Con_Printf("Downloaded \"%s\" (%i bytes, %i CRC)\n", cls.qw_downloadname, size, crc);
+				Con_DPrintf("Downloaded \"%s\" (%i bytes, %i CRC)\n", cls.qw_downloadname, size, crc);
 				FS_WriteFile(cls.qw_downloadname, cls.qw_downloadmemory, cls.qw_downloadmemorycursize);
 				extension = FS_FileExtension(cls.qw_downloadname);
 				if (!strcasecmp(extension, "pak") || !strcasecmp(extension, "pk3"))
@@ -1459,7 +1459,7 @@ static void CL_StopDownload(int size, int crc)
 	}
 	else if (cls.qw_downloadmemory && size)
 	{
-		Con_Printf("Download \"%s\" is corrupt (%i bytes, %i CRC, should be %i bytes, %i CRC), discarding\n", cls.qw_downloadname, size, crc, (int)cls.qw_downloadmemorycursize, (int)CRC_Block(cls.qw_downloadmemory, cls.qw_downloadmemorycursize));
+		Con_DPrintf("Download \"%s\" is corrupt (%i bytes, %i CRC, should be %i bytes, %i CRC), discarding\n", cls.qw_downloadname, size, crc, (int)cls.qw_downloadmemorycursize, (int)CRC_Block(cls.qw_downloadmemory, cls.qw_downloadmemorycursize));
 		CL_BeginDownloads(true);
 	}
 
@@ -1495,7 +1495,7 @@ static void CL_ParseDownload(void)
 	if (!cls.qw_downloadname[0])
 	{
 		if (size > 0)
-			Con_Printf("CL_ParseDownload: received %i bytes with no download active\n", size);
+			Con_DPrintf("CL_ParseDownload: received %i bytes with no download active\n", size);
 		return;
 	}
 
@@ -1517,13 +1517,13 @@ static void CL_DownloadBegin_f(void)
 
 	if (size < 0 || size > 1<<30 || FS_CheckNastyPath(Cmd_Argv(2), false))
 	{
-		Con_Printf("cl_downloadbegin: received bogus information\n");
+		Con_DPrintf("cl_downloadbegin: received bogus information\n");
 		CL_StopDownload(0, 0);
 		return;
 	}
 
 	if (cls.qw_downloadname[0])
-		Con_Printf("Download of %s aborted\n", cls.qw_downloadname);
+		Con_DPrintf("Download of %s aborted\n", cls.qw_downloadname);
 
 	CL_StopDownload(0, 0);
 
@@ -1549,7 +1549,7 @@ static void CL_StopDownload_f(void)
 	Curl_CancelAll();
 	if (cls.qw_downloadname[0])
 	{
-		Con_Printf("Download of %s aborted\n", cls.qw_downloadname);
+		Con_DPrintf("Download of %s aborted\n", cls.qw_downloadname);
 		CL_StopDownload(0, 0);
 	}
 	CL_BeginDownloads(true);
@@ -1559,7 +1559,7 @@ static void CL_DownloadFinished_f(void)
 {
 	if (Cmd_Argc() < 3)
 	{
-		Con_Printf("Malformed cl_downloadfinished command\n");
+		Con_DPrintf("Malformed cl_downloadfinished command\n");
 		return;
 	}
 	CL_StopDownload(atoi(Cmd_Argv(1)), atoi(Cmd_Argv(2)));
@@ -1728,7 +1728,7 @@ static void CL_ParseServerInfo (void)
 		cl.qw_servercount = MSG_ReadLong(&cl_message);
 
 		str = MSG_ReadString(&cl_message, cl_readstring, sizeof(cl_readstring));
-		Con_Printf("server gamedir is %s\n", str);
+		Con_DPrintf("server gamedir is %s\n", str);
 		strlcpy(gamedir[0], str, sizeof(gamedir[0]));
 
 		// change gamedir if needed
@@ -1772,7 +1772,7 @@ static void CL_ParseServerInfo (void)
 		cl.movevars_airaccel_sideways_friction = 0;
 
 		// seperate the printfs so the server message can have a color
-		Con_Printf("\n\n<===================================>\n\n\2%s\n", str);
+		Con_DPrintf("\n\n<===================================>\n\n\2%s\n", str);
 
 		// check memory integrity
 		Mem_CheckSentinelsGlobal();
@@ -1828,7 +1828,7 @@ static void CL_ParseServerInfo (void)
 
 	// seperate the printfs so the server message can have a color
 		if (cls.protocol != PROTOCOL_NEHAHRAMOVIE) // no messages when playing the Nehahra movie
-			Con_Printf("\n<===================================>\n\n\2%s\n", str);
+			Con_DPrintf("\n<===================================>\n\n\2%s\n", str);
 
 		// check memory integrity
 		Mem_CheckSentinelsGlobal();
@@ -1928,7 +1928,7 @@ static void CL_ParseServerInfo (void)
 			// start a new demo file
 			dpsnprintf (demofile, sizeof(demofile), "%s_%s.dem", Sys_TimeString (cl_autodemo_nameformat.string), cl.worldbasename);
 
-			Con_Printf ("Auto-recording to %s.\n", demofile);
+			Con_DPrintf ("Auto-recording to %s.\n", demofile);
 
 			// Reset bit 0 for every new demo
 			Cvar_SetValueQuick(&cl_autodemo_delete,
@@ -2314,7 +2314,7 @@ static void CL_ParseStaticSound (int large)
 
 	if (sound_num < 0 || sound_num >= MAX_SOUNDS)
 	{
-		Con_Printf("CL_ParseStaticSound: sound_num(%i) >= MAX_SOUNDS (%i)\n", sound_num, MAX_SOUNDS);
+		Con_DPrintf("CL_ParseStaticSound: sound_num(%i) >= MAX_SOUNDS (%i)\n", sound_num, MAX_SOUNDS);
 		return;
 	}
 
@@ -2359,7 +2359,7 @@ void CL_NewBeam (int ent, vec3_t start, vec3_t end, dp_model_t *m, int lightning
 
 	if (ent >= MAX_EDICTS)
 	{
-		Con_Printf("CL_NewBeam: invalid entity number %i\n", ent);
+		Con_DPrintf("CL_NewBeam: invalid entity number %i\n", ent);
 		ent = 0;
 	}
 
@@ -2402,7 +2402,7 @@ static void CL_ParseBeam (dp_model_t *m, int lightning)
 
 	if (ent >= MAX_EDICTS)
 	{
-		Con_Printf("CL_ParseBeam: invalid entity number %i\n", ent);
+		Con_DPrintf("CL_ParseBeam: invalid entity number %i\n", ent);
 		ent = 0;
 	}
 
@@ -3092,7 +3092,7 @@ static void CL_IPLog_Load(void)
 		if (address[0] && line[i])
 			CL_IPLog_Add(address, line + i, false, false);
 		else
-			Con_Printf("%s:%i: could not parse address and name:\n%s\n", cl_iplog_name.string, linenumber, line);
+			Con_DPrintf("%s:%i: could not parse address and name:\n%s\n", cl_iplog_name.string, linenumber, line);
 	}
 }
 
@@ -3102,7 +3102,7 @@ static void CL_IPLog_List_f(void)
 	const char *addressprefix;
 	if (Cmd_Argc() > 2)
 	{
-		Con_Printf("usage: %s 123.456.789.\n", Cmd_Argv(0));
+		Con_DPrintf("usage: %s 123.456.789.\n", Cmd_Argv(0));
 		return;
 	}
 	addressprefix = "";
@@ -3111,10 +3111,10 @@ static void CL_IPLog_List_f(void)
 	if (!cl_iplog_loaded)
 		CL_IPLog_Load();
 	if (addressprefix && addressprefix[0])
-		Con_Printf("Listing iplog addresses beginning with %s\n", addressprefix);
+		Con_DPrintf("Listing iplog addresses beginning with %s\n", addressprefix);
 	else
-		Con_Printf("Listing all iplog entries\n");
-	Con_Printf("address         name\n");
+		Con_DPrintf("Listing all iplog entries\n");
+	Con_DPrintf("address         name\n");
 	for (i = 0;i < cl_iplog_numitems;i++)
 	{
 		if (addressprefix && addressprefix[0])
@@ -3131,9 +3131,9 @@ static void CL_IPLog_List_f(void)
 		// if name is more than 15 characters, print all of it, not worrying
 		// about the fact it will misalign the columns
 		if (strlen(cl_iplog_items[i].address) < 15)
-			Con_Printf("%-15s %s\n", cl_iplog_items[i].address, cl_iplog_items[i].name);
+			Con_DPrintf("%-15s %s\n", cl_iplog_items[i].address, cl_iplog_items[i].name);
 		else
-			Con_Printf("%5s %s\n", cl_iplog_items[i].address, cl_iplog_items[i].name);
+			Con_DPrintf("%5s %s\n", cl_iplog_items[i].address, cl_iplog_items[i].name);
 	}
 }
 
@@ -3153,7 +3153,7 @@ static qboolean CL_ExaminePrintString(const char *text)
 			;
 		if (cl.parsingtextplayerindex >= cl.maxclients) // should never happen, since the client itself should be in cl.scores
 		{
-			Con_Printf("ping reply but empty scoreboard?!?\n");
+			Con_DPrintf("ping reply but empty scoreboard?!?\n");
 			cl.parsingtextmode = CL_PARSETEXTMODE_NONE;
 			cl.parsingtextexpectingpingforscores = 0;
 		}
@@ -3381,7 +3381,7 @@ static void CL_NetworkTimeReceived(double newtime)
 	}
 }
 
-#define SHOWNET(x) if(cl_shownet.integer==2)Con_Printf("%3i:%s(%i)\n", cl_message.readcount-1, x, cmd);
+#define SHOWNET(x) if(cl_shownet.integer==2)Con_DPrintf("%3i:%s(%i)\n", cl_message.readcount-1, x, cmd);
 
 /*
 =====================
@@ -3415,7 +3415,7 @@ void CL_ParseServerMessage(void)
 // if recording demos, copy the message out
 //
 	if (cl_shownet.integer == 1)
-		Con_Printf("%f %i\n", realtime, cl_message.cursize);
+		Con_DPrintf("%f %i\n", realtime, cl_message.cursize);
 	else if (cl_shownet.integer == 2)
 		Con_Print("------------------\n");
 
@@ -3494,11 +3494,11 @@ void CL_ParseServerMessage(void)
 				break;
 
 			case qw_svc_nop:
-				//Con_Printf("qw_svc_nop\n");
+				//Con_DPrintf("qw_svc_nop\n");
 				break;
 
 			case qw_svc_disconnect:
-				Con_Printf("Server disconnected\n");
+				Con_DPrintf("Server disconnected\n");
 				if (cls.demonum != -1)
 					CL_NextDemo();
 				else
@@ -3552,7 +3552,7 @@ void CL_ParseServerMessage(void)
 				i = MSG_ReadByte(&cl_message);
 				if (i >= cl.max_lightstyle)
 				{
-					Con_Printf ("svc_lightstyle >= MAX_LIGHTSTYLES");
+					Con_DPrintf ("svc_lightstyle >= MAX_LIGHTSTYLES");
 					break;
 				}
 				strlcpy (cl.lightstyle[i].map,  MSG_ReadString(&cl_message, cl_readstring, sizeof(cl_readstring)), sizeof (cl.lightstyle[i].map));
@@ -3883,7 +3883,7 @@ void CL_ParseServerMessage(void)
 				break;
 
 			case svc_disconnect:
-				Con_Printf ("Server disconnected\n");
+				Con_DPrintf ("Server disconnected\n");
 				if (cls.demonum != -1)
 					CL_NextDemo ();
 				else
@@ -3978,7 +3978,7 @@ void CL_ParseServerMessage(void)
 				i = MSG_ReadByte(&cl_message);
 				if (i >= cl.max_lightstyle)
 				{
-					Con_Printf ("svc_lightstyle >= MAX_LIGHTSTYLES");
+					Con_DPrintf ("svc_lightstyle >= MAX_LIGHTSTYLES");
 					break;
 				}
 				strlcpy (cl.lightstyle[i].map,  MSG_ReadString(&cl_message, cl_readstring, sizeof(cl_readstring)), sizeof (cl.lightstyle[i].map));
@@ -4011,7 +4011,7 @@ void CL_ParseServerMessage(void)
 							cl.model_precache[i] = model;
 						}
 						else
-							Con_Printf("svc_precache: index %i outside range %i...%i\n", i, 1, MAX_MODELS);
+							Con_DPrintf("svc_precache: index %i outside range %i...%i\n", i, 1, MAX_MODELS);
 					}
 					else
 					{
@@ -4024,7 +4024,7 @@ void CL_ParseServerMessage(void)
 							cl.sound_precache[i] = sfx;
 						}
 						else
-							Con_Printf("svc_precache: index %i outside range %i...%i\n", i, 1, MAX_SOUNDS);
+							Con_DPrintf("svc_precache: index %i outside range %i...%i\n", i, 1, MAX_SOUNDS);
 					}
 				}
 				break;

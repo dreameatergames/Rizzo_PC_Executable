@@ -67,7 +67,7 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 		seq_port = 0;
 		if(strchr(seq_name, ':'))
 			seq_port = atoi(strchr(seq_name, ':') + 1);
-		Con_Printf ("SndSys_Init: seq input port has been set to \"%d:%d\". Enabling sequencer input...\n", seq_client, seq_port);
+		Con_DPrintf ("SndSys_Init: seq input port has been set to \"%d:%d\". Enabling sequencer input...\n", seq_client, seq_port);
 		err = snd_seq_open (&seq_handle, "default", SND_SEQ_OPEN_INPUT, 0);
 		if (err < 0)
 		{
@@ -89,7 +89,7 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 		err = snd_seq_connect_from(seq_handle, 0, seq_client, seq_port);
 		if(err < 0)
 		{
-			Con_Printf ("SndSys_Init: can't connect to seq port \"%d:%d\"\n", seq_client, seq_port);
+			Con_DPrintf ("SndSys_Init: can't connect to seq port \"%d:%d\"\n", seq_client, seq_port);
 			goto seqerror;
 		}
 		err = snd_seq_nonblock(seq_handle, 1);
@@ -110,7 +110,7 @@ seqdone:
 	// Check the requested sound format
 	if (requested->width < 1 || requested->width > 2)
 	{
-		Con_Printf ("SndSys_Init: invalid sound width (%hu)\n",
+		Con_DPrintf ("SndSys_Init: invalid sound width (%hu)\n",
 					requested->width);
 
 		if (suggested != NULL)
@@ -122,7 +122,7 @@ seqdone:
 			else
 				suggested->width = 2;
 
-			Con_Printf ("SndSys_Init: suggesting sound width = %hu\n",
+			Con_DPrintf ("SndSys_Init: suggesting sound width = %hu\n",
 						suggested->width);
 		}
 
@@ -157,11 +157,11 @@ seqdone:
 		pcm_name = com_argv[i + 1];
 
 	// Open the audio device
-	Con_Printf ("SndSys_Init: PCM device is \"%s\"\n", pcm_name);
+	Con_DPrintf ("SndSys_Init: PCM device is \"%s\"\n", pcm_name);
 	err = snd_pcm_open (&pcm_handle, pcm_name, SND_PCM_STREAM_PLAYBACK, SND_PCM_NONBLOCK);
 	if (err < 0)
 	{
-		Con_Printf ("SndSys_Init: can't open audio device \"%s\" (%s)\n",
+		Con_DPrintf ("SndSys_Init: can't open audio device \"%s\" (%s)\n",
 					pcm_name, snd_strerror (err));
 		return false;
 	}
@@ -170,14 +170,14 @@ seqdone:
 	err = snd_pcm_hw_params_malloc (&hw_params);
 	if (err < 0)
 	{
-		Con_Printf ("SndSys_Init: can't allocate hardware parameters (%s)\n",
+		Con_DPrintf ("SndSys_Init: can't allocate hardware parameters (%s)\n",
 					snd_strerror (err));
 		goto init_error;
 	}
 	err = snd_pcm_hw_params_any (pcm_handle, hw_params);
 	if (err < 0)
 	{
-		Con_Printf ("SndSys_Init: can't initialize hardware parameters (%s)\n",
+		Con_DPrintf ("SndSys_Init: can't initialize hardware parameters (%s)\n",
 					snd_strerror (err));
 		goto init_error;
 	}
@@ -186,7 +186,7 @@ seqdone:
 	err = snd_pcm_hw_params_set_access (pcm_handle, hw_params, SND_PCM_ACCESS_RW_INTERLEAVED);
 	if (err < 0)
 	{
-		Con_Printf ("SndSys_Init: can't set access type (%s)\n",
+		Con_DPrintf ("SndSys_Init: can't set access type (%s)\n",
 					snd_strerror (err));
 		goto init_error;
 	}
@@ -199,7 +199,7 @@ seqdone:
 	err = snd_pcm_hw_params_set_format (pcm_handle, hw_params, snd_pcm_format);
 	if (err < 0)
 	{
-		Con_Printf ("SndSys_Init: can't set sound width to %hu (%s)\n",
+		Con_DPrintf ("SndSys_Init: can't set sound width to %hu (%s)\n",
 					requested->width, snd_strerror (err));
 		goto init_error;
 	}
@@ -208,7 +208,7 @@ seqdone:
 	err = snd_pcm_hw_params_set_channels (pcm_handle, hw_params, requested->channels);
 	if (err < 0)
 	{
-		Con_Printf ("SndSys_Init: can't set sound channels to %hu (%s)\n",
+		Con_DPrintf ("SndSys_Init: can't set sound channels to %hu (%s)\n",
 					requested->channels, snd_strerror (err));
 		goto init_error;
 	}
@@ -217,7 +217,7 @@ seqdone:
 	err = snd_pcm_hw_params_set_rate (pcm_handle, hw_params, requested->speed, 0);
 	if (err < 0)
 	{
-		Con_Printf ("SndSys_Init: can't set sound speed to %u (%s)\n",
+		Con_DPrintf ("SndSys_Init: can't set sound speed to %u (%s)\n",
 					requested->speed, snd_strerror (err));
 		goto init_error;
 	}
@@ -233,7 +233,7 @@ seqdone:
 	err = snd_pcm_hw_params_set_buffer_size_near (pcm_handle, hw_params, &buffer_size);
 	if (err < 0)
 	{
-		Con_Printf ("SndSys_Init: can't set sound buffer size to %lu (%s)\n",
+		Con_DPrintf ("SndSys_Init: can't set sound buffer size to %lu (%s)\n",
 					buffer_size, snd_strerror (err));
 		goto init_error;
 	}
@@ -244,7 +244,7 @@ seqdone:
 	err = snd_pcm_hw_params_set_period_size_near(pcm_handle, hw_params, &buffer_size, 0);
 	if (err < 0)
 	{
-		Con_Printf ("SndSys_Init: can't set sound period size to %lu (%s)\n",
+		Con_DPrintf ("SndSys_Init: can't set sound period size to %lu (%s)\n",
 					buffer_size, snd_strerror (err));
 		goto init_error;
 	}
@@ -252,7 +252,7 @@ seqdone:
 	err = snd_pcm_hw_params (pcm_handle, hw_params);
 	if (err < 0)
 	{
-		Con_Printf ("SndSys_Init: can't set hardware parameters (%s)\n",
+		Con_DPrintf ("SndSys_Init: can't set hardware parameters (%s)\n",
 					snd_strerror (err));
 		goto init_error;
 	}
@@ -329,7 +329,7 @@ static qboolean SndSys_Recover (int err_num)
 	err = snd_pcm_prepare (pcm_handle);
 	if (err < 0)
 	{
-		Con_Printf ("SndSys_Recover: unable to recover (%s)\n",
+		Con_DPrintf ("SndSys_Recover: unable to recover (%s)\n",
 					 snd_strerror (err));
 
 		// TOCHECK: should we stop the playback ?
