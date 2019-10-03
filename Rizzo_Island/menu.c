@@ -5175,7 +5175,7 @@ void MVM_error_cmd(const char *format, ...)
 	// fall back to the normal menu
 
 	// say it
-	Con_Print("Falling back to normal menu\n");
+	Con_DPrintf("Falling back to normal menu\n");
 
 	key_dest = key_game;
 

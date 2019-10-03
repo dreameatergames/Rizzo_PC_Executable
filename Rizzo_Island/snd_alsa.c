@@ -54,7 +54,7 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 	snd_pcm_format_t snd_pcm_format;
 	snd_pcm_uframes_t buffer_size;
 
-	Con_Print ("SndSys_Init: using the ALSA module\n");
+	Con_DPrintf ("SndSys_Init: using the ALSA module\n");
 
 	seq_name = NULL;
 // COMMANDLINEOPTION: Linux ALSA Sound: -sndseqin <client>:<port> selects which sequencer port to use for input, by default no sequencer port is used (MIDI note events from that port get mapped to MIDINOTE<n> keys that can be bound)
@@ -71,19 +71,19 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 		err = snd_seq_open (&seq_handle, "default", SND_SEQ_OPEN_INPUT, 0);
 		if (err < 0)
 		{
-			Con_Print ("SndSys_Init: can't open seq device\n");
+			Con_DPrintf ("SndSys_Init: can't open seq device\n");
 			goto seqdone;
 		}
 		err = snd_seq_set_client_name(seq_handle, gamename);
 		if (err < 0)
 		{
-			Con_Print ("SndSys_Init: can't set name of seq device\n");
+			Con_DPrintf ("SndSys_Init: can't set name of seq device\n");
 			goto seqerror;
 		}
 		err = snd_seq_create_simple_port(seq_handle, gamename, SND_SEQ_PORT_CAP_WRITE | SND_SEQ_PORT_CAP_SUBS_WRITE, SND_SEQ_PORT_TYPE_MIDI_GENERIC | SND_SEQ_PORT_TYPE_APPLICATION);
 		if(err < 0)
 		{
-			Con_Print ("SndSys_Init: can't create seq port\n");
+			Con_DPrintf ("SndSys_Init: can't create seq port\n");
 			goto seqerror;
 		}
 		err = snd_seq_connect_from(seq_handle, 0, seq_client, seq_port);
@@ -95,7 +95,7 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 		err = snd_seq_nonblock(seq_handle, 1);
 		if(err < 0)
 		{
-			Con_Print ("SndSys_Init: can't make seq nonblocking\n");
+			Con_DPrintf ("SndSys_Init: can't make seq nonblocking\n");
 			goto seqerror;
 		}
 
@@ -131,7 +131,7 @@ seqdone:
 
 	if (pcm_handle != NULL)
 	{
-		Con_Print ("SndSys_Init: WARNING: Init called before Shutdown!\n");
+		Con_DPrintf ("SndSys_Init: WARNING: Init called before Shutdown!\n");
 		SndSys_Shutdown ();
 	}
 

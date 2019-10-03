@@ -428,13 +428,13 @@ void Portal_Visibility(dp_model_t *model, const vec3_t eye, int *leaflist, unsig
 	// if there is no model, it can not block visibility
 	if (model == NULL)
 	{
-		Con_Print("Portal_Visibility: NULL model\n");
+		Con_DPrintf("Portal_Visibility: NULL model\n");
 		return;
 	}
 
 	if (!model->brush.data_nodes)
 	{
-		Con_Print("Portal_Visibility: not a brush model\n");
+		Con_DPrintf("Portal_Visibility: not a brush model\n");
 		return;
 	}
 

@@ -597,7 +597,7 @@ unsigned char *SZ_GetSpace (sizebuf_t *buf, int length)
 			Host_Error ("SZ_GetSpace: %i is > full buffer size", length);
 
 		buf->overflowed = true;
-		Con_Print("SZ_GetSpace: overflow\n");
+		Con_DPrintf("SZ_GetSpace: overflow\n");
 		SZ_Clear (buf);
 	}
 
@@ -677,7 +677,7 @@ void Com_HexDumpToConsole(const unsigned char *data, int size)
 		if (cur >= flushpointer || i >= size)
 		{
 			*cur++ = 0;
-			Con_Print(text);
+			Con_DPrintf(text);
 			cur = text;
 		}
 	}

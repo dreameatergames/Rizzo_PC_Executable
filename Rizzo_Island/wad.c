@@ -128,7 +128,7 @@ unsigned char *W_GetLumpName(const char *name)
 		{
 			if (memcmp(wad.gfx_base, "WAD2", 4))
 			{
-				Con_Print("gfx.wad doesn't have WAD2 id\n");
+				Con_DPrintf("gfx.wad doesn't have WAD2 id\n");
 				Mem_Free(wad.gfx_base);
 				wad.gfx_base = NULL;
 			}
@@ -173,7 +173,7 @@ void W_LoadTextureWadFile (char *filename, int complain)
 	}
 
 	if (FS_Read(file, &header, sizeof(wadinfo_t)) != sizeof(wadinfo_t))
-	{Con_Print("W_LoadTextureWadFile: unable to read wad header\n");FS_Close(file);file = NULL;return;}
+	{Con_DPrintf("W_LoadTextureWadFile: unable to read wad header\n");FS_Close(file);file = NULL;return;}
 
 	if(memcmp(header.identification, "WAD3", 4))
 	{Con_DPrintf("W_LoadTextureWadFile: Wad file %s doesn't have WAD3 id\n",filename);FS_Close(file);file = NULL;return;}
@@ -183,7 +183,7 @@ void W_LoadTextureWadFile (char *filename, int complain)
 	{Con_DPrintf("W_LoadTextureWadFile: invalid number of lumps (%i)\n", numlumps);FS_Close(file);file = NULL;return;}
 	infotableofs = LittleLong(header.infotableofs);
 	if (FS_Seek (file, infotableofs, SEEK_SET))
-	{Con_Print("W_LoadTextureWadFile: unable to seek to lump table\n");FS_Close(file);file = NULL;return;}
+	{Con_DPrintf("W_LoadTextureWadFile: unable to seek to lump table\n");FS_Close(file);file = NULL;return;}
 
 	if (!wad.hlwads.mempool)
 		Mem_ExpandableArray_NewArray(&wad.hlwads, cls.permanentmempool, sizeof(mwad_t), 16);
@@ -194,7 +194,7 @@ void W_LoadTextureWadFile (char *filename, int complain)
 
 	if (!w->lumps)
 	{
-		Con_Print("W_LoadTextureWadFile: unable to allocate temporary memory for lump table\n");
+		Con_DPrintf("W_LoadTextureWadFile: unable to allocate temporary memory for lump table\n");
 		FS_Close(w->file);
 		w->file = NULL;
 		w->numlumps = 0;
@@ -203,7 +203,7 @@ void W_LoadTextureWadFile (char *filename, int complain)
 
 	if (FS_Read(file, w->lumps, sizeof(lumpinfo_t) * w->numlumps) != (fs_offset_t)sizeof(lumpinfo_t) * numlumps)
 	{
-		Con_Print("W_LoadTextureWadFile: unable to read lump table\n");
+		Con_DPrintf("W_LoadTextureWadFile: unable to read lump table\n");
 		FS_Close(w->file);
 		w->file = NULL;
 		w->numlumps = 0;
@@ -292,13 +292,13 @@ unsigned char *W_GetTextureBGRA(char *name)
 			if (!strcmp(texname, w->lumps[i].name)) // found it
 			{
 				if (FS_Seek(w->file, w->lumps[i].filepos, SEEK_SET))
-				{Con_Print("W_GetTexture: corrupt WAD3 file\n");return NULL;}
+				{Con_DPrintf("W_GetTexture: corrupt WAD3 file\n");return NULL;}
 
 				MSG_InitReadBuffer(&sb, (unsigned char *)Mem_Alloc(tempmempool, w->lumps[i].disksize), w->lumps[i].disksize);
 				if (!sb.data)
 					return NULL;
 				if (FS_Read(w->file, sb.data, w->lumps[i].size) < w->lumps[i].disksize)
-				{Con_Print("W_GetTexture: corrupt WAD3 file\n");return NULL;}
+				{Con_DPrintf("W_GetTexture: corrupt WAD3 file\n");return NULL;}
 
 				data = W_ConvertWAD3TextureBGRA(&sb);
 				Mem_Free(sb.data);

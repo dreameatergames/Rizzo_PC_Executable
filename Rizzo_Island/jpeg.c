@@ -825,7 +825,7 @@ qboolean JPEG_SaveImage_preflipped (const char *filename, int width, int height,
 	// No DLL = no JPEGs
 	if (!jpeg_dll)
 	{
-		Con_Print("You need the libjpeg library to save JPEG images\n");
+		Con_DPrintf("You need the libjpeg library to save JPEG images\n");
 		return false;
 	}
 
@@ -939,7 +939,7 @@ size_t JPEG_SaveImage_to_Buffer (char *jpegbuf, size_t jpegsize, int width, int 
 	// No DLL = no JPEGs
 	if (!jpeg_dll)
 	{
-		Con_Print("You need the libjpeg library to save JPEG images\n");
+		Con_DPrintf("You need the libjpeg library to save JPEG images\n");
 		return false;
 	}
 
@@ -1056,7 +1056,7 @@ qboolean Image_Compress(const char *imagename, size_t maxsize, void **buf, size_
 	// No DLL = no JPEGs
 	if (!jpeg_dll)
 	{
-		Con_Print("You need the libjpeg library to save JPEG images\n");
+		Con_DPrintf("You need the libjpeg library to save JPEG images\n");
 		return false;
 	}
 

@@ -707,7 +707,7 @@ static void CheckPendingDownloads(void)
 
 					if(di->startpos > 0)
 						Con_DPrintf(", resuming from position %ld", (long) di->startpos);
-					Con_Print("...\n");
+					Con_DPrintf("...\n");
 				}
 				else
 				{
@@ -1342,7 +1342,7 @@ static void Curl_Info_f(void)
 	if(Curl_Running())
 	{
 		if (curl_mutex) Thread_LockMutex(curl_mutex);
-		Con_Print("Currently running downloads:\n");
+		Con_DPrintf("Currently running downloads:\n");
 		for(di = downloads; di; di = di->next)
 		{
 			double speed, percent;
@@ -1352,13 +1352,13 @@ static void Curl_Info_f(void)
 			if(percent >= 0)
 				Con_DPrintf("(%.1f%% @ %.1f KiB/s)\n", percent, speed / 1024.0);
 			else
-				Con_Print("(queued)\n");
+				Con_DPrintf("(queued)\n");
 		}
 		if (curl_mutex) Thread_UnlockMutex(curl_mutex);
 	}
 	else
 	{
-		Con_Print("No downloads running.\n");
+		Con_DPrintf("No downloads running.\n");
 	}
 }
 
@@ -1400,19 +1400,19 @@ static void Curl_Curl_f(void)
 
 	if(!curl_dll)
 	{
-		Con_Print("libcurl DLL not found, this command is inactive.\n");
+		Con_DPrintf("libcurl DLL not found, this command is inactive.\n");
 		return;
 	}
 
 	if(!cl_curl_enabled.integer)
 	{
-		Con_Print("curl support not enabled. Set cl_curl_enabled to 1 to enable.\n");
+		Con_DPrintf("curl support not enabled. Set cl_curl_enabled to 1 to enable.\n");
 		return;
 	}
 
 	if(Cmd_Argc() < 2)
 	{
-		Con_Print("usage:\ncurl --info, curl --cancel [filename], curl url\n");
+		Con_DPrintf("usage:\ncurl --info, curl --cancel [filename], curl url\n");
 		return;
 	}
 
@@ -1437,7 +1437,7 @@ static void Curl_Curl_f(void)
 				if(di)
 					Curl_EndDownload(di, CURL_DOWNLOAD_ABORTED, CURLE_OK, NULL);
 				else
-					Con_Print("download not found\n");
+					Con_DPrintf("download not found\n");
 			}
 			return;
 		}

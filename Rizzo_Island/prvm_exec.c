@@ -148,13 +148,13 @@ static void PRVM_PrintStatement(prvm_prog_t *prog, mstatement_t *s)
 		if (prvm_opnames[s->op][0] == STRING_COLOR_TAG)
 			i -= 2;
 		for ( ; i<10 ; i++)
-			Con_Print(" ");
+			Con_DPrintf(" ");
 	}
 	if (s->operand[0] >= 0) Con_DPrintf(  "%s", PRVM_GlobalString(prog, s->operand[0], valuebuf, sizeof(valuebuf)));
 	if (s->operand[1] >= 0) Con_DPrintf(", %s", PRVM_GlobalString(prog, s->operand[1], valuebuf, sizeof(valuebuf)));
 	if (s->operand[2] >= 0) Con_DPrintf(", %s", PRVM_GlobalString(prog, s->operand[2], valuebuf, sizeof(valuebuf)));
 	if (s->jumpabsolute >= 0) Con_DPrintf(", statement %i", s->jumpabsolute);
-	Con_Print("\n");
+	Con_DPrintf("\n");
 }
 
 void PRVM_PrintFunctionStatements (prvm_prog_t *prog, const char *name)
@@ -231,7 +231,7 @@ void PRVM_StackTrace (prvm_prog_t *prog)
 		f = prog->stack[i].f;
 
 		if (!f)
-			Con_Print("<NULL FUNCTION>\n");
+			Con_DPrintf("<NULL FUNCTION>\n");
 		else
 		{
 			if (prog->statement_linenums)
@@ -438,7 +438,7 @@ void PRVM_CallProfile_f (void)
 	prvm_prog_t *prog;
 	if (Cmd_Argc() != 2)
 	{
-		Con_Print("prvm_callprofile <program name>\n");
+		Con_DPrintf("prvm_callprofile <program name>\n");
 		return;
 	}
 
@@ -470,7 +470,7 @@ void PRVM_Profile_f (void)
 		howmany = atoi(Cmd_Argv(2));
 	else if (Cmd_Argc() != 2)
 	{
-		Con_Print("prvm_profile <program name>\n");
+		Con_DPrintf("prvm_profile <program name>\n");
 		return;
 	}
 
@@ -496,7 +496,7 @@ void PRVM_ChildProfile_f (void)
 		howmany = atoi(Cmd_Argv(2));
 	else if (Cmd_Argc() != 2)
 	{
-		Con_Print("prvm_childprofile <program name>\n");
+		Con_DPrintf("prvm_childprofile <program name>\n");
 		return;
 	}
 

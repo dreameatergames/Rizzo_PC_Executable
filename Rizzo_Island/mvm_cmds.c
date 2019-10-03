@@ -470,7 +470,7 @@ static void VM_M_getserverliststring(prvm_prog_t *prog)
 	{
 		if(hostnr < 0 || hostnr >= serverlist_viewcount)
 		{
-			Con_Print("VM_M_getserverliststring: bad hostnr passed!\n");
+			Con_DPrintf("VM_M_getserverliststring: bad hostnr passed!\n");
 			return;
 		}
 		cache = ServerList_GetViewEntry(hostnr);
@@ -505,7 +505,7 @@ static void VM_M_getserverliststring(prvm_prog_t *prog)
 			PRVM_G_INT( OFS_RETURN ) = PRVM_SetTempString( prog, cache->line2 );
 			break;
 		default:
-			Con_Print("VM_M_getserverliststring: bad field number passed!\n");
+			Con_DPrintf("VM_M_getserverliststring: bad field number passed!\n");
 	}
 }
 
@@ -535,7 +535,7 @@ static void VM_M_getserverlistnumber(prvm_prog_t *prog)
 	{
 		if(hostnr < 0 || hostnr >= serverlist_viewcount)
 		{
-			Con_Print("VM_M_getserverliststring: bad hostnr passed!\n");
+			Con_DPrintf("VM_M_getserverliststring: bad hostnr passed!\n");
 			return;
 		}
 		cache = ServerList_GetViewEntry(hostnr);
@@ -569,7 +569,7 @@ static void VM_M_getserverlistnumber(prvm_prog_t *prog)
 			PRVM_G_FLOAT( OFS_RETURN ) = cache->info.isfavorite;
 			break;
 		default:
-			Con_Print("VM_M_getserverlistnumber: bad field number passed!\n");
+			Con_DPrintf("VM_M_getserverlistnumber: bad field number passed!\n");
 	}
 }
 

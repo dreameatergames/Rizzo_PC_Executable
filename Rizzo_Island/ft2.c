@@ -388,7 +388,7 @@ void font_start(void)
 
 	if (qFT_Init_FreeType(&font_ft2lib))
 	{
-		Con_Print("ERROR: Failed to initialize the FreeType2 library!\n");
+		Con_DPrintf("ERROR: Failed to initialize the FreeType2 library!\n");
 		Font_CloseLibrary();
 		return;
 	}
@@ -396,7 +396,7 @@ void font_start(void)
 	font_mempool = Mem_AllocPool("FONT", 0, NULL);
 	if (!font_mempool)
 	{
-		Con_Print("ERROR: Failed to allocate FONT memory pool!\n");
+		Con_DPrintf("ERROR: Failed to allocate FONT memory pool!\n");
 		Font_CloseLibrary();
 		return;
 	}

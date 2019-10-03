@@ -167,7 +167,7 @@ static void LoadSky_f (void)
 		if (skyname[0])
 			Con_DPrintf("current sky: %s\n", skyname);
 		else
-			Con_Print("no skybox has been set\n");
+			Con_DPrintf("no skybox has been set\n");
 		break;
 	case 2:
 		if (R_SetSkyBox(Cmd_Argv(1)))
@@ -175,13 +175,13 @@ static void LoadSky_f (void)
 			if (skyname[0])
 				Con_DPrintf("skybox set to %s\n", skyname);
 			else
-				Con_Print("skybox disabled\n");
+				Con_DPrintf("skybox disabled\n");
 		}
 		else
 			Con_DPrintf("failed to load skybox %s\n", Cmd_Argv(1));
 		break;
 	default:
-		Con_Print("usage: loadsky skyname\n");
+		Con_DPrintf("usage: loadsky skyname\n");
 		break;
 	}
 }

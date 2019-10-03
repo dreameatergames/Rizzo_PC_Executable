@@ -154,7 +154,7 @@ static qboolean CDAudio_Play_real (int track, qboolean looping, qboolean complai
 	if(track < 1)
 	{
 		if(complain)
-			Con_Print("Could not load BGM track.\n");
+			Con_DPrintf("Could not load BGM track.\n");
 		return false;
 	}
 
@@ -327,7 +327,7 @@ void CDAudio_Play_byName (const char *trackname, qboolean looping, qboolean tryr
 	{
 		if(cdaudio.integer == 0 || track < 1)
 		{
-			Con_Print("Could not load BGM track.\n");
+			Con_DPrintf("Could not load BGM track.\n");
 			return;
 		}
 		else
@@ -540,7 +540,7 @@ static void CD_f (void)
 		if (cdValid)
 			Con_DPrintf("%u tracks on CD.\n", maxTrack);
 		else
-			Con_Print ("No CD in player.\n");
+			Con_DPrintf ("No CD in player.\n");
 		if (cdPlaying)
 			Con_DPrintf("Currently %s track %u\n", cdPlayLooping ? "looping" : "playing", cdPlayTrack);
 		else if (wasPlaying)
@@ -750,14 +750,14 @@ int CDAudio_Startup (void)
 
 	if (CDAudio_GetAudioDiskInfo())
 	{
-		Con_Print("CDAudio_Init: No CD in player.\n");
+		Con_DPrintf("CDAudio_Init: No CD in player.\n");
 		cdValid = false;
 	}
 
 	saved_vol = CDAudio_SysGetVolume ();
 	if (saved_vol < 0.0f)
 	{
-		Con_Print ("Can't get initial CD volume\n");
+		Con_DPrintf ("Can't get initial CD volume\n");
 		saved_vol = 1.0f;
 	}
 	else
@@ -765,7 +765,7 @@ int CDAudio_Startup (void)
 
 	initialized = true;
 
-	Con_Print("CD Audio Initialized\n");
+	Con_DPrintf("CD Audio Initialized\n");
 
 	return 0;
 }

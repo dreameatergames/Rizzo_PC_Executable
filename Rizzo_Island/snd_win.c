@@ -236,7 +236,7 @@ static sndinitstat SndSys_InitDirectSound (const snd_format_t* requested)
 
 		if (hInstDS == NULL)
 		{
-			Con_Print("Couldn't load dsound.dll\n");
+			Con_DPrintf("Couldn't load dsound.dll\n");
 			return SIS_FAILURE;
 		}
 
@@ -244,7 +244,7 @@ static sndinitstat SndSys_InitDirectSound (const snd_format_t* requested)
 
 		if (!pDirectSoundCreate)
 		{
-			Con_Print("Couldn't get DS proc addr\n");
+			Con_DPrintf("Couldn't get DS proc addr\n");
 			return SIS_FAILURE;
 		}
 	}
@@ -253,7 +253,7 @@ static sndinitstat SndSys_InitDirectSound (const snd_format_t* requested)
 	{
 		if (hresult != DSERR_ALLOCATED)
 		{
-			Con_Print("DirectSound create failed\n");
+			Con_DPrintf("DirectSound create failed\n");
 			return SIS_FAILURE;
 		}
 
@@ -263,7 +263,7 @@ static sndinitstat SndSys_InitDirectSound (const snd_format_t* requested)
 						"Sound not available",
 						MB_RETRYCANCEL | MB_SETFOREGROUND | MB_ICONEXCLAMATION) != IDRETRY)
 		{
-			Con_Print("DirectSoundCreate failure\n  hardware already in use\n");
+			Con_DPrintf("DirectSoundCreate failure\n  hardware already in use\n");
 			return SIS_NOTAVAIL;
 		}
 	}
@@ -272,19 +272,19 @@ static sndinitstat SndSys_InitDirectSound (const snd_format_t* requested)
 
 	if (DS_OK != IDirectSound_GetCaps (pDS, &dscaps))
 	{
-		Con_Print("Couldn't get DS caps\n");
+		Con_DPrintf("Couldn't get DS caps\n");
 	}
 
 	if (dscaps.dwFlags & DSCAPS_EMULDRIVER)
 	{
-		Con_Print("No DirectSound driver installed\n");
+		Con_DPrintf("No DirectSound driver installed\n");
 		SndSys_Shutdown ();
 		return SIS_FAILURE;
 	}
 
 	if (DS_OK != IDirectSound_SetCooperativeLevel (pDS, mainwindow, DSSCL_EXCLUSIVE))
 	{
-		Con_Print("Set coop level failed\n");
+		Con_DPrintf("Set coop level failed\n");
 		SndSys_Shutdown ();
 		return SIS_FAILURE;
 	}
@@ -310,11 +310,11 @@ static sndinitstat SndSys_InitDirectSound (const snd_format_t* requested)
 
 			if (DS_OK != IDirectSoundBuffer_SetFormat (pDSPBuf, (WAVEFORMATEX*)&pformat))
 			{
-				Con_Print("Set primary sound buffer format: no\n");
+				Con_DPrintf("Set primary sound buffer format: no\n");
 			}
 			else
 			{
-				Con_Print("Set primary sound buffer format: yes\n");
+				Con_DPrintf("Set primary sound buffer format: yes\n");
 
 				primary_format_set = true;
 			}
@@ -350,30 +350,30 @@ static sndinitstat SndSys_InitDirectSound (const snd_format_t* requested)
 
 		if (DS_OK != IDirectSoundBuffer_GetCaps (pDSBuf, &dsbcaps))
 		{
-			Con_Print("DS:GetCaps failed\n");
+			Con_DPrintf("DS:GetCaps failed\n");
 			SndSys_Shutdown ();
 			return SIS_FAILURE;
 		}
 
-		Con_Print("Using secondary sound buffer\n");
+		Con_DPrintf("Using secondary sound buffer\n");
 	}
 	else
 	{
 		if (DS_OK != IDirectSound_SetCooperativeLevel (pDS, mainwindow, DSSCL_WRITEPRIMARY))
 		{
-			Con_Print("Set coop level failed\n");
+			Con_DPrintf("Set coop level failed\n");
 			SndSys_Shutdown ();
 			return SIS_FAILURE;
 		}
 
 		if (DS_OK != IDirectSoundBuffer_GetCaps (pDSPBuf, &dsbcaps))
 		{
-			Con_Print("DS:GetCaps failed\n");
+			Con_DPrintf("DS:GetCaps failed\n");
 			return SIS_FAILURE;
 		}
 
 		pDSBuf = pDSPBuf;
-		Con_Print("Using primary sound buffer\n");
+		Con_DPrintf("Using primary sound buffer\n");
 	}
 
 	// Make sure mixer is active
@@ -393,14 +393,14 @@ static sndinitstat SndSys_InitDirectSound (const snd_format_t* requested)
 	{
 		if (hresult != DSERR_BUFFERLOST)
 		{
-			Con_Print("SNDDMA_InitDirect: DS::Lock Sound Buffer Failed\n");
+			Con_DPrintf("SNDDMA_InitDirect: DS::Lock Sound Buffer Failed\n");
 			SndSys_Shutdown ();
 			return SIS_FAILURE;
 		}
 
 		if (++reps > 10000)
 		{
-			Con_Print("SNDDMA_InitDirect: DS: couldn't restore buffer\n");
+			Con_DPrintf("SNDDMA_InitDirect: DS: couldn't restore buffer\n");
 			SndSys_Shutdown ();
 			return SIS_FAILURE;
 		}
@@ -446,7 +446,7 @@ static qboolean SndSys_InitMmsystem (const snd_format_t* requested)
 	{
 		if (hr != MMSYSERR_ALLOCATED)
 		{
-			Con_Print("waveOutOpen failed\n");
+			Con_DPrintf("waveOutOpen failed\n");
 			return false;
 		}
 
@@ -456,7 +456,7 @@ static qboolean SndSys_InitMmsystem (const snd_format_t* requested)
 						"Sound not available",
 						MB_RETRYCANCEL | MB_SETFOREGROUND | MB_ICONEXCLAMATION) != IDRETRY)
 		{
-			Con_Print("waveOutOpen failure;\n  hardware already in use\n");
+			Con_DPrintf("waveOutOpen failure;\n  hardware already in use\n");
 			return false;
 		}
 	}
@@ -472,14 +472,14 @@ static qboolean SndSys_InitMmsystem (const snd_format_t* requested)
 	hData = GlobalAlloc(GMEM_MOVEABLE | GMEM_SHARE, gSndBufSize);
 	if (!hData)
 	{
-		Con_Print("Sound: Out of memory.\n");
+		Con_DPrintf("Sound: Out of memory.\n");
 		SndSys_Shutdown ();
 		return false;
 	}
 	lpData = (HPSTR)GlobalLock(hData);
 	if (!lpData)
 	{
-		Con_Print("Sound: Failed to lock.\n");
+		Con_DPrintf("Sound: Failed to lock.\n");
 		SndSys_Shutdown ();
 		return false;
 	}
@@ -494,7 +494,7 @@ static qboolean SndSys_InitMmsystem (const snd_format_t* requested)
 
 	if (hWaveHdr == NULL)
 	{
-		Con_Print("Sound: Failed to Alloc header.\n");
+		Con_DPrintf("Sound: Failed to Alloc header.\n");
 		SndSys_Shutdown ();
 		return false;
 	}
@@ -503,7 +503,7 @@ static qboolean SndSys_InitMmsystem (const snd_format_t* requested)
 
 	if (lpWaveHdr == NULL)
 	{
-		Con_Print("Sound: Failed to lock header.\n");
+		Con_DPrintf("Sound: Failed to lock header.\n");
 		SndSys_Shutdown ();
 		return false;
 	}
@@ -518,7 +518,7 @@ static qboolean SndSys_InitMmsystem (const snd_format_t* requested)
 
 		if (waveOutPrepareHeader(hWaveOut, lpWaveHdr+i, sizeof(WAVEHDR)) != MMSYSERR_NOERROR)
 		{
-			Con_Print("Sound: failed to prepare wave headers\n");
+			Con_DPrintf("Sound: failed to prepare wave headers\n");
 			SndSys_Shutdown ();
 			return false;
 		}
@@ -559,7 +559,7 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 		Cvar_RegisterVariable(&snd_wav_partitionsize);
 	}
 
-	Con_Print ("SndSys_Init: using the Win32 module\n");
+	Con_DPrintf ("SndSys_Init: using the Win32 module\n");
 
 #ifdef SUPPORTDIRECTX
 // COMMANDLINEOPTION: Windows Sound: -wavonly uses wave sound instead of DirectSound
@@ -577,9 +577,9 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 		stat = SndSys_InitDirectSound (requested);
 
 		if (stat == SIS_SUCCESS)
-			Con_Print("DirectSound initialized\n");
+			Con_DPrintf("DirectSound initialized\n");
 		else
-			Con_Print("DirectSound failed to init\n");
+			Con_DPrintf("DirectSound failed to init\n");
 	}
 #endif
 
@@ -592,9 +592,9 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 #endif
 	{
 		if (SndSys_InitMmsystem (requested))
-			Con_Print("Wave sound (MMSYSTEM) initialized\n");
+			Con_DPrintf("Wave sound (MMSYSTEM) initialized\n");
 		else
-			Con_Print("Wave sound failed to init\n");
+			Con_DPrintf("Wave sound failed to init\n");
 	}
 
 #ifdef SUPPORTDIRECTX
@@ -827,11 +827,11 @@ qboolean SndSys_LockRenderBuffer (void)
 	{
 		// if the buffer was lost or stopped, restore it and/or restart it
 		if (IDirectSoundBuffer_GetStatus (pDSBuf, &dwStatus) != DS_OK)
-			Con_Print("Couldn't get sound buffer status\n");
+			Con_DPrintf("Couldn't get sound buffer status\n");
 
 		if (dwStatus & DSBSTATUS_BUFFERLOST)
 		{
-			Con_Print("DSound buffer is lost!!\n");
+			Con_DPrintf("DSound buffer is lost!!\n");
 			IDirectSoundBuffer_Restore (pDSBuf);
 		}
 
@@ -844,7 +844,7 @@ qboolean SndSys_LockRenderBuffer (void)
 		{
 			if (hresult != DSERR_BUFFERLOST)
 			{
-				Con_Print("S_LockBuffer: DS: Lock Sound Buffer Failed\n");
+				Con_DPrintf("S_LockBuffer: DS: Lock Sound Buffer Failed\n");
 				S_Shutdown ();
 				S_Startup ();
 				return false;
@@ -852,7 +852,7 @@ qboolean SndSys_LockRenderBuffer (void)
 
 			if (++reps > 10000)
 			{
-				Con_Print("S_LockBuffer: DS: couldn't restore buffer\n");
+				Con_DPrintf("S_LockBuffer: DS: couldn't restore buffer\n");
 				S_Shutdown ();
 				S_Startup ();
 				return false;

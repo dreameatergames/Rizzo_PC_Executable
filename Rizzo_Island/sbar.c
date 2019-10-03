@@ -568,79 +568,7 @@ Sbar_SoloScoreboard
 */
 static void Sbar_SoloScoreboard (void)
 {
-#if 1
-	char	str[80], timestr[40];
-	int		max, timelen;
-	int		minutes, seconds;
-	double	t;
-	char vabuf[1024];
 
-	t = (cl.intermission ? cl.completed_time : cl.time);
-	minutes = (int)(t / 60);
-	seconds = (int)(t - 60*floor(t/60));
-
-	// monsters and secrets are now both on the top row
-	if (cl.stats[STAT_TOTALMONSTERS])
-		Sbar_DrawString(8, 4, va(vabuf, sizeof(vabuf), "Monsters:%3i /%3i", cl.stats[STAT_MONSTERS], cl.stats[STAT_TOTALMONSTERS]));
-	else if (cl.stats[STAT_MONSTERS]) // LA: Display something if monsters_killed is non-zero, but total_monsters is zero
-		Sbar_DrawString(8, 4, va(vabuf, sizeof(vabuf), "Monsters:%3i", cl.stats[STAT_MONSTERS]));
-
-	if (cl.stats[STAT_TOTALSECRETS])
-		Sbar_DrawString(8+22*8, 4, va(vabuf, sizeof(vabuf), "Secrets:%3i /%3i", cl.stats[STAT_SECRETS], cl.stats[STAT_TOTALSECRETS]));
-	else if (cl.stats[STAT_SECRETS]) // LA: And similarly for secrets
-		Sbar_DrawString(8+22*8, 4, va(vabuf, sizeof(vabuf), "Secrets:%3i", cl.stats[STAT_SECRETS]));
-
-	// format is like this: e1m1:The Sligpate Complex
-	dpsnprintf(str, sizeof(str), "%s:%s", cl.worldbasename, cl.worldmessage);
-
-	// if there's a newline character, terminate the string there
-	if (strchr(str, '\n'))
-		*(strchr(str, '\n')) = 0;
-
-	// make the time string
-	timelen = dpsnprintf(timestr, sizeof(timestr), " %i:%02i", minutes, seconds);
-
-	// truncate the level name if necessary to make room for time
-	max = 38 - timelen;
-	if ((int)strlen(str) > max)
-		str[max] = 0;
-
-	// print the filename and message
-	Sbar_DrawString(8, 12, str);
-
-	// print the time
-	Sbar_DrawString(8 + max*8, 12, timestr);
-
-#else
-	char	str[80];
-	int		minutes, seconds, tens, units;
-	int		l;
-
-	if (IS_OLDNEXUIZ_DERIVED(gamemode)) {
-		dpsnprintf (str, sizeof(str), "Monsters:%3i /%3i", cl.stats[STAT_MONSTERS], cl.stats[STAT_TOTALMONSTERS]);
-		Sbar_DrawString (8, 4, str);
-
-		dpsnprintf (str, sizeof(str), "Secrets :%3i /%3i", cl.stats[STAT_SECRETS], cl.stats[STAT_TOTALSECRETS]);
-		Sbar_DrawString (8, 12, str);
-	}
-
-// time
-	minutes = (int)(cl.time / 60);
-	seconds = (int)(cl.time - 60*minutes);
-	tens = seconds / 10;
-	units = seconds - 10*tens;
-	dpsnprintf (str, sizeof(str), "Time :%3i:%i%i", minutes, tens, units);
-	Sbar_DrawString (184, 4, str);
-
-// draw level name
-	if (IS_OLDNEXUIZ_DERIVED(gamemode)) {
-		l = (int) strlen (cl.worldname);
-		Sbar_DrawString (232 - l*4, 12, cl.worldname);
-	} else {
-		l = (int) strlen (cl.worldmessage);
-		Sbar_DrawString (232 - l*4, 12, cl.worldmessage);
-	}
-#endif
 }
 
 /*
@@ -827,43 +755,7 @@ Sbar_DrawFrags
 */
 static void Sbar_DrawFrags (void)
 {
-	int i, k, l, x, f;
-	char num[12];
-	scoreboard_t *s;
-	unsigned char *c;
 
-	Sbar_SortFrags ();
-
-	// draw the text
-	l = min(scoreboardlines, 4);
-
-	x = 23 * 8;
-
-	for (i = 0;i < l;i++)
-	{
-		k = fragsort[i];
-		s = &cl.scores[k];
-
-		// draw background
-		c = palette_rgb_pantsscoreboard[(s->colors & 0xf0) >> 4];
-		DrawQ_Fill (sbar_x + x + 10, sbar_y     - 23, 28, 4, c[0] * (1.0f / 255.0f), c[1] * (1.0f / 255.0f), c[2] * (1.0f / 255.0f), sbar_alpha_fg.value, 0);
-		c = palette_rgb_shirtscoreboard[s->colors & 0xf];
-		DrawQ_Fill (sbar_x + x + 10, sbar_y + 4 - 23, 28, 3, c[0] * (1.0f / 255.0f), c[1] * (1.0f / 255.0f), c[2] * (1.0f / 255.0f), sbar_alpha_fg.value, 0);
-
-		// draw number
-		f = s->frags;
-		dpsnprintf (num, sizeof(num), "%3i",f);
-
-		if (k == cl.viewentity - 1)
-		{
-			Sbar_DrawCharacter ( x      + 2, -24, 16);
-			Sbar_DrawCharacter ( x + 32 - 4, -24, 17);
-		}
-		Sbar_DrawCharacter (x +  8, -24, num[0]);
-		Sbar_DrawCharacter (x + 16, -24, num[1]);
-		Sbar_DrawCharacter (x + 24, -24, num[2]);
-		x += 32;
-	}
 }
 
 //=============================================================================
@@ -998,207 +890,7 @@ void Sbar_ShowFPS_Update(void)
 
 void Sbar_ShowFPS(void)
 {
-	float fps_x, fps_y, fps_scalex, fps_scaley, fps_strings = 0;
-	char soundstring[32];
-	char fpsstring[32];
-	char timestring[32];
-	char datestring[32];
-	char timedemostring1[32];
-	char timedemostring2[32];
-	char speedstring[32];
-	char blurstring[32];
-	char topspeedstring[48];
-	char texstring[MAX_QPATH];
-	qboolean red = false;
-	soundstring[0] = 0;
-	fpsstring[0] = 0;
-	timedemostring1[0] = 0;
-	timedemostring2[0] = 0;
-	timestring[0] = 0;
-	datestring[0] = 0;
-	speedstring[0] = 0;
-	blurstring[0] = 0;
-	texstring[0] = 0;
-	topspeedstring[0] = 0;
-	if (showfps.integer)
-	{
-		red = (showfps_framerate < 1.0f);
-		if(showfps.integer == 2)
-			dpsnprintf(fpsstring, sizeof(fpsstring), "%7.3f mspf", (1000.0 / showfps_framerate));
-		else if (red)
-			dpsnprintf(fpsstring, sizeof(fpsstring), "%4i spf", (int)(1.0 / showfps_framerate + 0.5));
-		else
-			dpsnprintf(fpsstring, sizeof(fpsstring), "%4i fps", (int)(showfps_framerate + 0.5));
-		fps_strings++;
-		if (cls.timedemo)
-		{
-			dpsnprintf(timedemostring1, sizeof(timedemostring1), "frame%4i %f", cls.td_frames, realtime - cls.td_starttime);
-			dpsnprintf(timedemostring2, sizeof(timedemostring2), "%i seconds %3.0f/%3.0f/%3.0f fps", cls.td_onesecondavgcount, cls.td_onesecondminfps, cls.td_onesecondavgfps / max(1, cls.td_onesecondavgcount), cls.td_onesecondmaxfps);
-			fps_strings++;
-			fps_strings++;
-		}
-	}
-	if (showtime.integer)
-	{
-		strlcpy(timestring, Sys_TimeString(showtime_format.string), sizeof(timestring));
-		fps_strings++;
-	}
-	if (showdate.integer)
-	{
-		strlcpy(datestring, Sys_TimeString(showdate_format.string), sizeof(datestring));
-		fps_strings++;
-	}
-	if (showblur.integer)
-	{
-		dpsnprintf(blurstring, sizeof(blurstring), "%3i%% blur", (int)(cl.motionbluralpha * 100));
-		fps_strings++;
-	}
-	if (showsound.integer)
-	{
-		dpsnprintf(soundstring, sizeof(soundstring), "%4i/4%i at %3ims", cls.soundstats.mixedsounds, cls.soundstats.totalsounds, cls.soundstats.latency_milliseconds);
-		fps_strings++;
-	}
-	if (showspeed.integer || showtopspeed.integer)
-	{
-		double speed, speedxy, f;
-		const char *unit;
-		speed = VectorLength(cl.movement_velocity);
-		speedxy = sqrt(cl.movement_velocity[0] * cl.movement_velocity[0] + cl.movement_velocity[1] * cl.movement_velocity[1]);
-		if (showspeed.integer)
-		{
-			get_showspeed_unit(showspeed.integer, &f, &unit);
-			dpsnprintf(speedstring, sizeof(speedstring), "%.0f (%.0f) %s", f*speed, f*speedxy, unit);
-			fps_strings++;
-		}
-		if (showtopspeed.integer)
-		{
-			qboolean topspeed_latched = false, topspeedxy_latched = false;
-			get_showspeed_unit(showtopspeed.integer, &f, &unit);
-			if (speed >= topspeed || current_time - top_time > 3)
-			{
-				topspeed = speed;
-				time(&top_time);
-			}
-			else
-				topspeed_latched = true;
-			if (speedxy >= topspeedxy || current_time - topxy_time > 3)
-			{
-				topspeedxy = speedxy;
-				time(&topxy_time);
-			}
-			else
-				topspeedxy_latched = true;
-			dpsnprintf(topspeedstring, sizeof(topspeedstring), "%s%.0f%s (%s%.0f%s) %s",
-				topspeed_latched ? "^1" : "^xf88", f*topspeed, "^xf88",
-				topspeedxy_latched ? "^1" : "^xf88", f*topspeedxy, "^xf88",
-				unit);
-			time(&current_time);
-			fps_strings++;
-		}
-	}
-	if (showtex.integer)
-	{
-		vec3_t org;
-		vec3_t dest;
-		vec3_t temp;
-		trace_t trace;
 
-		Matrix4x4_OriginFromMatrix(&r_refdef.view.matrix, org);
-		VectorSet(temp, 65536, 0, 0);
-		Matrix4x4_Transform(&r_refdef.view.matrix, temp, dest);
-		trace.hittexture = NULL; // to make sure
-		// TODO change this trace to be stopped by anything "visible" (i.e. with a drawsurface), but not stuff like weapclip
-		// probably needs adding a new SUPERCONTENTS type
-		trace = CL_TraceLine(org, dest, MOVE_NORMAL, NULL, SUPERCONTENTS_SOLID, 0, collision_extendmovelength.value, true, false, NULL, true, true);
-		if(trace.hittexture)
-			strlcpy(texstring, trace.hittexture->name, sizeof(texstring));
-		else
-			strlcpy(texstring, "(no texture hit)", sizeof(texstring));
-		fps_strings++;
-	}
-	if (fps_strings)
-	{
-		fps_scalex = 12;
-		fps_scaley = 12;
-		//fps_y = vid_conheight.integer - sb_lines; // yes this may draw over the sbar
-		//fps_y = bound(0, fps_y, vid_conheight.integer - fps_strings*fps_scaley);
-		fps_y = vid_conheight.integer - sbar_info_pos.integer - fps_strings*fps_scaley;
-		if (soundstring[0])
-		{
-			fps_x = vid_conwidth.integer - DrawQ_TextWidth(soundstring, 0, fps_scalex, fps_scaley, true, FONT_INFOBAR);
-			DrawQ_Fill(fps_x, fps_y, vid_conwidth.integer - fps_x, fps_scaley, 0, 0, 0, 0.5, 0);
-			DrawQ_String(fps_x, fps_y, soundstring, 0, fps_scalex, fps_scaley, 1, 1, 1, 1, 0, NULL, true, FONT_INFOBAR);
-			fps_y += fps_scaley;
-		}
-		if (fpsstring[0])
-		{
-			r_draw2d_force = true;
-			fps_x = vid_conwidth.integer - DrawQ_TextWidth(fpsstring, 0, fps_scalex, fps_scaley, true, FONT_INFOBAR);
-			DrawQ_Fill(fps_x, fps_y, vid_conwidth.integer - fps_x, fps_scaley, 0, 0, 0, 0.5, 0);
-			if (red)
-				DrawQ_String(fps_x, fps_y, fpsstring, 0, fps_scalex, fps_scaley, 1, 0, 0, 1, 0, NULL, true, FONT_INFOBAR);
-			else
-				DrawQ_String(fps_x, fps_y, fpsstring, 0, fps_scalex, fps_scaley, 1, 1, 1, 1, 0, NULL, true, FONT_INFOBAR);
-			fps_y += fps_scaley;
-			r_draw2d_force = false;
-		}
-		if (timedemostring1[0])
-		{
-			fps_x = vid_conwidth.integer - DrawQ_TextWidth(timedemostring1, 0, fps_scalex, fps_scaley, true, FONT_INFOBAR);
-			DrawQ_Fill(fps_x, fps_y, vid_conwidth.integer - fps_x, fps_scaley, 0, 0, 0, 0.5, 0);
-			DrawQ_String(fps_x, fps_y, timedemostring1, 0, fps_scalex, fps_scaley, 1, 1, 1, 1, 0, NULL, true, FONT_INFOBAR);
-			fps_y += fps_scaley;
-		}
-		if (timedemostring2[0])
-		{
-			fps_x = vid_conwidth.integer - DrawQ_TextWidth(timedemostring2, 0, fps_scalex, fps_scaley, true, FONT_INFOBAR);
-			DrawQ_Fill(fps_x, fps_y, vid_conwidth.integer - fps_x, fps_scaley, 0, 0, 0, 0.5, 0);
-			DrawQ_String(fps_x, fps_y, timedemostring2, 0, fps_scalex, fps_scaley, 1, 1, 1, 1, 0, NULL, true, FONT_INFOBAR);
-			fps_y += fps_scaley;
-		}
-		if (timestring[0])
-		{
-			fps_x = vid_conwidth.integer - DrawQ_TextWidth(timestring, 0, fps_scalex, fps_scaley, true, FONT_INFOBAR);
-			DrawQ_Fill(fps_x, fps_y, vid_conwidth.integer - fps_x, fps_scaley, 0, 0, 0, 0.5, 0);
-			DrawQ_String(fps_x, fps_y, timestring, 0, fps_scalex, fps_scaley, 1, 1, 1, 1, 0, NULL, true, FONT_INFOBAR);
-			fps_y += fps_scaley;
-		}
-		if (datestring[0])
-		{
-			fps_x = vid_conwidth.integer - DrawQ_TextWidth(datestring, 0, fps_scalex, fps_scaley, true, FONT_INFOBAR);
-			DrawQ_Fill(fps_x, fps_y, vid_conwidth.integer - fps_x, fps_scaley, 0, 0, 0, 0.5, 0);
-			DrawQ_String(fps_x, fps_y, datestring, 0, fps_scalex, fps_scaley, 1, 1, 1, 1, 0, NULL, true, FONT_INFOBAR);
-			fps_y += fps_scaley;
-		}
-		if (speedstring[0])
-		{
-			fps_x = vid_conwidth.integer - DrawQ_TextWidth(speedstring, 0, fps_scalex, fps_scaley, true, FONT_INFOBAR);
-			DrawQ_Fill(fps_x, fps_y, vid_conwidth.integer - fps_x, fps_scaley, 0, 0, 0, 0.5, 0);
-			DrawQ_String(fps_x, fps_y, speedstring, 0, fps_scalex, fps_scaley, 1, 1, 1, 1, 0, NULL, true, FONT_INFOBAR);
-			fps_y += fps_scaley;
-		}
-		if (topspeedstring[0])
-		{
-			fps_x = vid_conwidth.integer - DrawQ_TextWidth(topspeedstring, 0, fps_scalex, fps_scaley, false, FONT_INFOBAR);
-			DrawQ_Fill(fps_x, fps_y, vid_conwidth.integer - fps_x, fps_scaley, 0, 0, 0, 0.5, 0);
-			DrawQ_String(fps_x, fps_y, topspeedstring, 0, fps_scalex, fps_scaley, 1, 1, 1, 1, 0, NULL, false, FONT_INFOBAR);
-			fps_y += fps_scaley;
-		}
-		if (blurstring[0])
-		{
-			fps_x = vid_conwidth.integer - DrawQ_TextWidth(blurstring, 0, fps_scalex, fps_scaley, true, FONT_INFOBAR);
-			DrawQ_Fill(fps_x, fps_y, vid_conwidth.integer - fps_x, fps_scaley, 0, 0, 0, 0.5, 0);
-			DrawQ_String(fps_x, fps_y, blurstring, 0, fps_scalex, fps_scaley, 1, 1, 1, 1, 0, NULL, true, FONT_INFOBAR);
-			fps_y += fps_scaley;
-		}
-		if (texstring[0])
-		{
-			fps_x = vid_conwidth.integer - DrawQ_TextWidth(texstring, 0, fps_scalex, fps_scaley, true, FONT_INFOBAR);
-			DrawQ_Fill(fps_x, fps_y, vid_conwidth.integer - fps_x, fps_scaley, 0, 0, 0, 0.5, 0);
-			DrawQ_String(fps_x, fps_y, texstring, 0, fps_scalex, fps_scaley, 1, 1, 1, 1, 0, NULL, true, FONT_INFOBAR);
-			fps_y += fps_scaley;
-		}
-	}
 }
 
 static void Sbar_DrawGauge(float x, float y, cachepic_t *pic, float width, float height, float rangey, float rangeheight, float c1, float c2, float c1r, float c1g, float c1b, float c1a, float c2r, float c2g, float c2b, float c2a, float c3r, float c3g, float c3b, float c3a, int drawflags)
@@ -1473,13 +1165,7 @@ void Sbar_Draw (void)
 					Sbar_DrawFrags ();
 			}
 
-			if (sb_showscores || (cl.stats[STAT_HEALTH] <= 0 && cl_deathscoreboard.integer))
-			{
-				if (gamemode != GAME_GOODVSBAD2)
-					Sbar_DrawAlphaPic (0, 0, sb_scorebar, sbar_alpha_bg.value);
-				Sbar_DrawScoreboard ();
-			}
-	
+
 				// keys (hipnotic only)
 				//MED 01/04/97 moved keys here so they would not be overwritten
 				if (gamemode == GAME_HIPNOTIC || gamemode == GAME_QUOTH)
@@ -1489,66 +1175,14 @@ void Sbar_Draw (void)
 					if (cl.stats[STAT_ITEMS] & IT_KEY2)
 						Sbar_DrawPic (209, 12, sb_items[1]);
 				}
-				// armor
-				if (gamemode != GAME_GOODVSBAD2)
-				{
-					if (cl.stats[STAT_ITEMS] & IT_INVULNERABILITY)
-					{
-						Sbar_DrawNum (24, 0, 666, 3, 1);
-						Sbar_DrawPic (0, 0, sb_disc);
-					}
-					else
-					{
-						
-				
-					}
-				}
 
 
 				// health
 				Sbar_DrawNum (136, 0, cl.stats[STAT_HEALTH], 3, 1);
 
-				// ammo icon
-				if (gamemode == GAME_ROGUE)
-				{
-					if (cl.stats[STAT_ITEMS] & RIT_SHELLS)
-						Sbar_DrawPic (224, 0, sb_ammo[0]);
-					else if (cl.stats[STAT_ITEMS] & RIT_NAILS)
-						Sbar_DrawPic (224, 0, sb_ammo[1]);
-					else if (cl.stats[STAT_ITEMS] & RIT_ROCKETS)
-						Sbar_DrawPic (224, 0, sb_ammo[2]);
-					else if (cl.stats[STAT_ITEMS] & RIT_CELLS)
-						Sbar_DrawPic (224, 0, sb_ammo[3]);
-					else if (cl.stats[STAT_ITEMS] & RIT_LAVA_NAILS)
-						Sbar_DrawPic (224, 0, rsb_ammo[0]);
-					else if (cl.stats[STAT_ITEMS] & RIT_PLASMA_AMMO)
-						Sbar_DrawPic (224, 0, rsb_ammo[1]);
-					else if (cl.stats[STAT_ITEMS] & RIT_MULTI_ROCKETS)
-						Sbar_DrawPic (224, 0, rsb_ammo[2]);
-				}
-				else
-				{
-					if (cl.stats[STAT_ITEMS] & IT_SHELLS)
-						Sbar_DrawPic (224, 0, sb_ammo[0]);
-					else if (cl.stats[STAT_ITEMS] & IT_NAILS)
-						Sbar_DrawPic (224, 0, sb_ammo[1]);
-					else if (cl.stats[STAT_ITEMS] & IT_ROCKETS)
-						Sbar_DrawPic (224, 0, sb_ammo[2]);
-					else if (cl.stats[STAT_ITEMS] & IT_CELLS)
-						Sbar_DrawPic (224, 0, sb_ammo[3]);
-				}
-
 				Sbar_DrawNum (248, 0, cl.stats[STAT_AMMO], 3, 0);
 
-				// LordHavoc: changed to draw the deathmatch overlays in any multiplayer mode
-				if ((!cl.islocalgame || cl.gametype != GAME_COOP))
-				{
-					if (gamemode == GAME_TRANSFUSION)
-						Sbar_MiniDeathmatchOverlay (0, 0);
-					else
-						Sbar_MiniDeathmatchOverlay (sbar_x + 324, vid_conheight.integer - 8*8);
-					Sbar_Score(24);
-				}
+
 			}
 		}
 

@@ -359,7 +359,7 @@ static void Host_Map_f (void)
 
 	if (Cmd_Argc() != 2)
 	{
-		Con_Print("map <levelname> : start a new game (kicks off all players)\n");
+		Con_DPrintf("map <levelname> : start a new game (kicks off all players)\n");
 		return;
 	}
 
@@ -408,7 +408,7 @@ static void Host_Changelevel_f (void)
 
 	if (Cmd_Argc() != 2)
 	{
-		Con_Print("changelevel <levelname> : continue game on a new level\n");
+		Con_DPrintf("changelevel <levelname> : continue game on a new level\n");
 		return;
 	}
 	// HACKHACKHACK
@@ -445,12 +445,12 @@ static void Host_Restart_f (void)
 
 	if (Cmd_Argc() != 1)
 	{
-		Con_Print("restart : restart current level\n");
+		Con_DPrintf("restart : restart current level\n");
 		return;
 	}
 	if (!sv.active)
 	{
-		Con_Print("Only the server may restart\n");
+		Con_DPrintf("Only the server may restart\n");
 		return;
 	}
 
@@ -512,12 +512,12 @@ void Host_Reconnect_f (void)
 		// netquake uses reconnect on level changes (silly)
 		if (Cmd_Argc() != 1)
 		{
-			Con_Print("reconnect : wait for signon messages again\n");
+			Con_DPrintf("reconnect : wait for signon messages again\n");
 			return;
 		}
 		if (!cls.signon)
 		{
-			Con_Print("reconnect: no signon, ignoring reconnect\n");
+			Con_DPrintf("reconnect: no signon, ignoring reconnect\n");
 			return;
 		}
 		cls.signon = 0;		// need new connection messages
@@ -535,7 +535,7 @@ static void Host_Connect_f (void)
 {
 	if (Cmd_Argc() < 2)
 	{
-		Con_Print("connect <serveraddress> [<key> <value> ...]: connect to a multiplayer game\n");
+		Con_DPrintf("connect <serveraddress> [<key> <value> ...]: connect to a multiplayer game\n");
 		return;
 	}
 	// clear the rcon password, to prevent vulnerability by stuffcmd-ing a connect command
@@ -576,7 +576,7 @@ void Host_Savegame_to(prvm_prog_t *prog, const char *name)
 	f = FS_OpenRealFile(name, "wb", false);
 	if (!f)
 	{
-		Con_Print("ERROR: couldn't open.\n");
+		Con_DPrintf("ERROR: couldn't open.\n");
 		return;
 	}
 
@@ -697,7 +697,7 @@ void Host_Savegame_to(prvm_prog_t *prog, const char *name)
 #endif
 
 	FS_Close (f);
-	Con_Print("done.\n");
+	Con_DPrintf("done.\n");
 }
 
 /*
@@ -713,7 +713,7 @@ static void Host_Savegame_f (void)
 
 	if (!sv.active)
 	{
-		Con_Print("Can't save - no server running.\n");
+		Con_DPrintf("Can't save - no server running.\n");
 		return;
 	}
 
@@ -724,28 +724,28 @@ static void Host_Savegame_f (void)
 		// singleplayer checks
 		if (cl.intermission)
 		{
-			Con_Print("Can't save in intermission.\n");
+			Con_DPrintf("Can't save in intermission.\n");
 			return;
 		}
 
 		if (deadflag)
 		{
-			Con_Print("Can't savegame with a dead player\n");
+			Con_DPrintf("Can't savegame with a dead player\n");
 			return;
 		}
 	}
 	else
-		Con_Print("Warning: saving a multiplayer game may have strange results when restored (to properly resume, all players must join in the same player slots and then the game can be reloaded).\n");
+		Con_DPrintf("Warning: saving a multiplayer game may have strange results when restored (to properly resume, all players must join in the same player slots and then the game can be reloaded).\n");
 
 	if (Cmd_Argc() != 2)
 	{
-		Con_Print("save <savename> : save a game\n");
+		Con_DPrintf("save <savename> : save a game\n");
 		return;
 	}
 
 	if (strstr(Cmd_Argv(1), ".."))
 	{
-		Con_Print("Relative pathnames are not allowed.\n");
+		Con_DPrintf("Relative pathnames are not allowed.\n");
 		return;
 	}
 
@@ -781,7 +781,7 @@ static void Host_Loadgame_f (void)
 
 	if (Cmd_Argc() != 2)
 	{
-		Con_Print("load <savename> : load a game\n");
+		Con_DPrintf("load <savename> : load a game\n");
 		return;
 	}
 
@@ -806,7 +806,7 @@ static void Host_Loadgame_f (void)
 	t = text = (char *)FS_LoadFile (filename, tempmempool, false, NULL);
 	if (!text)
 	{
-		Con_Print("ERROR: couldn't open.\n");
+		Con_DPrintf("ERROR: couldn't open.\n");
 		return;
 	}
 
@@ -863,7 +863,7 @@ static void Host_Loadgame_f (void)
 	if (!sv.active)
 	{
 		Mem_Free(text);
-		Con_Print("Couldn't load map\n");
+		Con_DPrintf("Couldn't load map\n");
 		return;
 	}
 	sv.paused = true;		// pause until all clients connect
@@ -1430,7 +1430,7 @@ static void Host_Say(qboolean teamonly)
 	host_client = save;
 
 	if (cls.state == ca_dedicated)
-		Con_Print(&text[1]);
+		Con_DPrintf(&text[1]);
 }
 
 
@@ -1522,7 +1522,7 @@ static void Host_Tell_f(void)
 		if(playername_length >= sizeof(namebuf))
 		{
 			if (fromServer)
-				Con_Print("Host_Tell: too long player name/ID\n");
+				Con_DPrintf("Host_Tell: too long player name/ID\n");
 			else
 				SV_ClientPrint("Host_Tell: too long player name/ID\n");
 			return;
@@ -1540,7 +1540,7 @@ static void Host_Tell_f(void)
 	if(playernumber < 0 || playernumber >= svs.maxclients || !(svs.clients[playernumber].active))
 	{
 		if (fromServer)
-			Con_Print("Host_Tell: invalid player name/ID\n");
+			Con_DPrintf("Host_Tell: invalid player name/ID\n");
 		else
 			SV_ClientPrint("Host_Tell: invalid player name/ID\n");
 		return;
@@ -1555,7 +1555,7 @@ static void Host_Tell_f(void)
 		if (p2[-1] == '"')
 			p2--;
 		else if (fromServer)
-			Con_Print("Host_Tell: missing end quote\n");
+			Con_DPrintf("Host_Tell: missing end quote\n");
 		else
 			SV_ClientPrint("Host_Tell: missing end quote\n");
 	}
@@ -1646,7 +1646,7 @@ static void Host_Color_f(void)
 		if (cmd_source == src_command)
 		{
 			Con_DPrintf("\"color\" is \"%i %i\"\n", cl_color.integer >> 4, cl_color.integer & 15);
-			Con_Print("color <0-15> [0-15]\n");
+			Con_DPrintf("color <0-15> [0-15]\n");
 		}
 		return;
 	}
@@ -1668,7 +1668,7 @@ static void Host_TopColor_f(void)
 		if (cmd_source == src_command)
 		{
 			Con_DPrintf("\"topcolor\" is \"%i\"\n", (cl_color.integer >> 4) & 15);
-			Con_Print("topcolor <0-15>\n");
+			Con_DPrintf("topcolor <0-15>\n");
 		}
 		return;
 	}
@@ -1683,7 +1683,7 @@ static void Host_BottomColor_f(void)
 		if (cmd_source == src_command)
 		{
 			Con_DPrintf("\"bottomcolor\" is \"%i\"\n", cl_color.integer & 15);
-			Con_Print("bottomcolor <0-15>\n");
+			Con_DPrintf("bottomcolor <0-15>\n");
 		}
 		return;
 	}
@@ -1702,7 +1702,7 @@ static void Host_Rate_f(void)
 		if (cmd_source == src_command)
 		{
 			Con_DPrintf("\"rate\" is \"%i\"\n", cl_rate.integer);
-			Con_Print("rate <bytespersecond>\n");
+			Con_DPrintf("rate <bytespersecond>\n");
 		}
 		return;
 	}
@@ -1724,7 +1724,7 @@ static void Host_Rate_BurstSize_f(void)
 	if (Cmd_Argc() != 2)
 	{
 		Con_DPrintf("\"rate_burstsize\" is \"%i\"\n", cl_rate_burstsize.integer);
-		Con_Print("rate_burstsize <bytes>\n");
+		Con_DPrintf("rate_burstsize <bytes>\n");
 		return;
 	}
 
@@ -1852,7 +1852,7 @@ static void Host_PreSpawn_f (void)
 {
 	if (host_client->prespawned)
 	{
-		Con_Print("prespawn not valid -- already prespawned\n");
+		Con_DPrintf("prespawn not valid -- already prespawned\n");
 		return;
 	}
 	host_client->prespawned = true;
@@ -1883,12 +1883,12 @@ static void Host_Spawn_f (void)
 
 	if (!host_client->prespawned)
 	{
-		Con_Print("Spawn not valid -- not yet prespawned\n");
+		Con_DPrintf("Spawn not valid -- not yet prespawned\n");
 		return;
 	}
 	if (host_client->spawned)
 	{
-		Con_Print("Spawn not valid -- already spawned\n");
+		Con_DPrintf("Spawn not valid -- already spawned\n");
 		return;
 	}
 	host_client->spawned = true;
@@ -2021,12 +2021,12 @@ static void Host_Begin_f (void)
 {
 	if (!host_client->spawned)
 	{
-		Con_Print("Begin not valid -- not yet spawned\n");
+		Con_DPrintf("Begin not valid -- not yet spawned\n");
 		return;
 	}
 	if (host_client->begun)
 	{
-		Con_Print("Begin not valid -- already begun\n");
+		Con_DPrintf("Begin not valid -- already begun\n");
 		return;
 	}
 	host_client->begun = true;
@@ -2274,7 +2274,7 @@ static prvm_edict_t	*FindViewthing(prvm_prog_t *prog)
 		if (!strcmp (PRVM_GetString(prog, PRVM_serveredictstring(e, classname)), "viewthing"))
 			return e;
 	}
-	Con_Print("No viewthing on map\n");
+	Con_DPrintf("No viewthing on map\n");
 	return NULL;
 }
 
@@ -2526,8 +2526,8 @@ static void MaxPlayers_f(void)
 
 	if (sv.active)
 	{
-		Con_Print("maxplayers can not be changed while a server is running.\n");
-		Con_Print("It will be changed on next server startup (\"map\" command).\n");
+		Con_DPrintf("maxplayers can not be changed while a server is running.\n");
+		Con_DPrintf("It will be changed on next server startup (\"map\" command).\n");
 	}
 
 	n = atoi(Cmd_Argv(1));

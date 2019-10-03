@@ -820,7 +820,7 @@ void SV_ReadClientMessage(void)
 
 		if (sv_message.badread)
 		{
-			Con_Print("SV_ReadClientMessage: badread\n");
+			Con_DPrintf("SV_ReadClientMessage: badread\n");
 			SV_DropClient (false);
 			return;
 		}

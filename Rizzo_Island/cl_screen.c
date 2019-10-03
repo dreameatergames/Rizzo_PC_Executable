@@ -1487,7 +1487,7 @@ void SCR_ScreenShot_f (void)
 				break;
 		if (shotnumber100 >= 100)
 		{
-			Con_Print("Couldn't create the image file - already 100 shots taken this second!\n");
+			Con_DPrintf("Couldn't create the image file - already 100 shots taken this second!\n");
 			return;
 		}
 
@@ -1518,7 +1518,7 @@ void SCR_ScreenShot_f (void)
 				break;
 		if (shotnumber >= 1000000)
 		{
-			Con_Print("Couldn't create the image file - you already have 1000000 screenshots!\n");
+			Con_DPrintf("Couldn't create the image file - you already have 1000000 screenshots!\n");
 			return;
 		}
 
@@ -1661,7 +1661,7 @@ Cr = R *  .500 + G * -.419 + B * -.0813 + 128.;
 			return;
 		}
 		else
-			Con_Print("cl_capturevideo_ogg: libraries not available. Capturing in AVI instead.\n");
+			Con_DPrintf("cl_capturevideo_ogg: libraries not available. Capturing in AVI instead.\n");
 	}
 
 	SCR_CaptureVideo_Avi_BeginVideo();
@@ -1867,7 +1867,7 @@ static void R_Envmap_f (void)
 
 	if (Cmd_Argc() != 3)
 	{
-		Con_Print("envmap <basename> <size>: save out 6 cubic environment map images, usable with loadsky, note that size must one of 128, 256, 512, or 1024 and can't be bigger than your current resolution\n");
+		Con_DPrintf("envmap <basename> <size>: save out 6 cubic environment map images, usable with loadsky, note that size must one of 128, 256, 512, or 1024 and can't be bigger than your current resolution\n");
 		return;
 	}
 
@@ -1875,12 +1875,12 @@ static void R_Envmap_f (void)
 	size = atoi(Cmd_Argv(2));
 	if (size != 128 && size != 256 && size != 512 && size != 1024)
 	{
-		Con_Print("envmap: size must be one of 128, 256, 512, or 1024\n");
+		Con_DPrintf("envmap: size must be one of 128, 256, 512, or 1024\n");
 		return;
 	}
 	if (size > vid.width || size > vid.height)
 	{
-		Con_Print("envmap: your resolution is not big enough to render that size\n");
+		Con_DPrintf("envmap: your resolution is not big enough to render that size\n");
 		return;
 	}
 

@@ -82,7 +82,7 @@ static void KeyDown (kbutton_t *b)
 		b->down[1] = k;
 	else
 	{
-		Con_Print("Three keys down for a button!\n");
+		Con_DPrintf("Three keys down for a button!\n");
 		return;
 	}
 
@@ -2144,7 +2144,7 @@ void CL_SendMove(void)
 
 	if (cls.netcon->message.overflowed)
 	{
-		Con_Print("CL_SendMove: lost server connection\n");
+		Con_DPrintf("CL_SendMove: lost server connection\n");
 		CL_Disconnect();
 		SV_LockThreadMutex();
 		Host_ShutdownServer();

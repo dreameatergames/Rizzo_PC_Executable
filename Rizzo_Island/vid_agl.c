@@ -134,20 +134,20 @@ void VID_SetMouse(qboolean fullscreengrab, qboolean relative, qboolean hidecurso
 						Con_DPrintf("previous mouse acceleration: %f\n", originalMouseSpeed);
 						if(IOHIDSetAccelerationWithKey(mouseDev, CFSTR(kIOHIDMouseAccelerationType), -1.0) != kIOReturnSuccess)
 						{
-							Con_Print("Could not disable mouse acceleration (failed at IOHIDSetAccelerationWithKey).\n");
+							Con_DPrintf("Could not disable mouse acceleration (failed at IOHIDSetAccelerationWithKey).\n");
 							Cvar_SetValueQuick(&apple_mouse_noaccel, 0);
 						}
 					}
 					else
 					{
-						Con_Print("Could not disable mouse acceleration (failed at IOHIDGetAccelerationWithKey).\n");
+						Con_DPrintf("Could not disable mouse acceleration (failed at IOHIDGetAccelerationWithKey).\n");
 						Cvar_SetValueQuick(&apple_mouse_noaccel, 0);
 					}
 					IOServiceClose(mouseDev);
 				}
 				else
 				{
-					Con_Print("Could not disable mouse acceleration (failed at IO_GetIOHandle).\n");
+					Con_DPrintf("Could not disable mouse acceleration (failed at IO_GetIOHandle).\n");
 					Cvar_SetValueQuick(&apple_mouse_noaccel, 0);
 				}
 			}
@@ -167,11 +167,11 @@ void VID_SetMouse(qboolean fullscreengrab, qboolean relative, qboolean hidecurso
 				{
 					Con_DPrintf("restoring mouse acceleration to: %f\n", originalMouseSpeed);
 					if(IOHIDSetAccelerationWithKey(mouseDev, CFSTR(kIOHIDMouseAccelerationType), originalMouseSpeed) != kIOReturnSuccess)
-						Con_Print("Could not re-enable mouse acceleration (failed at IOHIDSetAccelerationWithKey).\n");
+						Con_DPrintf("Could not re-enable mouse acceleration (failed at IOHIDSetAccelerationWithKey).\n");
 					IOServiceClose(mouseDev);
 				}
 				else
-					Con_Print("Could not re-enable mouse acceleration (failed at IO_GetIOHandle).\n");
+					Con_DPrintf("Could not re-enable mouse acceleration (failed at IO_GetIOHandle).\n");
 			}
 
 			CGAssociateMouseAndMouseCursorPosition(true);
@@ -272,7 +272,7 @@ int VID_SetGamma(unsigned short *ramps, int rampsize)
 
 	if (CGSetDisplayTransferByTable(CGMainDisplayID(), rampsize, table_red, table_green, table_blue) != CGDisplayNoErr)
 	{
-		Con_Print("VID_SetGamma: ERROR: CGSetDisplayTransferByTable failed!\n");
+		Con_DPrintf("VID_SetGamma: ERROR: CGSetDisplayTransferByTable failed!\n");
 		return false;
 	}
 
@@ -290,7 +290,7 @@ int VID_GetGamma(unsigned short *ramps, int rampsize)
 	// Get the gamma ramps from the system
 	if (CGGetDisplayTransferByTable(CGMainDisplayID(), rampsize, table_red, table_green, table_blue, &actualsize) != CGDisplayNoErr)
 	{
-		Con_Print("VID_GetGamma: ERROR: CGGetDisplayTransferByTable failed!\n");
+		Con_DPrintf("VID_GetGamma: ERROR: CGGetDisplayTransferByTable failed!\n");
 		return false;
 	}
 	if (actualsize != (unsigned int)rampsize)

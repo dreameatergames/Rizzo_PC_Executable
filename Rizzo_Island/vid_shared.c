@@ -1975,7 +1975,7 @@ void VID_Restart_f(void)
 	VID_Shutdown();
 	if (!VID_Mode(vid_fullscreen.integer, vid_width.integer, vid_height.integer, vid_bitsperpixel.integer, vid_refreshrate.value, vid_stereobuffer.integer, vid_samples.integer))
 	{
-		Con_Print("Video mode change failed\n");
+		Con_DPrintf("Video mode change failed\n");
 		if (!VID_Mode(vid.mode.fullscreen, vid.mode.width, vid.mode.height, vid.mode.bitsperpixel, vid.mode.refreshrate, vid.mode.stereobuffer, vid.mode.samples))
 			Con_DPrintf("Unable to restore to last working video mode");
 	}
@@ -2040,7 +2040,7 @@ void VID_Start(void)
 	success = VID_Mode(vid_fullscreen.integer, vid_width.integer, vid_height.integer, vid_bitsperpixel.integer, vid_refreshrate.value, vid_stereobuffer.integer, vid_samples.integer);
 	if (!success)
 	{
-		Con_Print("Desired video mode fail, trying fallbacks...\n");
+		Con_DPrintf("Desired video mode fail, trying fallbacks...\n");
 		for (i = 0;!success && vidfallbacks[i][0] != NULL;i++)
 		{
 			Cvar_Set(vidfallbacks[i][0], vidfallbacks[i][1]);

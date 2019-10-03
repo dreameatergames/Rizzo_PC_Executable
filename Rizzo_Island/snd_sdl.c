@@ -103,7 +103,7 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 
 	// Init the SDL Audio subsystem
 	if( SDL_InitSubSystem( SDL_INIT_AUDIO ) ) {
-		Con_Print( "Initializing the SDL Audio subsystem failed!\n" );
+		Con_DPrintf( "Initializing the SDL Audio subsystem failed!\n" );
 		return false;
 	}
 

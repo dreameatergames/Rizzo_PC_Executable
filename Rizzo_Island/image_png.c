@@ -485,7 +485,7 @@ qboolean PNG_SaveImage_preflipped (const char *filename, int width, int height, 
 	// No DLL = no JPEGs
 	if (!png_dll)
 	{
-		Con_Print("You need the libpng library to save PNG images\n");
+		Con_DPrintf("You need the libpng library to save PNG images\n");
 		return false;
 	}
 

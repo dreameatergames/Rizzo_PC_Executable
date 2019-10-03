@@ -1096,7 +1096,7 @@ static void Crypto_KeyGen_Finished(int code, size_t length_received, unsigned ch
 
 	if(!d0_blind_id_dll)
 	{
-		Con_Print("libd0_blind_id DLL not found, this command is inactive.\n");
+		Con_DPrintf("libd0_blind_id DLL not found, this command is inactive.\n");
 		keygen_i = -1;
 		SV_UnlockThreadMutex();
 		return;
@@ -1208,7 +1208,7 @@ static void Crypto_KeyGen_f(void)
 
 	if(!d0_blind_id_dll)
 	{
-		Con_Print("libd0_blind_id DLL not found, this command is inactive.\n");
+		Con_DPrintf("libd0_blind_id DLL not found, this command is inactive.\n");
 		return;
 	}
 	if(Cmd_Argc() != 3)
@@ -1361,7 +1361,7 @@ static void Crypto_Keys_f(void)
 	int i;
 	if(!d0_blind_id_dll)
 	{
-		Con_Print("libd0_blind_id DLL not found, this command is inactive.\n");
+		Con_DPrintf("libd0_blind_id DLL not found, this command is inactive.\n");
 		return;
 	}
 	for(i = 0; i < MAX_PUBKEYS; ++i)
@@ -1387,7 +1387,7 @@ static void Crypto_HostKeys_f(void)
 
 	if(!d0_blind_id_dll)
 	{
-		Con_Print("libd0_blind_id DLL not found, this command is inactive.\n");
+		Con_DPrintf("libd0_blind_id DLL not found, this command is inactive.\n");
 		return;
 	}
 	for(i = 0; i < CRYPTO_HOSTKEY_HASHSIZE; ++i)
@@ -1411,7 +1411,7 @@ static void Crypto_HostKey_Clear_f(void)
 
 	if(!d0_blind_id_dll)
 	{
-		Con_Print("libd0_blind_id DLL not found, this command is inactive.\n");
+		Con_DPrintf("libd0_blind_id DLL not found, this command is inactive.\n");
 		return;
 	}
 
@@ -1515,7 +1515,7 @@ const void *Crypto_EncryptPacket(crypto_t *crypto, const void *data_src, size_t 
 			// HMAC is needed to not leak information about packet content
 			if(developer_networking.integer)
 			{
-				Con_Print("To be encrypted:\n");
+				Con_DPrintf("To be encrypted:\n");
 				Com_HexDumpToConsole((const unsigned char *) data_src, (int)len_src);
 			}
 			if(len_src + 32 > len || !HMAC_SHA256_32BYTES(h, (const unsigned char *) data_src, (int)len_src, crypto->dhkey, DHKEY_SIZE))
@@ -1602,7 +1602,7 @@ const void *Crypto_DecryptPacket(crypto_t *crypto, const void *data_src, size_t 
 			}
 			if(developer_networking.integer)
 			{
-				Con_Print("Decrypted:\n");
+				Con_DPrintf("Decrypted:\n");
 				Com_HexDumpToConsole((const unsigned char *) data_dst, (int)*len_dst);
 			}
 			return data_dst; // no need to copy

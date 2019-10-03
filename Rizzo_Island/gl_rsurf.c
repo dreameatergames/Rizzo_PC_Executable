@@ -1571,13 +1571,13 @@ static void R_ReplaceWorldTexture (void)
 
 	if(Cmd_Argc() < 2)
 	{
-		Con_Print("r_replacemaptexture <texname> <newtexname> - replaces texture\n");
-		Con_Print("r_replacemaptexture <texname> - switch back to default texture\n");
+		Con_DPrintf("r_replacemaptexture <texname> <newtexname> - replaces texture\n");
+		Con_DPrintf("r_replacemaptexture <texname> - switch back to default texture\n");
 		return;
 	}
 	if(!cl.islocalgame || !cl.worldmodel)
 	{
-		Con_Print("This command works only in singleplayer\n");
+		Con_DPrintf("This command works only in singleplayer\n");
 		return;
 	}
 	r = Cmd_Argv(1);
@@ -1616,7 +1616,7 @@ static void R_ListWorldTextures (void)
 	}
 	m = r_refdef.scene.worldmodel;
 
-	Con_Print("Worldmodel textures :\n");
+	Con_DPrintf("Worldmodel textures :\n");
 	for(i=0,t=m->data_textures;i<m->num_textures;i++,t++)
 		if (t->name[0] && strcasecmp(t->name, "NO TEXTURE FOUND"))
 			Con_DPrintf("%s\n", t->name);

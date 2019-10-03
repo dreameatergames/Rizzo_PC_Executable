@@ -645,7 +645,7 @@ void CSQC_AddPrintText (const char *msg)
 	size_t i;
 	if(!cl.csqc_loaded)
 	{
-		Con_Print(msg);
+		Con_DPrintf(msg);
 		return;
 	}
 	CSQC_BEGIN
@@ -669,7 +669,7 @@ void CSQC_AddPrintText (const char *msg)
 		cl.csqc_printtextbuf[0] = 0;
 	}
 	else
-		Con_Print(msg);
+		Con_DPrintf(msg);
 	CSQC_END
 }
 

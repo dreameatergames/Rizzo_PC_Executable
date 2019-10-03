@@ -380,7 +380,7 @@ static void VM_SV_sprint(prvm_prog_t *prog)
 	// LordHavoc: div0 requested that sprintto world  operate like print
 	if (entnum == 0)
 	{
-		Con_Print(string);
+		Con_DPrintf(string);
 		return;
 	}
 
@@ -1588,7 +1588,7 @@ static void VM_SV_setspawnparms(prvm_prog_t *prog)
 	i = PRVM_NUM_FOR_EDICT(ent);
 	if (i < 1 || i > svs.maxclients || !svs.clients[i-1].active)
 	{
-		Con_Print("tried to setspawnparms on a non-client\n");
+		Con_DPrintf("tried to setspawnparms on a non-client\n");
 		return;
 	}
 
@@ -1790,7 +1790,7 @@ static void VM_SV_setcolor(prvm_prog_t *prog)
 
 	if (entnum < 1 || entnum > svs.maxclients || !svs.clients[entnum-1].active)
 	{
-		Con_Print("tried to setcolor a non-client\n");
+		Con_DPrintf("tried to setcolor a non-client\n");
 		return;
 	}
 
@@ -2332,7 +2332,7 @@ static void VM_SV_clientcommand(prvm_prog_t *prog)
 	i = (PRVM_NUM_FOR_EDICT(PRVM_G_EDICT(OFS_PARM0)) - 1);
 	if (i < 0 || i >= svs.maxclients || !svs.clients[i].active)
 	{
-		Con_Print("PF_clientcommand: entity is not a client\n");
+		Con_DPrintf("PF_clientcommand: entity is not a client\n");
 		return;
 	}
 

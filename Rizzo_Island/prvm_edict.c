@@ -678,12 +678,12 @@ void PRVM_ED_Print(prvm_prog_t *prog, prvm_edict_t *ed, const char *wildcard_fie
 		strlcat(tempstring, "\n", sizeof(tempstring));
 		if (strlen(tempstring) >= sizeof(tempstring)/2)
 		{
-			Con_Print(tempstring);
+			Con_DPrintf(tempstring);
 			tempstring[0] = 0;
 		}
 	}
 	if (tempstring[0])
-		Con_Print(tempstring);
+		Con_DPrintf(tempstring);
 }
 
 /*
@@ -763,7 +763,7 @@ void PRVM_ED_PrintEdicts_f (void)
 
 	if(Cmd_Argc() < 2 || Cmd_Argc() > 3)
 	{
-		Con_Print("prvm_edicts <program name> <optional field name wildcard>\n");
+		Con_DPrintf("prvm_edicts <program name> <optional field name wildcard>\n");
 		return;
 	}
 
@@ -795,7 +795,7 @@ static void PRVM_ED_PrintEdict_f (void)
 
 	if(Cmd_Argc() < 3 || Cmd_Argc() > 4)
 	{
-		Con_Print("prvm_edict <program name> <edict number> <optional field name wildcard>\n");
+		Con_DPrintf("prvm_edict <program name> <edict number> <optional field name wildcard>\n");
 		return;
 	}
 
@@ -805,7 +805,7 @@ static void PRVM_ED_PrintEdict_f (void)
 	i = atoi (Cmd_Argv(2));
 	if (i >= prog->num_edicts)
 	{
-		Con_Print("Bad edict number\n");
+		Con_DPrintf("Bad edict number\n");
 		return;
 	}
 	if( Cmd_Argc() == 4)
@@ -832,7 +832,7 @@ static void PRVM_ED_Count_f (void)
 
 	if(Cmd_Argc() != 2)
 	{
-		Con_Print("prvm_count <program name>\n");
+		Con_DPrintf("prvm_count <program name>\n");
 		return;
 	}
 
@@ -1123,7 +1123,7 @@ static void PRVM_ED_EdictGet_f(void)
 
 	if(Cmd_Argc() != 4 && Cmd_Argc() != 5)
 	{
-		Con_Print("prvm_edictget <program name> <edict number> <field> [<cvar>]\n");
+		Con_DPrintf("prvm_edictget <program name> <edict number> <field> [<cvar>]\n");
 		return;
 	}
 
@@ -1167,7 +1167,7 @@ static void PRVM_ED_GlobalGet_f(void)
 
 	if(Cmd_Argc() != 3 && Cmd_Argc() != 4)
 	{
-		Con_Print("prvm_globalget <program name> <global> [<cvar>]\n");
+		Con_DPrintf("prvm_globalget <program name> <global> [<cvar>]\n");
 		return;
 	}
 
@@ -1215,7 +1215,7 @@ static void PRVM_ED_EdictSet_f(void)
 
 	if(Cmd_Argc() != 5)
 	{
-		Con_Print("prvm_edictset <program name> <edict number> <field> <value>\n");
+		Con_DPrintf("prvm_edictset <program name> <edict number> <field> <value>\n");
 		return;
 	}
 
@@ -1415,7 +1415,7 @@ void PRVM_ED_LoadFromFile (prvm_prog_t *prog, const char *data)
 		{
 			if (!PRVM_alledictstring(ent, classname))
 			{
-				Con_Print("No classname for:\n");
+				Con_DPrintf("No classname for:\n");
 				PRVM_ED_Print(prog, ent, NULL);
 				PRVM_ED_Free (prog, ent);
 				continue;
@@ -1442,7 +1442,7 @@ void PRVM_ED_LoadFromFile (prvm_prog_t *prog, const char *data)
 				{
 					if (developer.integer > 0) // don't confuse non-developers with errors
 					{
-						Con_Print("No spawn function for:\n");
+						Con_DPrintf("No spawn function for:\n");
 						PRVM_ED_Print(prog, ent, NULL);
 					}
 					PRVM_ED_Free (prog, ent);
@@ -2483,14 +2483,14 @@ static void PRVM_Fields_f (void)
 	/*
 	if (!sv.active)
 	{
-		Con_Print("no progs loaded\n");
+		Con_DPrintf("no progs loaded\n");
 		return;
 	}
 	*/
 
 	if(Cmd_Argc() != 2)
 	{
-		Con_Print("prvm_fields <program name>\n");
+		Con_DPrintf("prvm_fields <program name>\n");
 		return;
 	}
 
@@ -2576,7 +2576,7 @@ static void PRVM_Fields_f (void)
 		strlcat(tempstring, "\n", sizeof(tempstring));
 		if (strlen(tempstring) >= sizeof(tempstring)/2)
 		{
-			Con_Print(tempstring);
+			Con_DPrintf(tempstring);
 			tempstring[0] = 0;
 		}
 		if (counts[i])
@@ -2599,12 +2599,12 @@ static void PRVM_Globals_f (void)
 	// TODO
 	/*if (!sv.active)
 	{
-		Con_Print("no progs loaded\n");
+		Con_DPrintf("no progs loaded\n");
 		return;
 	}*/
 	if(Cmd_Argc () < 2 || Cmd_Argc() > 3)
 	{
-		Con_Print("prvm_globals <program name> <optional name wildcard>\n");
+		Con_DPrintf("prvm_globals <program name> <optional name wildcard>\n");
 		return;
 	}
 
@@ -3399,7 +3399,7 @@ void PRVM_LeakTest(prvm_prog_t *prog)
 		{
 			Con_DPrintf("Unreferenced edict found!\n  Allocated at: %s\n", ed->priv.required->allocation_origin);
 			PRVM_ED_Print(prog, ed, NULL);
-			Con_Print("\n");
+			Con_DPrintf("\n");
 			leaked = true;
 		}
 

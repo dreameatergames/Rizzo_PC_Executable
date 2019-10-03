@@ -198,7 +198,7 @@ static unsigned char* LoadPCX_BGRA (const unsigned char *f, int filesize, int *m
 
 	if (filesize < (int)sizeof(pcx) + 768)
 	{
-		Con_Print("Bad pcx file\n");
+		Con_DPrintf("Bad pcx file\n");
 		return NULL;
 	}
 
@@ -221,7 +221,7 @@ static unsigned char* LoadPCX_BGRA (const unsigned char *f, int filesize, int *m
 	image_height = pcx.ymax + 1 - pcx.ymin;
 	if (pcx.manufacturer != 0x0a || pcx.version != 5 || pcx.encoding != 1 || pcx.bits_per_pixel != 8 || image_width > 32768 || image_height > 32768 || image_width <= 0 || image_height <= 0)
 	{
-		Con_Print("Bad pcx file\n");
+		Con_DPrintf("Bad pcx file\n");
 		return NULL;
 	}
 
@@ -431,7 +431,7 @@ unsigned char *LoadTGA_BGRA (const unsigned char *f, int filesize, int *miplevel
 
 	if (image_width > 32768 || image_height > 32768 || image_width <= 0 || image_height <= 0)
 	{
-		Con_Print("LoadTGA: invalid size\n");
+		Con_DPrintf("LoadTGA: invalid size\n");
 		PrintTargaHeader(&targa_header);
 		return NULL;
 	}
@@ -451,13 +451,13 @@ unsigned char *LoadTGA_BGRA (const unsigned char *f, int filesize, int *miplevel
 	{
 		if (targa_header.colormap_length > 256)
 		{
-			Con_Print("LoadTGA: only up to 256 colormap_length supported\n");
+			Con_DPrintf("LoadTGA: only up to 256 colormap_length supported\n");
 			PrintTargaHeader(&targa_header);
 			return NULL;
 		}
 		if (targa_header.colormap_index)
 		{
-			Con_Print("LoadTGA: colormap_index not supported\n");
+			Con_DPrintf("LoadTGA: colormap_index not supported\n");
 			PrintTargaHeader(&targa_header);
 			return NULL;
 		}
@@ -479,7 +479,7 @@ unsigned char *LoadTGA_BGRA (const unsigned char *f, int filesize, int *miplevel
 		}
 		else
 		{
-			Con_Print("LoadTGA: Only 32 and 24 bit colormap_size supported\n");
+			Con_DPrintf("LoadTGA: Only 32 and 24 bit colormap_size supported\n");
 			PrintTargaHeader(&targa_header);
 			return NULL;
 		}
@@ -491,7 +491,7 @@ unsigned char *LoadTGA_BGRA (const unsigned char *f, int filesize, int *miplevel
 	case 2:
 		if (targa_header.pixel_size != 24 && targa_header.pixel_size != 32)
 		{
-			Con_Print("LoadTGA: only 24bit and 32bit pixel sizes supported for type 2 and type 10 images\n");
+			Con_DPrintf("LoadTGA: only 24bit and 32bit pixel sizes supported for type 2 and type 10 images\n");
 			PrintTargaHeader(&targa_header);
 			return NULL;
 		}
@@ -508,7 +508,7 @@ unsigned char *LoadTGA_BGRA (const unsigned char *f, int filesize, int *miplevel
 	case 1:
 		if (targa_header.pixel_size != 8)
 		{
-			Con_Print("LoadTGA: only 8bit pixel size for type 1, 3, 9, and 11 images supported\n");
+			Con_DPrintf("LoadTGA: only 8bit pixel size for type 1, 3, 9, and 11 images supported\n");
 			PrintTargaHeader(&targa_header);
 			return NULL;
 		}
@@ -521,7 +521,7 @@ unsigned char *LoadTGA_BGRA (const unsigned char *f, int filesize, int *miplevel
 
 	if (targa_header.attributes & 0x10)
 	{
-		Con_Print("LoadTGA: origin must be in top left or bottom left, top right and bottom right are not supported\n");
+		Con_DPrintf("LoadTGA: origin must be in top left or bottom left, top right and bottom right are not supported\n");
 		return NULL;
 	}
 
@@ -529,7 +529,7 @@ unsigned char *LoadTGA_BGRA (const unsigned char *f, int filesize, int *miplevel
 	alphabits = targa_header.attributes & 0x0F;
 	if (alphabits != 8 && alphabits != 0)
 	{
-		Con_Print("LoadTGA: only 0 or 8 attribute (alpha) bits supported\n");
+		Con_DPrintf("LoadTGA: only 0 or 8 attribute (alpha) bits supported\n");
 		return NULL;
 	}
 
@@ -766,7 +766,7 @@ static unsigned char *LoadWAL_BGRA (const unsigned char *f, int filesize, int *m
 
 	if (filesize < (int) sizeof(q2wal_t))
 	{
-		Con_Print("LoadWAL: invalid WAL file\n");
+		Con_DPrintf("LoadWAL: invalid WAL file\n");
 		return NULL;
 	}
 
@@ -780,7 +780,7 @@ static unsigned char *LoadWAL_BGRA (const unsigned char *f, int filesize, int *m
 
 	if (filesize < (int) LittleLong(inwal->offsets[0]) + image_width * image_height)
 	{
-		Con_Print("LoadWAL: invalid WAL file\n");
+		Con_DPrintf("LoadWAL: invalid WAL file\n");
 		return NULL;
 	}
 
@@ -800,7 +800,7 @@ qboolean LoadWAL_GetMetadata(const unsigned char *f, int filesize, int *retwidth
 
 	if (filesize < (int) sizeof(q2wal_t))
 	{
-		Con_Print("LoadWAL: invalid WAL file\n");
+		Con_DPrintf("LoadWAL: invalid WAL file\n");
 		if (retwidth)
 			*retwidth = 16;
 		if (retheight)

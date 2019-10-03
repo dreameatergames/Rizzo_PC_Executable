@@ -740,9 +740,9 @@ static int Mod_Q1BSP_RecursiveHullCheck(RecursiveHullCheckTraceInfo_t *t, int nu
 		{
 #if COLLISIONPARANOID >= 3
 			if (p1side)
-				Con_Print("<");
+				Con_DPrintf("<");
 			else
-				Con_Print(">");
+				Con_DPrintf(">");
 #endif
 			// loop back and process the start child
 			num = node->children[p1side];
@@ -752,7 +752,7 @@ static int Mod_Q1BSP_RecursiveHullCheck(RecursiveHullCheckTraceInfo_t *t, int nu
 			// find the midpoint where the line crosses the plane, use the
 			// original line for best accuracy
 #if COLLISIONPARANOID >= 3
-			Con_Print("M");
+			Con_DPrintf("M");
 #endif
 			if (plane->type < 3)
 			{
@@ -804,7 +804,7 @@ static int Mod_Q1BSP_RecursiveHullCheck(RecursiveHullCheckTraceInfo_t *t, int nu
 			t->trace->fraction = bound(0, midf, 1);
 
 #if COLLISIONPARANOID >= 3
-			Con_Print("D");
+			Con_DPrintf("D");
 #endif
 			return HULLCHECKSTATE_DONE;
 		}
@@ -841,7 +841,7 @@ static int Mod_Q1BSP_RecursiveHullCheck(RecursiveHullCheckTraceInfo_t *t, int nu
 		if (t->trace->allsolid)
 			t->trace->startsolid = true;
 #if COLLISIONPARANOID >= 3
-		Con_Print("S");
+		Con_DPrintf("S");
 #endif
 		return HULLCHECKSTATE_SOLID;
 	}
@@ -849,7 +849,7 @@ static int Mod_Q1BSP_RecursiveHullCheck(RecursiveHullCheckTraceInfo_t *t, int nu
 	{
 		t->trace->allsolid = false;
 #if COLLISIONPARANOID >= 3
-		Con_Print("E");
+		Con_DPrintf("E");
 #endif
 		return HULLCHECKSTATE_EMPTY;
 	}
@@ -954,7 +954,7 @@ static void Mod_Q1BSP_TraceLine(struct model_s *model, const frameblend_t *frame
 		if (!trace->startsolid && testtrace.startsolid)
 			Con_DPrintf(" - ended in solid!\n");
 	}
-	Con_Print("\n");
+	Con_DPrintf("\n");
 #else
 	if (VectorLength2(rhc.dist))
 		Mod_Q1BSP_RecursiveHullCheck(&rhc, rhc.hull->firstclipnode, 0, 1, rhc.start, rhc.end);
@@ -1036,7 +1036,7 @@ static void Mod_Q1BSP_TraceBox(struct model_s *model, const frameblend_t *frameb
 		if (!trace->startsolid && testtrace.startsolid)
 			Con_DPrintf(" - ended in solid!\n");
 	}
-	Con_Print("\n");
+	Con_DPrintf("\n");
 #else
 	if (VectorLength2(rhc.dist))
 		Mod_Q1BSP_RecursiveHullCheck(&rhc, rhc.hull->firstclipnode, 0, 1, rhc.start, rhc.end);
@@ -2094,7 +2094,7 @@ static void Mod_Q1BSP_LoadLighting(sizebuf_t *sb)
 					Con_DPrintf("Unknown .lit file version (%d)\n", i);
 			}
 			else if (filesize == 8)
-				Con_Print("Empty .lit file, ignoring\n");
+				Con_DPrintf("Empty .lit file, ignoring\n");
 			else
 				Con_DPrintf("Corrupt .lit file (file size %i bytes, should be %i bytes), ignoring\n", (int) filesize, (int) (8 + sb->cursize * 3));
 			if (data)
@@ -2444,7 +2444,7 @@ static void SubdividePolygon(int numverts, float *verts)
 	{
 		if (subdivpolytriangles >= MAX_SUBDIVPOLYTRIANGLES)
 		{
-			Con_Print("SubdividePolygon: ran out of triangles in buffer, please increase your r_subdivide_size\n");
+			Con_DPrintf("SubdividePolygon: ran out of triangles in buffer, please increase your r_subdivide_size\n");
 			return;
 		}
 
@@ -2946,7 +2946,7 @@ static void Mod_Q1BSP_LoadLeafs(sizebuf_t *sb)
 		if (p >= 0 && out->clusterindex >= 0)
 		{
 			if (p >= loadmodel->brushq1.num_compressedpvs)
-				Con_Print("Mod_Q1BSP_LoadLeafs: invalid visofs\n");
+				Con_DPrintf("Mod_Q1BSP_LoadLeafs: invalid visofs\n");
 			else
 				Mod_Q1BSP_DecompressVis(loadmodel->brushq1.data_compressedpvs + p, loadmodel->brushq1.data_compressedpvs + loadmodel->brushq1.num_compressedpvs, loadmodel->brush.data_pvsclusters + out->clusterindex * loadmodel->brush.num_pvsclusterbytes, loadmodel->brush.data_pvsclusters + (out->clusterindex + 1) * loadmodel->brush.num_pvsclusterbytes);
 		}
@@ -3582,12 +3582,12 @@ static void Mod_Q1BSP_RecursiveNodePortals(mnode_t *node)
 
 	if (nodeportal->numpoints < 3)
 	{
-		Con_Print("Mod_Q1BSP_RecursiveNodePortals: WARNING: new portal was clipped away\n");
+		Con_DPrintf("Mod_Q1BSP_RecursiveNodePortals: WARNING: new portal was clipped away\n");
 		nodeportal->numpoints = 0;
 	}
 	else if (nodeportal->numpoints >= MAX_PORTALPOINTS)
 	{
-		Con_Print("Mod_Q1BSP_RecursiveNodePortals: WARNING: new portal has too many points\n");
+		Con_DPrintf("Mod_Q1BSP_RecursiveNodePortals: WARNING: new portal has too many points\n");
 		nodeportal->numpoints = 0;
 	}
 
@@ -4557,7 +4557,7 @@ static void Mod_Q2BSP_LoadLeafs(sizebuf_t *sb)
 
 		if (out->clusterindex >= loadmodel->brush.num_pvsclusters)
 		{
-			Con_Print("Mod_Q2BSP_LoadLeafs: invalid clusterindex\n");
+			Con_DPrintf("Mod_Q2BSP_LoadLeafs: invalid clusterindex\n");
 			out->clusterindex = -1;
 		}
 
@@ -6234,7 +6234,7 @@ static void Mod_Q3BSP_LoadFaces(lump_t *l)
 				if ((loadmodel->surfmesh.data_element3i + 3 * out->num_firsttriangle)[j] < out->num_firstvertex || (loadmodel->surfmesh.data_element3i + 3 * out->num_firsttriangle)[j] >= out->num_firstvertex + out->num_vertices)
 					(loadmodel->surfmesh.data_element3i + 3 * out->num_firsttriangle)[j] = out->num_firstvertex;
 			}
-			Con_Print("\n");
+			Con_DPrintf("\n");
 		}
 		// calculate a bounding box
 		VectorClear(out->mins);

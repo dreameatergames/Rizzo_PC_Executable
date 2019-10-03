@@ -195,7 +195,7 @@ unsigned int SndSys_GetSoundTime (void)
 
 	if (ioctl (audio_fd, AUDIO_GETINFO, &info) < 0)
 	{
-		Con_Print("Error: can't get audio info\n");
+		Con_DPrintf("Error: can't get audio info\n");
 		SndSys_Shutdown ();
 		return 0;
 	}

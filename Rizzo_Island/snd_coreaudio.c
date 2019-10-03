@@ -200,7 +200,7 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 	submissionChunk = bufferByteCount / sizeof(float);
 	if (submissionChunk % requested->channels != 0)
 	{
-		Con_Print("CoreAudio: chunk size is NOT a multiple of the number of channels\n");
+		Con_DPrintf("CoreAudio: chunk size is NOT a multiple of the number of channels\n");
 		return false;
 	}
 	submissionChunk /= requested->channels;
@@ -215,7 +215,7 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 		return false;
 	}
 
-	Con_Print ("   Hardware format:\n");
+	Con_DPrintf ("   Hardware format:\n");
 	Con_DPrintf("    %5d mSampleRate\n", (unsigned int)streamDesc.mSampleRate);
 	Con_DPrintf("     %c%c%c%c mFormatID\n",
 				(char)(streamDesc.mFormatID >> 24),
@@ -260,7 +260,7 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 						{
 							s_isRunning = true;
 							snd_threaded = true;
-							Con_Print("   Initialization successful\n");
+							Con_DPrintf("   Initialization successful\n");
 							return true;
 						}
 						else
@@ -269,24 +269,24 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 						mixbuffer = NULL;
 					}
 					else
-						Con_Print("CoreAudio: can't allocate memory for mixbuffer\n");
+						Con_DPrintf("CoreAudio: can't allocate memory for mixbuffer\n");
 					Mem_Free(snd_renderbuffer->ring);
 					Mem_Free(snd_renderbuffer);
 					snd_renderbuffer = NULL;
 				}
 				else
-					Con_Print("CoreAudio: can't allocate memory for ringbuffer\n");
+					Con_DPrintf("CoreAudio: can't allocate memory for ringbuffer\n");
 				pthread_mutex_destroy(&coreaudio_mutex);
 			}
 			else
-				Con_Print("CoreAudio: can't create pthread mutex\n");
+				Con_DPrintf("CoreAudio: can't create pthread mutex\n");
 			AudioDeviceRemoveIOProc(outputDeviceID, audioDeviceIOProc);
 		}
 		else
 			Con_DPrintf("CoreAudio: AudioDeviceAddIOProc() returned %d\n", (int)status);
 	}
 	else
-		Con_Print("CoreAudio: Default audio device doesn't support linear PCM!\n");
+		Con_DPrintf("CoreAudio: Default audio device doesn't support linear PCM!\n");
 	return false;
 }
 

@@ -407,7 +407,7 @@ void SV_BroadcastPrint(const char *msg)
 	}
 
 	if (sv_echobprint.integer && cls.state == ca_dedicated)
-		Con_Print(msg);
+		Con_DPrintf(msg);
 }
 
 /*
@@ -1397,12 +1397,12 @@ void Host_Shutdown(void)
 
 	if (isdown)
 	{
-		Con_Print("recursive shutdown\n");
+		Con_DPrintf("recursive shutdown\n");
 		return;
 	}
 	if (setjmp(host_abortframe))
 	{
-		Con_Print("aborted the quitting frame?!?\n");
+		Con_DPrintf("aborted the quitting frame?!?\n");
 		return;
 	}
 	isdown = true;

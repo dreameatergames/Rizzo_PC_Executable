@@ -77,7 +77,7 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 	if (audio_fd < 0)
 	{
 		perror("/dev/dsp");
-		Con_Print("SndSys_Init: could not open /dev/dsp\n");
+		Con_DPrintf("SndSys_Init: could not open /dev/dsp\n");
 		return false;
 	}
 	
@@ -86,10 +86,10 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 	if (flags != -1)
 	{
 		if (fcntl(audio_fd, F_SETFL, flags | O_NONBLOCK) == -1)
-			Con_Print("SndSys_Init : fcntl(F_SETFL, O_NONBLOCK) failed!\n");
+			Con_DPrintf("SndSys_Init : fcntl(F_SETFL, O_NONBLOCK) failed!\n");
 	}
 	else
-		Con_Print("SndSys_Init: fcntl(F_GETFL) failed!\n");
+		Con_DPrintf("SndSys_Init: fcntl(F_GETFL) failed!\n");
 	
 	// Set the fragment size (up to "NB_FRAGMENTS" fragments of "fragmentsize" bytes)
 	fragmentsize = requested->speed * requested->channels * requested->width / 10;
@@ -98,7 +98,7 @@ qboolean SndSys_Init (const snd_format_t* requested, snd_format_t* suggested)
 	ioctl_param = (NB_FRAGMENTS << 16) | log2i(fragmentsize);
 	if (ioctl(audio_fd, SNDCTL_DSP_SETFRAGMENT, &ioctl_param) == -1)
 	{
-		Con_Print ("SndSys_Init: could not set the fragment size\n");
+		Con_DPrintf ("SndSys_Init: could not set the fragment size\n");
 		SndSys_Shutdown ();
 		return false;
 	}
@@ -286,7 +286,7 @@ unsigned int SndSys_GetSoundTime (void)
 
 	if (ioctl (audio_fd, SNDCTL_DSP_GETOPTR, &count) == -1)
 	{
-		Con_Print ("SndSys_GetSoundTimeDiff: can't ioctl (SNDCTL_DSP_GETOPTR)\n");
+		Con_DPrintf ("SndSys_GetSoundTimeDiff: can't ioctl (SNDCTL_DSP_GETOPTR)\n");
 		return 0;
 	}
 	new_osstime = count.bytes / (snd_renderbuffer->format.width * snd_renderbuffer->format.channels);
@@ -295,7 +295,7 @@ unsigned int SndSys_GetSoundTime (void)
 		timediff = new_osstime - old_osstime;
 	else
 	{
-		Con_Print ("SndSys_GetSoundTime: osstime wrapped\n");
+		Con_DPrintf ("SndSys_GetSoundTime: osstime wrapped\n");
 		timediff = 0;
 	}
 

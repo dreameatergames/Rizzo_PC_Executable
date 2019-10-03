@@ -1152,13 +1152,13 @@ qboolean VID_InitModeGL(viddef_mode_t *mode)
 		if (i & RC_PALETTE)
 		{
 			VID_Shutdown();
-			Con_Print("Can't run in non-RGB mode\n");
+			Con_DPrintf("Can't run in non-RGB mode\n");
 			return false;
 		}
 		if (bpp > depth)
 		{
 			VID_Shutdown();
-			Con_Print("A higher desktop depth is required to run this video mode\n");
+			Con_DPrintf("A higher desktop depth is required to run this video mode\n");
 			return false;
 		}
 
@@ -1206,7 +1206,7 @@ qboolean VID_InitModeGL(viddef_mode_t *mode)
 		if (!GL_CheckExtension("wgl", wglfuncs, NULL, false))
 		{
 			VID_Shutdown();
-			Con_Print("wgl functions not found\n");
+			Con_DPrintf("wgl functions not found\n");
 			return false;
 		}
 
@@ -1214,7 +1214,7 @@ qboolean VID_InitModeGL(viddef_mode_t *mode)
 		if (!baseRC)
 		{
 			VID_Shutdown();
-			Con_Print("Could not initialize GL (wglCreateContext failed).\n\nMake sure you are in 65536 color mode, and try running -window.\n");
+			Con_DPrintf("Could not initialize GL (wglCreateContext failed).\n\nMake sure you are in 65536 color mode, and try running -window.\n");
 			return false;
 		}
 		if (!qwglMakeCurrent(baseDC, baseRC))
@@ -1227,11 +1227,11 @@ qboolean VID_InitModeGL(viddef_mode_t *mode)
 		if ((qglGetString = (const GLubyte* (GLAPIENTRY *)(GLenum name))GL_GetProcAddress("glGetString")) == NULL)
 		{
 			VID_Shutdown();
-			Con_Print("glGetString not found\n");
+			Con_DPrintf("glGetString not found\n");
 			return false;
 		}
 		if ((qwglGetExtensionsStringARB = (const char *(WINAPI *)(HDC hdc))GL_GetProcAddress("wglGetExtensionsStringARB")) == NULL)
-			Con_Print("wglGetExtensionsStringARB not found\n");
+			Con_DPrintf("wglGetExtensionsStringARB not found\n");
 
 		gl_extensions = (const char *)qglGetString(GL_EXTENSIONS);
 		gl_platform = "WGL";
@@ -1734,13 +1734,13 @@ qboolean VID_InitModeSOFT(viddef_mode_t *mode)
 		if (i & RC_PALETTE)
 		{
 			VID_Shutdown();
-			Con_Print("Can't run in non-RGB mode\n");
+			Con_DPrintf("Can't run in non-RGB mode\n");
 			return false;
 		}
 		if (bpp > depth)
 		{
 			VID_Shutdown();
-			Con_Print("A higher desktop depth is required to run this video mode\n");
+			Con_DPrintf("A higher desktop depth is required to run this video mode\n");
 			return false;
 		}
 
@@ -2056,7 +2056,7 @@ static qboolean IN_InitDInput (void)
 
 		if (hInstDI == NULL)
 		{
-			Con_Print("Couldn't load dinput.dll\n");
+			Con_DPrintf("Couldn't load dinput.dll\n");
 			return false;
 		}
 	}
@@ -2067,7 +2067,7 @@ static qboolean IN_InitDInput (void)
 
 		if (!pDirectInputCreate)
 		{
-			Con_Print("Couldn't get DI proc addr\n");
+			Con_DPrintf("Couldn't get DI proc addr\n");
 			return false;
 		}
 	}
@@ -2089,7 +2089,7 @@ static qboolean IN_InitDInput (void)
 
 	if (FAILED(hr))
 	{
-		Con_Print("Couldn't open DI mouse device\n");
+		Con_DPrintf("Couldn't open DI mouse device\n");
 		return false;
 	}
 
@@ -2098,7 +2098,7 @@ static qboolean IN_InitDInput (void)
 
 	if (FAILED(hr))
 	{
-		Con_Print("Couldn't set DI mouse format\n");
+		Con_DPrintf("Couldn't set DI mouse format\n");
 		return false;
 	}
 
@@ -2108,7 +2108,7 @@ static qboolean IN_InitDInput (void)
 
 	if (FAILED(hr))
 	{
-		Con_Print("Couldn't set DI coop level\n");
+		Con_DPrintf("Couldn't set DI coop level\n");
 		return false;
 	}
 
@@ -2119,7 +2119,7 @@ static qboolean IN_InitDInput (void)
 
 	if (FAILED(hr))
 	{
-		Con_Print("Couldn't set DI buffersize\n");
+		Con_DPrintf("Couldn't set DI buffersize\n");
 		return false;
 	}
 
@@ -2146,9 +2146,9 @@ static void IN_StartupMouse (void)
 		dinput = IN_InitDInput ();
 
 	if (dinput)
-		Con_Print("DirectInput initialized\n");
+		Con_DPrintf("DirectInput initialized\n");
 	else
-		Con_Print("DirectInput not initialized\n");
+		Con_DPrintf("DirectInput not initialized\n");
 #endif
 
 	mouse_buttons = 10;

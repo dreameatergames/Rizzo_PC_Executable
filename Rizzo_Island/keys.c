@@ -1368,7 +1368,7 @@ Key_In_Unbind_f (void)
 	char *errchar = NULL;
 
 	if (Cmd_Argc () != 3) {
-		Con_Print("in_unbind <bindmap> <key> : remove commands from a key\n");
+		Con_DPrintf("in_unbind <bindmap> <key> : remove commands from a key\n");
 		return;
 	}
 
@@ -1398,7 +1398,7 @@ Key_In_Bind_f (void)
 	c = Cmd_Argc ();
 
 	if (c != 3 && c != 4) {
-		Con_Print("in_bind <bindmap> <key> [command] : attach a command to a key\n");
+		Con_DPrintf("in_bind <bindmap> <key> [command] : attach a command to a key\n");
 		return;
 	}
 
@@ -1442,7 +1442,7 @@ Key_In_Bindmap_f (void)
 	c = Cmd_Argc ();
 
 	if (c != 3) {
-		Con_Print("in_bindmap <bindmap> <fallback>: set current bindmap and fallback\n");
+		Con_DPrintf("in_bindmap <bindmap> <fallback>: set current bindmap and fallback\n");
 		return;
 	}
 
@@ -1468,7 +1468,7 @@ Key_Unbind_f (void)
 	int         b;
 
 	if (Cmd_Argc () != 2) {
-		Con_Print("unbind <key> : remove commands from a key\n");
+		Con_DPrintf("unbind <key> : remove commands from a key\n");
 		return;
 	}
 
@@ -1552,7 +1552,7 @@ Key_Bind_f (void)
 	c = Cmd_Argc ();
 
 	if (c != 2 && c != 3) {
-		Con_Print("bind <key> [command] : attach a command to a key\n");
+		Con_DPrintf("bind <key> [command] : attach a command to a key\n");
 		return;
 	}
 	b = Key_StringToKeynum (Cmd_Argv (1));

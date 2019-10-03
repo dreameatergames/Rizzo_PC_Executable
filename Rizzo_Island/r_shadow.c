@@ -6345,7 +6345,7 @@ void R_Shadow_LoadWorldLights(void)
 	float origin[3], radius, color[3], angles[3], corona, coronasizescale, ambientscale, diffusescale, specularscale;
 	if (cl.worldmodel == NULL)
 	{
-		Con_Print("No map loaded.\n");
+		Con_DPrintf("No map loaded.\n");
 		return;
 	}
 	dpsnprintf(name, sizeof(name), "%s.rtlights", cl.worldnamenoextension);
@@ -6455,7 +6455,7 @@ void R_Shadow_SaveWorldLights(void)
 		return;
 	if (cl.worldmodel == NULL)
 	{
-		Con_Print("No map loaded.\n");
+		Con_DPrintf("No map loaded.\n");
 		return;
 	}
 	dpsnprintf(name, sizeof(name), "%s.rtlights", cl.worldnamenoextension);
@@ -6503,7 +6503,7 @@ void R_Shadow_LoadLightsFile(void)
 	float origin[3], radius, color[3], subtract, spotdir[3], spotcone, falloff, distbias;
 	if (cl.worldmodel == NULL)
 	{
-		Con_Print("No map loaded.\n");
+		Con_DPrintf("No map loaded.\n");
 		return;
 	}
 	dpsnprintf(name, sizeof(name), "%s.lights", cl.worldnamenoextension);
@@ -6565,7 +6565,7 @@ void R_Shadow_LoadWorldLightsFromMap_LightArghliteTyrlite(void)
 
 	if (cl.worldmodel == NULL)
 	{
-		Con_Print("No map loaded.\n");
+		Con_DPrintf("No map loaded.\n");
 		return;
 	}
 	// try to load a .ent file first
@@ -6857,12 +6857,12 @@ static void R_Shadow_EditLights_Spawn_f(void)
 	vec3_t color;
 	if (!r_editlights.integer)
 	{
-		Con_Print("Cannot spawn light when not in editing mode.  Set r_editlights to 1.\n");
+		Con_DPrintf("Cannot spawn light when not in editing mode.  Set r_editlights to 1.\n");
 		return;
 	}
 	if (Cmd_Argc() != 1)
 	{
-		Con_Print("r_editlights_spawn does not take parameters\n");
+		Con_DPrintf("r_editlights_spawn does not take parameters\n");
 		return;
 	}
 	color[0] = color[1] = color[2] = 1;
@@ -6877,12 +6877,12 @@ static void R_Shadow_EditLights_Edit_f(void)
 	char cubemapname[MAX_INPUTLINE];
 	if (!r_editlights.integer)
 	{
-		Con_Print("Cannot spawn light when not in editing mode.  Set r_editlights to 1.\n");
+		Con_DPrintf("Cannot spawn light when not in editing mode.  Set r_editlights to 1.\n");
 		return;
 	}
 	if (!r_shadow_selectedlight)
 	{
-		Con_Print("No selected light.\n");
+		Con_DPrintf("No selected light.\n");
 		return;
 	}
 	VectorCopy(r_shadow_selectedlight->origin, origin);
@@ -7173,8 +7173,8 @@ static void R_Shadow_EditLights_Edit_f(void)
 	}
 	else
 	{
-		Con_Print("usage: r_editlights_edit [property] [value]\n");
-		Con_Print("Selected light's properties:\n");
+		Con_DPrintf("usage: r_editlights_edit [property] [value]\n");
+		Con_DPrintf("Selected light's properties:\n");
 		Con_DPrintf("Origin       : %f %f %f\n", r_shadow_selectedlight->origin[0], r_shadow_selectedlight->origin[1], r_shadow_selectedlight->origin[2]);
 		Con_DPrintf("Angles       : %f %f %f\n", r_shadow_selectedlight->angles[0], r_shadow_selectedlight->angles[1], r_shadow_selectedlight->angles[2]);
 		Con_DPrintf("Color        : %f %f %f\n", r_shadow_selectedlight->color[0], r_shadow_selectedlight->color[1], r_shadow_selectedlight->color[2]);
@@ -7203,7 +7203,7 @@ static void R_Shadow_EditLights_EditAll_f(void)
 
 	if (!r_editlights.integer)
 	{
-		Con_Print("Cannot edit lights when not in editing mode. Set r_editlights to 1.\n");
+		Con_DPrintf("Cannot edit lights when not in editing mode. Set r_editlights to 1.\n");
 		return;
 	}
 
@@ -7310,12 +7310,12 @@ static void R_Shadow_EditLights_ToggleShadow_f(void)
 {
 	if (!r_editlights.integer)
 	{
-		Con_Print("Cannot spawn light when not in editing mode.  Set r_editlights to 1.\n");
+		Con_DPrintf("Cannot spawn light when not in editing mode.  Set r_editlights to 1.\n");
 		return;
 	}
 	if (!r_shadow_selectedlight)
 	{
-		Con_Print("No selected light.\n");
+		Con_DPrintf("No selected light.\n");
 		return;
 	}
 	R_Shadow_UpdateWorldLight(r_shadow_selectedlight, r_shadow_selectedlight->origin, r_shadow_selectedlight->angles, r_shadow_selectedlight->color, r_shadow_selectedlight->radius, r_shadow_selectedlight->corona, r_shadow_selectedlight->style, !r_shadow_selectedlight->shadow, r_shadow_selectedlight->cubemapname, r_shadow_selectedlight->coronasizescale, r_shadow_selectedlight->ambientscale, r_shadow_selectedlight->diffusescale, r_shadow_selectedlight->specularscale, r_shadow_selectedlight->flags);
@@ -7325,12 +7325,12 @@ static void R_Shadow_EditLights_ToggleCorona_f(void)
 {
 	if (!r_editlights.integer)
 	{
-		Con_Print("Cannot spawn light when not in editing mode.  Set r_editlights to 1.\n");
+		Con_DPrintf("Cannot spawn light when not in editing mode.  Set r_editlights to 1.\n");
 		return;
 	}
 	if (!r_shadow_selectedlight)
 	{
-		Con_Print("No selected light.\n");
+		Con_DPrintf("No selected light.\n");
 		return;
 	}
 	R_Shadow_UpdateWorldLight(r_shadow_selectedlight, r_shadow_selectedlight->origin, r_shadow_selectedlight->angles, r_shadow_selectedlight->color, r_shadow_selectedlight->radius, !r_shadow_selectedlight->corona, r_shadow_selectedlight->style, r_shadow_selectedlight->shadow, r_shadow_selectedlight->cubemapname, r_shadow_selectedlight->coronasizescale, r_shadow_selectedlight->ambientscale, r_shadow_selectedlight->diffusescale, r_shadow_selectedlight->specularscale, r_shadow_selectedlight->flags);
@@ -7340,12 +7340,12 @@ static void R_Shadow_EditLights_Remove_f(void)
 {
 	if (!r_editlights.integer)
 	{
-		Con_Print("Cannot remove light when not in editing mode.  Set r_editlights to 1.\n");
+		Con_DPrintf("Cannot remove light when not in editing mode.  Set r_editlights to 1.\n");
 		return;
 	}
 	if (!r_shadow_selectedlight)
 	{
-		Con_Print("No selected light.\n");
+		Con_DPrintf("No selected light.\n");
 		return;
 	}
 	R_Shadow_FreeWorldLight(r_shadow_selectedlight);
@@ -7354,7 +7354,7 @@ static void R_Shadow_EditLights_Remove_f(void)
 
 static void R_Shadow_EditLights_Help_f(void)
 {
-	Con_Print(
+	Con_DPrintf(
 "Documentation on r_editlights system:\n"
 "Settings:\n"
 "r_editlights : enable/disable editing mode\n"
@@ -7413,12 +7413,12 @@ static void R_Shadow_EditLights_CopyInfo_f(void)
 {
 	if (!r_editlights.integer)
 	{
-		Con_Print("Cannot copy light info when not in editing mode.  Set r_editlights to 1.\n");
+		Con_DPrintf("Cannot copy light info when not in editing mode.  Set r_editlights to 1.\n");
 		return;
 	}
 	if (!r_shadow_selectedlight)
 	{
-		Con_Print("No selected light.\n");
+		Con_DPrintf("No selected light.\n");
 		return;
 	}
 	VectorCopy(r_shadow_selectedlight->angles, r_shadow_bufferlight.angles);
@@ -7442,12 +7442,12 @@ static void R_Shadow_EditLights_PasteInfo_f(void)
 {
 	if (!r_editlights.integer)
 	{
-		Con_Print("Cannot paste light info when not in editing mode.  Set r_editlights to 1.\n");
+		Con_DPrintf("Cannot paste light info when not in editing mode.  Set r_editlights to 1.\n");
 		return;
 	}
 	if (!r_shadow_selectedlight)
 	{
-		Con_Print("No selected light.\n");
+		Con_DPrintf("No selected light.\n");
 		return;
 	}
 	R_Shadow_UpdateWorldLight(r_shadow_selectedlight, r_shadow_selectedlight->origin, r_shadow_bufferlight.angles, r_shadow_bufferlight.color, r_shadow_bufferlight.radius, r_shadow_bufferlight.corona, r_shadow_bufferlight.style, r_shadow_bufferlight.shadow, r_shadow_bufferlight.cubemapname, r_shadow_bufferlight.coronasizescale, r_shadow_bufferlight.ambientscale, r_shadow_bufferlight.diffusescale, r_shadow_bufferlight.specularscale, r_shadow_bufferlight.flags);
@@ -7457,7 +7457,7 @@ static void R_Shadow_EditLights_Lock_f(void)
 {
 	if (!r_editlights.integer)
 	{
-		Con_Print("Cannot lock on light when not in editing mode.  Set r_editlights to 1.\n");
+		Con_DPrintf("Cannot lock on light when not in editing mode.  Set r_editlights to 1.\n");
 		return;
 	}
 	if (r_editlights_lockcursor)
@@ -7467,7 +7467,7 @@ static void R_Shadow_EditLights_Lock_f(void)
 	}
 	if (!r_shadow_selectedlight)
 	{
-		Con_Print("No selected light to lock on.\n");
+		Con_DPrintf("No selected light to lock on.\n");
 		return;
 	}
 	r_editlights_lockcursor = true;

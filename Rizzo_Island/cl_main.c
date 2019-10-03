@@ -470,7 +470,7 @@ void CL_EstablishConnection(const char *host, int firstarg)
 	}
 	else
 	{
-		Con_Print("Unable to find a suitable network socket to connect to server.\n");
+		Con_DPrintf("Unable to find a suitable network socket to connect to server.\n");
 #ifdef CONFIG_MENU
 		M_Update_Return_Reason("No network");
 #endif
@@ -1961,9 +1961,9 @@ static void CL_PauseDemo_f (void)
 {
 	cls.demopaused = !cls.demopaused;
 	if (cls.demopaused)
-		Con_Print("Demo paused\n");
+		Con_DPrintf("Demo paused\n");
 	else
-		Con_Print("Demo unpaused\n");
+		Con_DPrintf("Demo unpaused\n");
 }
 
 /*

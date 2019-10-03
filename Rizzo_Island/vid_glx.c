@@ -950,7 +950,7 @@ void VID_Finish (void)
 			{
 				vid_usingvsync = vid_usevsync;
 				if (qglXSwapIntervalSGI && qglXSwapIntervalSGI (vid_usevsync))
-					Con_Print("glXSwapIntervalSGI didn't accept the vid_vsync change, it will take effect on next vid_restart (GLX_SGI_swap_control does not allow turning off vsync)\n");
+					Con_DPrintf("glXSwapIntervalSGI didn't accept the vid_vsync change, it will take effect on next vid_restart (GLX_SGI_swap_control does not allow turning off vsync)\n");
 			}
 
 			if (!vid_hidden)
@@ -1045,7 +1045,7 @@ static qboolean VID_InitModeSoft(viddef_mode_t *mode)
 
 	if (!(vidx11_display = XOpenDisplay(NULL)))
 	{
-		Con_Print("Couldn't open the X display\n");
+		Con_DPrintf("Couldn't open the X display\n");
 		return false;
 	}
 	dpyname = XDisplayName(NULL);
@@ -1320,7 +1320,7 @@ static qboolean VID_InitModeSoft(viddef_mode_t *mode)
 #ifdef USEDGA
 	vid_x11_dgasupported = XF86DGAQueryVersion(vidx11_display, &MajorVersion, &MinorVersion);
 	if (!vid_x11_dgasupported)
-		Con_Print( "Failed to detect XF86DGA Mouse extension\n" );
+		Con_DPrintf( "Failed to detect XF86DGA Mouse extension\n" );
 #endif
 
 	VID_Soft_SharedSetup();
@@ -1369,7 +1369,7 @@ static qboolean VID_InitModeGL(viddef_mode_t *mode)
 
 	if (!(vidx11_display = XOpenDisplay(NULL)))
 	{
-		Con_Print("Couldn't open the X display\n");
+		Con_DPrintf("Couldn't open the X display\n");
 		return false;
 	}
 
@@ -1420,7 +1420,7 @@ static qboolean VID_InitModeGL(viddef_mode_t *mode)
 	visinfo = qglXChooseVisual(vidx11_display, vidx11_screen, attrib);
 	if (!visinfo)
 	{
-		Con_Print("Couldn't get an RGB, Double-buffered, Depth visual\n");
+		Con_DPrintf("Couldn't get an RGB, Double-buffered, Depth visual\n");
 		return false;
 	}
 
@@ -1667,7 +1667,7 @@ static qboolean VID_InitModeGL(viddef_mode_t *mode)
 #ifdef USEDGA
 	vid_x11_dgasupported = XF86DGAQueryVersion(vidx11_display, &MajorVersion, &MinorVersion);
 	if (!vid_x11_dgasupported)
-		Con_Print( "Failed to detect XF86DGA Mouse extension\n" );
+		Con_DPrintf( "Failed to detect XF86DGA Mouse extension\n" );
 #endif
 
 	GL_Init();

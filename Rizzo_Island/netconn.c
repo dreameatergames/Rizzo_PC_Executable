@@ -857,7 +857,7 @@ int NetConn_SendUnreliableMessage(netconn_t *conn, sizebuf_t *data, protocolvers
 
 			if (developer_networking.integer && conn == cls.netcon)
 			{
-				Con_Print("client sending reliable message to server:\n");
+				Con_DPrintf("client sending reliable message to server:\n");
 				SZ_HexDumpToConsole(&conn->message);
 			}
 
@@ -1161,7 +1161,7 @@ void NetConn_UpdateSockets(void)
 		{
 			clientport2 = cl_netport.integer;
 			if (cls.state == ca_connected)
-				Con_Print("Changing \"cl_port\" will not take effect until you reconnect.\n");
+				Con_DPrintf("Changing \"cl_port\" will not take effect until you reconnect.\n");
 		}
 		if (cls.state == ca_disconnected && clientport != clientport2)
 		{
@@ -1176,7 +1176,7 @@ void NetConn_UpdateSockets(void)
 	{
 		hostport = sv_netport.integer;
 		if (sv.active)
-			Con_Print("Changing \"port\" will not take effect until \"map\" command is executed.\n");
+			Con_DPrintf("Changing \"port\" will not take effect until \"map\" command is executed.\n");
 	}
 
 	for (j = 0;j < MAX_RCONS;j++)
@@ -1766,7 +1766,7 @@ static void NetConn_ClientParsePacket_ServerList_ParseDPList(lhnetaddress_t *sen
 		}
 		else
 		{
-			Con_Print("Error while parsing the server list\n");
+			Con_DPrintf("Error while parsing the server list\n");
 			break;
 		}
 
@@ -2479,7 +2479,7 @@ void NetConn_ClientFrame(void)
 #endif
 	if (cls.netcon && realtime > cls.netcon->timeout && !sv.active)
 	{
-		Con_Print("Connection timed out\n");
+		Con_DPrintf("Connection timed out\n");
 		CL_Disconnect();
 		SV_LockThreadMutex();
 		Host_ShutdownServer ();
@@ -2740,7 +2740,7 @@ static qboolean hmac_mdfour_time_matching(lhnetaddress_t *peeraddress, const cha
 	long t1, t2;
 
 	if (!password[0]) {
-		Con_Print("^4LOGIC ERROR: RCon_Authenticate should never call the comparator with an empty password. Please report.\n");
+		Con_DPrintf("^4LOGIC ERROR: RCon_Authenticate should never call the comparator with an empty password. Please report.\n");
 		return false;
 	}
 
@@ -2761,7 +2761,7 @@ static qboolean hmac_mdfour_challenge_matching(lhnetaddress_t *peeraddress, cons
 	int i;
 
 	if (!password[0]) {
-		Con_Print("^4LOGIC ERROR: RCon_Authenticate should never call the comparator with an empty password. Please report.\n");
+		Con_DPrintf("^4LOGIC ERROR: RCon_Authenticate should never call the comparator with an empty password. Please report.\n");
 		return false;
 	}
 
@@ -2792,7 +2792,7 @@ static qboolean hmac_mdfour_challenge_matching(lhnetaddress_t *peeraddress, cons
 static qboolean plaintext_matching(lhnetaddress_t *peeraddress, const char *password, const char *hash, const char *s, int slen)
 {
 	if (!password[0]) {
-		Con_Print("^4LOGIC ERROR: RCon_Authenticate should never call the comparator with an empty password. Please report.\n");
+		Con_DPrintf("^4LOGIC ERROR: RCon_Authenticate should never call the comparator with an empty password. Please report.\n");
 		return false;
 	}
 
@@ -3757,7 +3757,7 @@ void NetConn_QueryMasters(qboolean querydp, qboolean queryqw)
 	}
 	if (!masterquerycount)
 	{
-		Con_Print("Unable to query master servers, no suitable network sockets active.\n");
+		Con_DPrintf("Unable to query master servers, no suitable network sockets active.\n");
 		M_Update_Return_Reason("No network");
 	}
 }
@@ -3799,7 +3799,7 @@ static void Net_Heartbeat_f(void)
 	if (sv.active)
 		NetConn_Heartbeat(2);
 	else
-		Con_Print("No server running, can not heartbeat to master server.\n");
+		Con_DPrintf("No server running, can not heartbeat to master server.\n");
 }
 
 static void PrintStats(netconn_t *conn)
@@ -3822,7 +3822,7 @@ static void PrintStats(netconn_t *conn)
 void Net_Stats_f(void)
 {
 	netconn_t *conn;
-	Con_Print("connections                =\n");
+	Con_DPrintf("connections                =\n");
 	for (conn = netconn_list;conn;conn = conn->next)
 		PrintStats(conn);
 }
@@ -3831,9 +3831,9 @@ void Net_Stats_f(void)
 void Net_Refresh_f(void)
 {
 	if (m_state != m_slist) {
-		Con_Print("Sending new requests to master servers\n");
+		Con_DPrintf("Sending new requests to master servers\n");
 		ServerList_QueryList(false, true, false, true);
-		Con_Print("Listening for replies...\n");
+		Con_DPrintf("Listening for replies...\n");
 	} else
 		ServerList_QueryList(false, true, false, false);
 }
@@ -3844,9 +3844,9 @@ void Net_Slist_f(void)
 	serverlist_sortbyfield = SLIF_PING;
 	serverlist_sortflags = 0;
     if (m_state != m_slist) {
-		Con_Print("Sending requests to master servers\n");
+		Con_DPrintf("Sending requests to master servers\n");
 		ServerList_QueryList(true, true, false, true);
-		Con_Print("Listening for replies...\n");
+		Con_DPrintf("Listening for replies...\n");
 	} else
 		ServerList_QueryList(true, true, false, false);
 }
@@ -3857,10 +3857,10 @@ void Net_SlistQW_f(void)
 	serverlist_sortbyfield = SLIF_PING;
 	serverlist_sortflags = 0;
     if (m_state != m_slist) {
-		Con_Print("Sending requests to master servers\n");
+		Con_DPrintf("Sending requests to master servers\n");
 		ServerList_QueryList(true, false, true, true);
 		serverlist_consoleoutput = true;
-		Con_Print("Listening for replies...\n");
+		Con_DPrintf("Listening for replies...\n");
 	} else
 		ServerList_QueryList(true, false, true, false);
 }

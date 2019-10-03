@@ -51,7 +51,7 @@ void Con_Print(const char *txt);
 /// Prints to all appropriate console targets.
 void Con_DPrintf(const char *fmt, ...) DP_FUNC_PRINTF(1);
 
-/// A Con_Print that only shows up if the "developer" cvar is set.
+/// A Con_DPrintf that only shows up if the "developer" cvar is set.
 void Con_DPrint(const char *msg);
 
 /// A Con_DPrintf that only shows up if the "developer" cvar is set
@@ -89,7 +89,7 @@ void Log_DestBuffer_Flush (void); ///< call this once per frame to send out repl
 void Log_Printf(const char *logfilename, const char *fmt, ...) DP_FUNC_PRINTF(2);
 //@}
 
-// CON_MASK_PRINT is the default (Con_Print/Con_DPrintf)
+// CON_MASK_PRINT is the default (Con_DPrintf/Con_DPrintf)
 // CON_MASK_DEVELOPER is used by Con_DPrint/Con_DPrintf
 #define CON_MASK_HIDENOTIFY 128
 #define CON_MASK_CHAT 1

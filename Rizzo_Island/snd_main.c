@@ -350,7 +350,7 @@ static void S_SoundInfo_f(void)
 {
 	if (snd_renderbuffer == NULL)
 	{
-		Con_Print("sound system not started\n");
+		Con_DPrintf("sound system not started\n");
 		return;
 	}
 
@@ -711,7 +711,7 @@ void S_Startup (void)
 		// If we haven't found a suitable format
 		if (!accepted)
 		{
-			Con_Print("S_Startup: SndSys_Init failed.\n");
+			Con_DPrintf("S_Startup: SndSys_Init failed.\n");
 			sound_spatialized = false;
 			return;
 		}
@@ -719,7 +719,7 @@ void S_Startup (void)
 	else
 	{
 		snd_renderbuffer = Snd_CreateRingBuffer(&chosen_fmt, 0, NULL);
-		Con_Print ("S_Startup: simulating sound output\n");
+		Con_DPrintf ("S_Startup: simulating sound output\n");
 	}
 
 	memcpy(&prev_render_format, &snd_renderbuffer->format, sizeof(prev_render_format));
@@ -1921,7 +1921,7 @@ void S_StaticSound (sfx_t *sfx, vec3_t origin, float fvol, float attenuation)
 
 	if (total_channels == MAX_CHANNELS)
 	{
-		Con_Print("S_StaticSound: total_channels == MAX_CHANNELS\n");
+		Con_DPrintf("S_StaticSound: total_channels == MAX_CHANNELS\n");
 		return;
 	}
 

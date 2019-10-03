@@ -526,7 +526,7 @@ static void GL_TextureMode_f (void)
 				return;
 			}
 		}
-		Con_Print("current filter is unknown???\n");
+		Con_DPrintf("current filter is unknown???\n");
 		return;
 	}
 
@@ -535,7 +535,7 @@ static void GL_TextureMode_f (void)
 			break;
 	if (i == 6)
 	{
-		Con_Print("bad filter name\n");
+		Con_DPrintf("bad filter name\n");
 		return;
 	}
 
@@ -748,7 +748,7 @@ void R_TextureStats_Print(qboolean printeach, qboolean printpool, qboolean print
 	gltexture_t *glt;
 	gltexturepool_t *pool;
 	if (printeach)
-		Con_Print("glsize input loaded mip alpha name\n");
+		Con_DPrintf("glsize input loaded mip alpha name\n");
 	for (pool = gltexturepoolchain;pool;pool = pool->next)
 	{
 		pooltotal = 0;

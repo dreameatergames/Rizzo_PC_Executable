@@ -60,7 +60,7 @@ void InitConProc (HANDLE hFile, HANDLE heventParent, HANDLE heventChild)
 
 	if (!heventDone)
 	{
-		Con_Print("Couldn't create heventDone\n");
+		Con_DPrintf("Couldn't create heventDone\n");
 		return;
 	}
 
@@ -72,7 +72,7 @@ void InitConProc (HANDLE hFile, HANDLE heventParent, HANDLE heventChild)
 					   &dwID))
 	{
 		CloseHandle (heventDone);
-		Con_Print("Couldn't create QHOST thread\n");
+		Con_DPrintf("Couldn't create QHOST thread\n");
 		return;
 	}
 
@@ -115,7 +115,7 @@ DWORD RequestProc (DWORD dwNichts)
 	// hfileBuffer is invalid.  Just leave.
 		if (!pBuffer)
 		{
-			Con_Print("Invalid hfileBuffer\n");
+			Con_DPrintf("Invalid hfileBuffer\n");
 			break;
 		}
 

@@ -918,14 +918,14 @@ void Con_Shutdown (void)
 
 /*
 ================
-Con_PrintToHistory
+Con_PrintfToHistory
 
 Handles cursor positioning, line wrapping, etc
 All console printing must go through this in order to be displayed
 If no console is visible, the notify window will pop up.
 ================
 */
-static void Con_PrintToHistory(const char *txt, int mask)
+static void Con_PrintfToHistory(const char *txt, int mask)
 {
 	// process:
 	//   \n goes to next line
@@ -1148,7 +1148,7 @@ void Con_MaskPrint(int additionalmask, const char *msg)
 			// assert( STRING_COLOR_DEFAULT < 10 )
 			line[index++] = STRING_COLOR_DEFAULT + '0';
 			// special color codes for chat messages must always come first
-			// for Con_PrintToHistory to work properly
+			// for Con_DPrintfToHistory to work properly
 			if (*msg == 1 || *msg == 2 || *msg == 3)
 			{
 				// play talk wav
@@ -1202,7 +1202,7 @@ void Con_MaskPrint(int additionalmask, const char *msg)
 			// send to scrollable buffer
 			if (con_initialized && cls.state != ca_dedicated)
 			{
-				Con_PrintToHistory(line, mask);
+				Con_PrintfToHistory(line, mask);
 			}
 			// send to terminal or dedicated server window
 			if (!sys_nostdout)
@@ -1430,7 +1430,7 @@ void Con_MaskPrintf(int mask, const char *fmt, ...)
 
 /*
 ================
-Con_Print
+Con_DPrintf
 ================
 */
 void Con_Print(const char *msg)
@@ -1440,7 +1440,7 @@ void Con_Print(const char *msg)
 
 /*
 ================
-Con_Printf
+Con_DPrintff
 ================
 */
 void Con_Printf(const char *fmt, ...)
@@ -2222,7 +2222,7 @@ qboolean GetMapList (const char *s, char *completedname, int completednamebuffer
 		*(t->filenames[i]+len[i]+5) = 0;
 		Con_DPrintf("%16s (%-8s) %s\n", t->filenames[i]+5, desc, message);
 	}
-	Con_Print("\n");
+	Con_DPrintf("\n");
 	for(p=o;p<min;p++)
 	{
 		k = *(t->filenames[0]+5+p);
@@ -2267,20 +2267,20 @@ void Con_DisplayList(const char **list)
 	while (*list) {
 		len = (int)strlen(*list);
 		if (pos + maxlen >= width) {
-			Con_Print("\n");
+			Con_DPrintf("\n");
 			pos = 0;
 		}
 
-		Con_Print(*list);
+		Con_DPrintf(*list);
 		for (i = 0; i < (maxlen - len); i++)
-			Con_Print(" ");
+			Con_DPrintf(" ");
 
 		pos += maxlen;
 		list++;
 	}
 
 	if (pos)
-		Con_Print("\n\n");
+		Con_DPrintf("\n\n");
 }
 
 

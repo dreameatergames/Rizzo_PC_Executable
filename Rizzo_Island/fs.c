@@ -980,7 +980,7 @@ static void FS_Path_f (void)
 {
 	searchpath_t *s;
 
-	Con_Print("Current search path:\n");
+	Con_DPrintf("Current search path:\n");
 	for (s=fs_searchpaths ; s ; s=s->next)
 	{
 		if (s->pack)
@@ -1492,18 +1492,18 @@ void FS_Rescan (void)
 		if (!registered.integer)
 		{
 			if (fs_modified)
-				Con_Print("Playing shareware version, with modification.\nwarning: most mods require full quake data.\n");
+				Con_DPrintf("Playing shareware version, with modification.\nwarning: most mods require full quake data.\n");
 			else
-				Con_Print("Playing shareware version.\n");
+				Con_DPrintf("Playing shareware version.\n");
 		}
 		else
-			Con_Print("Playing registered version.\n");
+			Con_DPrintf("Playing registered version.\n");
 		break;
 	case GAME_STEELSTORM:
 		if (registered.integer)
-			Con_Print("Playing registered version.\n");
+			Con_DPrintf("Playing registered version.\n");
 		else
-			Con_Print("Playing shareware version.\n");
+			Con_DPrintf("Playing shareware version.\n");
 		break;
 	default:
 		break;
@@ -3842,7 +3842,7 @@ static void FS_ListDirectoryCmd (const char* cmdname, int oneperline)
 	else
 		pattern = "*";
 	if (!FS_ListDirectory(pattern, oneperline))
-		Con_Print("No files found.\n");
+		Con_DPrintf("No files found.\n");
 }
 
 void FS_Dir_f(void)
@@ -4113,19 +4113,19 @@ unsigned char *FS_Inflate(const unsigned char *data, size_t size, size_t *inflat
 				break;
 				
 			case Z_STREAM_ERROR:
-				Con_Print("FS_Inflate: stream error!\n");
+				Con_DPrintf("FS_Inflate: stream error!\n");
 				break;
 			case Z_DATA_ERROR:
-				Con_Print("FS_Inflate: data error!\n");
+				Con_DPrintf("FS_Inflate: data error!\n");
 				break;
 			case Z_MEM_ERROR:
-				Con_Print("FS_Inflate: mem error!\n");
+				Con_DPrintf("FS_Inflate: mem error!\n");
 				break;
 			case Z_BUF_ERROR:
-				Con_Print("FS_Inflate: buf error!\n");
+				Con_DPrintf("FS_Inflate: buf error!\n");
 				break;
 			default:
-				Con_Print("FS_Inflate: unknown error!\n");
+				Con_DPrintf("FS_Inflate: unknown error!\n");
 				break;
 				
 		}

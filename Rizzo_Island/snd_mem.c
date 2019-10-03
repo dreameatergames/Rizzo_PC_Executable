@@ -119,7 +119,7 @@ qboolean Snd_AppendToSndBuffer (snd_buffer_t* sb, const unsigned char *samples, 
 	// If the formats are incompatible
 	if (sb->format.channels != format->channels || sb->format.width != format->width)
 	{
-		Con_Print("AppendToSndBuffer: incompatible sound formats!\n");
+		Con_DPrintf("AppendToSndBuffer: incompatible sound formats!\n");
 		return false;
 	}
 
@@ -128,7 +128,7 @@ qboolean Snd_AppendToSndBuffer (snd_buffer_t* sb, const unsigned char *samples, 
 	// If the sound buffer is too short
 	if (outcount > sb->maxframes - sb->nbframes)
 	{
-		Con_Print("AppendToSndBuffer: sound buffer too short!\n");
+		Con_DPrintf("AppendToSndBuffer: sound buffer too short!\n");
 		return false;
 	}
 

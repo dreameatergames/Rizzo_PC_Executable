@@ -178,7 +178,7 @@ void CDAudio_SDL_CDDrive_f( void )
 	int numdrives = SDL_CDNumDrives();
 
 	if( Cmd_Argc() != 2 ) {
-		Con_Print( "cddrive <drivenr>\n" );
+		Con_DPrintf( "cddrive <drivenr>\n" );
 		return;
 	}
 

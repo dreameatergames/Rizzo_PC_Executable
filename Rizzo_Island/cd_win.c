@@ -60,12 +60,12 @@ int CDAudio_SysGetAudioDiskInfo(void)
 	dwReturn = mciSendCommand(wDeviceID, MCI_STATUS, MCI_STATUS_ITEM | MCI_WAIT, (DWORD_PTR) (LPVOID) &mciStatusParms);
 	if (dwReturn)
 	{
-		Con_Print("CDAudio_SysGetAudioDiskInfo: drive ready test - get status failed\n");
+		Con_DPrintf("CDAudio_SysGetAudioDiskInfo: drive ready test - get status failed\n");
 		return -1;
 	}
 	if (!mciStatusParms.dwReturn)
 	{
-		Con_Print("CDAudio_SysGetAudioDiskInfo: drive not ready\n");
+		Con_DPrintf("CDAudio_SysGetAudioDiskInfo: drive not ready\n");
 		return -1;
 	}
 
@@ -73,12 +73,12 @@ int CDAudio_SysGetAudioDiskInfo(void)
 	dwReturn = mciSendCommand(wDeviceID, MCI_STATUS, MCI_STATUS_ITEM | MCI_WAIT, (DWORD_PTR) (LPVOID) &mciStatusParms);
 	if (dwReturn)
 	{
-		Con_Print("CDAudio_SysGetAudioDiskInfo: get tracks - status failed\n");
+		Con_DPrintf("CDAudio_SysGetAudioDiskInfo: get tracks - status failed\n");
 		return -1;
 	}
 	if (mciStatusParms.dwReturn < 1)
 	{
-		Con_Print("CDAudio_SysGetAudioDiskInfo: no music tracks\n");
+		Con_DPrintf("CDAudio_SysGetAudioDiskInfo: no music tracks\n");
 		return -1;
 	}
 
@@ -212,7 +212,7 @@ LONG CDAudio_MessageHandler (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			break;
 
 		case MCI_NOTIFY_FAILURE:
-			Con_Print("MCI_NOTIFY_FAILURE\n");
+			Con_DPrintf("MCI_NOTIFY_FAILURE\n");
 			CDAudio_Stop ();
 			cdValid = false;
 			break;
@@ -264,5 +264,5 @@ int CDAudio_SysStartup (void)
 void CDAudio_SysShutdown (void)
 {
 	if (mciSendCommand(wDeviceID, MCI_CLOSE, MCI_WAIT, (DWORD_PTR)NULL))
-		Con_Print("CDAudio_SysShutdown: MCI_CLOSE failed\n");
+		Con_DPrintf("CDAudio_SysShutdown: MCI_CLOSE failed\n");
 }

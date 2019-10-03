@@ -424,7 +424,7 @@ void Cvar_SetQuick (cvar_t *var, const char *value)
 {
 	if (var == NULL)
 	{
-		Con_Print("Cvar_SetQuick: var == NULL\n");
+		Con_DPrintf("Cvar_SetQuick: var == NULL\n");
 		return;
 	}
 

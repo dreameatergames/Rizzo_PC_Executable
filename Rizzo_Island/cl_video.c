@@ -646,7 +646,7 @@ static void CL_PlayVideo_f(void)
 
 	if (Cmd_Argc() < 2)
 	{
-		Con_Print("usage: playvideo <videoname> [custom_subtitles_file]\nplays video named video/<videoname>.dpv\nif custom subtitles file is not presented\nit tries video/<videoname>.sub");
+		Con_DPrintf("usage: playvideo <videoname> [custom_subtitles_file]\nplays video named video/<videoname>.dpv\nif custom subtitles file is not presented\nit tries video/<videoname>.sub");
 		return;
 	}
 

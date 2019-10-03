@@ -192,7 +192,7 @@ void Cbuf_AddText (const char *text)
 
 	Cbuf_LockThreadMutex();
 	if (cmd_text.cursize + l >= cmd_text.maxsize)
-		Con_Print("Cbuf_AddText: overflow\n");
+		Con_DPrintf("Cbuf_AddText: overflow\n");
 	else
 		SZ_Write(&cmd_text, (const unsigned char *)text, l);
 	Cbuf_UnlockThreadMutex();
@@ -214,7 +214,7 @@ void Cbuf_InsertText (const char *text)
 	Cbuf_LockThreadMutex();
 	// we need to memmove the existing text and stuff this in before it...
 	if (cmd_text.cursize + l >= (size_t)cmd_text.maxsize)
-		Con_Print("Cbuf_InsertText: overflow\n");
+		Con_DPrintf("Cbuf_InsertText: overflow\n");
 	else
 	{
 		// we don't have a SZ_Prepend, so...
@@ -412,7 +412,7 @@ static void Cmd_StuffCmds_f (void)
 
 	if (Cmd_Argc () != 1)
 	{
-		Con_Print("stuffcmds : execute command line parameters\n");
+		Con_DPrintf("stuffcmds : execute command line parameters\n");
 		return;
 	}
 
@@ -710,7 +710,7 @@ static void Cmd_Exec_f (void)
 
 	if (Cmd_Argc () != 2)
 	{
-		Con_Print("exec <filename> : execute a script file\n");
+		Con_DPrintf("exec <filename> : execute a script file\n");
 		return;
 	}
 
@@ -741,7 +741,7 @@ static void Cmd_Echo_f (void)
 
 	for (i=1 ; i<Cmd_Argc() ; i++)
 		Con_DPrintf("%s ",Cmd_Argv(i));
-	Con_Print("\n");
+	Con_DPrintf("\n");
 }
 
 // DRESK - 5/14/06
@@ -760,7 +760,7 @@ static void Cmd_Toggle_f(void)
 
 	if(nNumArgs == 1)
 		// No Arguments Specified; Print Usage
-		Con_Print("Toggle Console Variable - Usage\n  toggle <variable> - toggles between 0 and 1\n  toggle <variable> <value> - toggles between 0 and <value>\n  toggle <variable> [string 1] [string 2]...[string n] - cycles through all strings\n");
+		Con_DPrintf("Toggle Console Variable - Usage\n  toggle <variable> - toggles between 0 and 1\n  toggle <variable> <value> - toggles between 0 and <value>\n  toggle <variable> [string 1] [string 2]...[string n] - cycles through all strings\n");
 	else
 	{ // Correct Arguments Specified
 		// Acquire Potential CVar
@@ -841,7 +841,7 @@ static void Cmd_Alias_f (void)
 
 	if (Cmd_Argc() == 1)
 	{
-		Con_Print("Current alias commands:\n");
+		Con_DPrintf("Current alias commands:\n");
 		for (a = cmd_alias ; a ; a=a->next)
 			Con_DPrintf("%s : %s", a->name, a->value);
 		return;
@@ -850,7 +850,7 @@ static void Cmd_Alias_f (void)
 	s = Cmd_Argv(1);
 	if (strlen(s) >= MAX_ALIAS_NAME)
 	{
-		Con_Print("Alias name is too long\n");
+		Con_DPrintf("Alias name is too long\n");
 		return;
 	}
 
@@ -915,7 +915,7 @@ static void Cmd_UnAlias_f (void)
 
 	if(Cmd_Argc() == 1)
 	{
-		Con_Print("unalias: Usage: unalias alias1 [alias2 ...]\n");
+		Con_DPrintf("unalias: Usage: unalias alias1 [alias2 ...]\n");
 		return;
 	}
 

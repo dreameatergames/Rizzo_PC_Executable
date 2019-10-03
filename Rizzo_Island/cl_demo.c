@@ -60,7 +60,7 @@ void CL_NextDemo (void)
 		cls.demonum = 0;
 		if (!cls.demos[cls.demonum][0])
 		{
-			Con_Print("No demos listed with startdemos\n");
+			Con_DPrintf("No demos listed with startdemos\n");
 			cls.demonum = -1;
 			return;
 		}
@@ -307,7 +307,7 @@ void CL_Stop_f (void)
 
 	if (!cls.demorecording)
 	{
-		Con_Print("Not recording a demo.\n");
+		Con_DPrintf("Not recording a demo.\n");
 		return;
 	}
 
@@ -323,10 +323,10 @@ void CL_Stop_f (void)
 	if(cl_autodemo.integer && (cl_autodemo_delete.integer & 1))
 	{
 		FS_RemoveOnClose(cls.demofile);
-		Con_Print("Completed and deleted demo\n");
+		Con_DPrintf("Completed and deleted demo\n");
 	}
 	else
-		Con_Print("Completed demo\n");
+		Con_DPrintf("Completed demo\n");
 	FS_Close (cls.demofile);
 	cls.demofile = NULL;
 	cls.demorecording = false;
@@ -348,19 +348,19 @@ void CL_Record_f (void)
 	c = Cmd_Argc();
 	if (c != 2 && c != 3 && c != 4)
 	{
-		Con_Print("record <demoname> [<map> [cd track]]\n");
+		Con_DPrintf("record <demoname> [<map> [cd track]]\n");
 		return;
 	}
 
 	if (strstr(Cmd_Argv(1), ".."))
 	{
-		Con_Print("Relative pathnames are not allowed.\n");
+		Con_DPrintf("Relative pathnames are not allowed.\n");
 		return;
 	}
 
 	if (c == 2 && cls.state == ca_connected)
 	{
-		Con_Print("Can not record - already connected to server\nClient demo recording must be started before connecting\n");
+		Con_DPrintf("Can not record - already connected to server\nClient demo recording must be started before connecting\n");
 		return;
 	}
 
@@ -389,7 +389,7 @@ void CL_Record_f (void)
 	cls.demofile = FS_OpenRealFile(name, "wb", false);
 	if (!cls.demofile)
 	{
-		Con_Print("ERROR: couldn't open.\n");
+		Con_DPrintf("ERROR: couldn't open.\n");
 		return;
 	}
 	strlcpy(cls.demoname, name, sizeof(cls.demoname));
@@ -419,7 +419,7 @@ void CL_PlayDemo_f (void)
 
 	if (Cmd_Argc() != 2)
 	{
-		Con_Print("play <demoname> : plays a demo\n");
+		Con_DPrintf("play <demoname> : plays a demo\n");
 		return;
 	}
 
@@ -598,7 +598,7 @@ void CL_TimeDemo_f (void)
 {
 	if (Cmd_Argc() != 2)
 	{
-		Con_Print("timedemo <demoname> : gets demo speeds\n");
+		Con_DPrintf("timedemo <demoname> : gets demo speeds\n");
 		return;
 	}
 

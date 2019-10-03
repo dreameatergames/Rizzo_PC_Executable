@@ -833,7 +833,7 @@ void Mem_PrintList(size_t minallocationsize)
 	mempool_t *pool;
 	memheader_t *mem;
 	Mem_CheckSentinelsGlobal();
-	Con_Print("memory pool list:\n"
+	Con_DPrintf("memory pool list:\n"
 	           "size    name\n");
 	for (pool = poolchain;pool;pool = pool->next)
 	{
@@ -858,7 +858,7 @@ static void MemList_f(void)
 		Mem_PrintStats();
 		break;
 	default:
-		Con_Print("MemList_f: unrecognized options\nusage: memlist [all]\n");
+		Con_DPrintf("MemList_f: unrecognized options\nusage: memlist [all]\n");
 		break;
 	}
 }

@@ -3991,7 +3991,7 @@ static rtexture_t *R_LoadCubemap(const char *basename)
 			for (j = 0;j < 3;j++)
 				for (i = 0;i < 6;i++)
 					Con_DPrintf("%s\"%s%s.tga\"", j + i > 0 ? ", " : "", basename, suffix[j][i].suffix);
-			Con_Print(" and was unable to find any of them).\n");
+			Con_DPrintf(" and was unable to find any of them).\n");
 		}
 	}
 	return cubemaptexture;

@@ -618,7 +618,7 @@ static void SV_SaveEntFile_f(void)
 	char vabuf[1024];
 	if (!sv.active || !sv.worldmodel)
 	{
-		Con_Print("Not running a server\n");
+		Con_DPrintf("Not running a server\n");
 		return;
 	}
 	FS_WriteFile(va(vabuf, sizeof(vabuf), "%s.ent", sv.worldnamenoextension), sv.worldmodel->brush.entities, (fs_offset_t)strlen(sv.worldmodel->brush.entities));

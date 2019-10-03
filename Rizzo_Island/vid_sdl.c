@@ -438,20 +438,20 @@ void VID_SetMouse(qboolean fullscreengrab, qboolean relative, qboolean hidecurso
 						Con_DPrintf("previous mouse acceleration: %f\n", originalMouseSpeed);
 						if(IOHIDSetAccelerationWithKey(mouseDev, CFSTR(kIOHIDMouseAccelerationType), -1.0) != kIOReturnSuccess)
 						{
-							Con_Print("Could not disable mouse acceleration (failed at IOHIDSetAccelerationWithKey).\n");
+							Con_DPrintf("Could not disable mouse acceleration (failed at IOHIDSetAccelerationWithKey).\n");
 							Cvar_SetValueQuick(&apple_mouse_noaccel, 0);
 						}
 					}
 					else
 					{
-						Con_Print("Could not disable mouse acceleration (failed at IOHIDGetAccelerationWithKey).\n");
+						Con_DPrintf("Could not disable mouse acceleration (failed at IOHIDGetAccelerationWithKey).\n");
 						Cvar_SetValueQuick(&apple_mouse_noaccel, 0);
 					}
 					IOServiceClose(mouseDev);
 				}
 				else
 				{
-					Con_Print("Could not disable mouse acceleration (failed at IO_GetIOHandle).\n");
+					Con_DPrintf("Could not disable mouse acceleration (failed at IO_GetIOHandle).\n");
 					Cvar_SetValueQuick(&apple_mouse_noaccel, 0);
 				}
 			}
@@ -467,11 +467,11 @@ void VID_SetMouse(qboolean fullscreengrab, qboolean relative, qboolean hidecurso
 				{
 					Con_DPrintf("restoring mouse acceleration to: %f\n", originalMouseSpeed);
 					if(IOHIDSetAccelerationWithKey(mouseDev, CFSTR(kIOHIDMouseAccelerationType), originalMouseSpeed) != kIOReturnSuccess)
-						Con_Print("Could not re-enable mouse acceleration (failed at IOHIDSetAccelerationWithKey).\n");
+						Con_DPrintf("Could not re-enable mouse acceleration (failed at IOHIDSetAccelerationWithKey).\n");
 					IOServiceClose(mouseDev);
 				}
 				else
-					Con_Print("Could not re-enable mouse acceleration (failed at IO_GetIOHandle).\n");
+					Con_DPrintf("Could not re-enable mouse acceleration (failed at IO_GetIOHandle).\n");
 			}
 		}
 #endif
@@ -2553,7 +2553,7 @@ static qboolean VID_InitModeGL(viddef_mode_t *mode)
 	if ((qglGetString = (const GLubyte* (GLAPIENTRY *)(GLenum name))GL_GetProcAddress("glGetString")) == NULL)
 	{
 		VID_Shutdown();
-		Con_Print("Required OpenGL function glGetString not found\n");
+		Con_DPrintf("Required OpenGL function glGetString not found\n");
 		return false;
 	}
 #endif

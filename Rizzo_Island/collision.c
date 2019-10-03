@@ -68,14 +68,14 @@ static void Collision_ValidateBrush(colbrushf_t *brush)
 	printbrush = false;
 	if (!brush->numpoints)
 	{
-		Con_Print("Collision_ValidateBrush: brush with no points!\n");
+		Con_DPrintf("Collision_ValidateBrush: brush with no points!\n");
 		printbrush = true;
 	}
 #if 0
 	// it's ok for a brush to have one point and no planes...
 	if (brush->numplanes == 0 && brush->numpoints != 1)
 	{
-		Con_Print("Collision_ValidateBrush: brush with no planes and more than one point!\n");
+		Con_DPrintf("Collision_ValidateBrush: brush with no planes and more than one point!\n");
 		printbrush = true;
 	}
 #endif
@@ -107,12 +107,12 @@ static void Collision_ValidateBrush(colbrushf_t *brush)
 		}
 		if (pointswithinsufficientplanes)
 		{
-			Con_Print("Collision_ValidateBrush: some points have insufficient planes, every point must be on at least 3 planes to form a corner.\n");
+			Con_DPrintf("Collision_ValidateBrush: some points have insufficient planes, every point must be on at least 3 planes to form a corner.\n");
 			printbrush = true;
 		}
 		if (pointsoffplanes == 0) // all points are on all planes
 		{
-			Con_Print("Collision_ValidateBrush: all points lie on all planes (degenerate, no brush volume!)\n");
+			Con_DPrintf("Collision_ValidateBrush: all points lie on all planes (degenerate, no brush volume!)\n");
 			printbrush = true;
 		}
 	}

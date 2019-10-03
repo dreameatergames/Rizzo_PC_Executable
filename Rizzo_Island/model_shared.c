@@ -663,7 +663,7 @@ static void Mod_Print(void)
 	int nummodels = (int)Mem_ExpandableArray_IndexRange(&models);
 	dp_model_t *mod;
 
-	Con_Print("Loaded models:\n");
+	Con_DPrintf("Loaded models:\n");
 	for (i = 0;i < nummodels;i++)
 	{
 		if ((mod = (dp_model_t *) Mem_ExpandableArray_RecordAtIndex(&models, i)) && mod->name[0] && mod->name[0] != '*')
@@ -686,7 +686,7 @@ static void Mod_Precache(void)
 	if (Cmd_Argc() == 2)
 		Mod_ForName(Cmd_Argv(1), false, true, Cmd_Argv(1)[0] == '*' ? cl.model_name[1] : NULL);
 	else
-		Con_Print("usage: modelprecache <filename>\n");
+		Con_DPrintf("usage: modelprecache <filename>\n");
 }
 
 int Mod_BuildVertexRemapTableFromElements(int numelements, const int *elements, int numvertices, int *remapvertices)
@@ -3449,7 +3449,7 @@ static void Mod_Decompile_f(void)
 
 	if (Cmd_Argc() != 2)
 	{
-		Con_Print("usage: modeldecompile <filename>\n");
+		Con_DPrintf("usage: modeldecompile <filename>\n");
 		return;
 	}
 
@@ -3459,7 +3459,7 @@ static void Mod_Decompile_f(void)
 	mod = Mod_ForName(inname, false, true, inname[0] == '*' ? cl.model_name[1] : NULL);
 	if (!mod)
 	{
-		Con_Print("No such model\n");
+		Con_DPrintf("No such model\n");
 		return;
 	}
 	if (mod->brush.submodel)
@@ -3471,7 +3471,7 @@ static void Mod_Decompile_f(void)
 	}
 	if (!mod->surfmesh.num_triangles)
 	{
-		Con_Print("Empty model (or sprite)\n");
+		Con_DPrintf("Empty model (or sprite)\n");
 		return;
 	}
 

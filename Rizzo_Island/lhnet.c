@@ -48,7 +48,7 @@
 #include "sys.h"
 #include "netconn.h"
 #else
-#define Con_Print printf
+#define Con_DPrintf printf
 #define Con_DPrintf printf
 #define Z_Malloc malloc
 #define Z_Free free
@@ -742,7 +742,7 @@ void LHNET_Init(void)
 #ifdef WIN32
 	lhnet_didWSAStartup = !WSAStartup(MAKEWORD(1, 1), &lhnet_winsockdata);
 	if (!lhnet_didWSAStartup)
-		Con_Print("LHNET_Init: WSAStartup failed, networking disabled\n");
+		Con_DPrintf("LHNET_Init: WSAStartup failed, networking disabled\n");
 #endif
 }
 
@@ -1045,7 +1045,7 @@ lhnetsocket_t *LHNET_OpenSocket_Connectionless(lhnetaddress_t *address)
 #ifdef WIN32
 			}
 			else
-				Con_Print("LHNET_OpenSocket_Connectionless: can't open a socket (WSAStartup failed during LHNET_Init)\n");
+				Con_DPrintf("LHNET_OpenSocket_Connectionless: can't open a socket (WSAStartup failed during LHNET_Init)\n");
 #endif
 			break;
 		default:
@@ -1152,7 +1152,7 @@ int LHNET_Read(lhnetsocket_t *lhnetsocket, void *content, int maxcontentlength, 
 			switch (e)
 			{
 				case ECONNREFUSED:
-					Con_Print("Connection refused\n");
+					Con_DPrintf("Connection refused\n");
 					return 0;
 			}
 			Con_DPrintf("LHNET_Read: recvfrom returned error: %s\n", LHNETPRIVATE_StrError());
@@ -1179,7 +1179,7 @@ int LHNET_Read(lhnetsocket_t *lhnetsocket, void *content, int maxcontentlength, 
 			switch (e)
 			{
 				case ECONNREFUSED:
-					Con_Print("Connection refused\n");
+					Con_DPrintf("Connection refused\n");
 					return 0;
 			}
 			Con_DPrintf("LHNET_Read: recvfrom returned error: %s\n", LHNETPRIVATE_StrError());

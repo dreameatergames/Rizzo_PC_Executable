@@ -367,7 +367,7 @@ void CL_KeepaliveMessage (qboolean readmessages)
 		countdownmsg = 5;
 		// write out a nop
 		// LordHavoc: must use unreliable because reliable could kill the sigon message!
-		Con_Print("--> client to server keepalive\n");
+		Con_DPrintf("--> client to server keepalive\n");
 		memset(&msg, 0, sizeof(msg));
 		msg.data = buf;
 		msg.maxsize = sizeof(buf);
@@ -1948,7 +1948,7 @@ static void CL_ParseServerInfo (void)
 				cls.demo_lastcsprogscrc = -1;
 			}
 			else
-				Con_Print ("ERROR: couldn't open.\n");
+				Con_DPrintf ("ERROR: couldn't open.\n");
 		}
 	}
 	cl.islocalgame = NetConn_IsLocalGame();
@@ -2388,7 +2388,7 @@ void CL_NewBeam (int ent, vec3_t start, vec3_t end, dp_model_t *m, int lightning
 		VectorCopy (end, b->end);
 	}
 	else
-		Con_Print("beam list overflow!\n");
+		Con_DPrintf("beam list overflow!\n");
 }
 
 static void CL_ParseBeam (dp_model_t *m, int lightning)
@@ -3417,7 +3417,7 @@ void CL_ParseServerMessage(void)
 	if (cl_shownet.integer == 1)
 		Con_DPrintf("%f %i\n", realtime, cl_message.cursize);
 	else if (cl_shownet.integer == 2)
-		Con_Print("------------------\n");
+		Con_DPrintf("------------------\n");
 
 //
 // parse the message
@@ -3488,7 +3488,7 @@ void CL_ParseServerMessage(void)
 						i &= 31;
 					}
 					description[strlen(description)-1] = '\n'; // replace the last space with a newline
-					Con_Print(description);
+					Con_DPrintf(description);
 					Host_Error("CL_ParseServerMessage: Illegible server message");
 				}
 				break;
@@ -3853,14 +3853,14 @@ void CL_ParseServerMessage(void)
 						i &= 31;
 					}
 					description[strlen(description)-1] = '\n'; // replace the last space with a newline
-					Con_Print(description);
+					Con_DPrintf(description);
 					Host_Error ("CL_ParseServerMessage: Illegible server message");
 				}
 				break;
 
 			case svc_nop:
 				if (cls.signon < SIGNONS)
-					Con_Print("<-- server to client keepalive\n");
+					Con_DPrintf("<-- server to client keepalive\n");
 				break;
 
 			case svc_time:
@@ -4275,7 +4275,7 @@ void CL_Parse_DumpPacket(void)
 {
 	if (!parsingerror)
 		return;
-	Con_Print("Packet dump:\n");
+	Con_DPrintf("Packet dump:\n");
 	SZ_HexDumpToConsole(&cl_message);
 	parsingerror = false;
 }

@@ -1236,7 +1236,7 @@ void EntityState_ReadFields(entity_state_t *e, unsigned int bits)
 			Con_DPrintf(" E_TAGATTACHMENT e%i:%i", e->tagentity, e->tagindex);
 		if (bits & E_LIGHTSTYLE)
 			Con_DPrintf(" E_LIGHTSTYLE %i", e->lightstyle);
-		Con_Print("\n");
+		Con_DPrintf("\n");
 	}
 }
 
@@ -1333,9 +1333,9 @@ void EntityFrame_AddFrame_Client(entityframe_database_t *d, vec3_t eye, int fram
 		if (e >= d->frames[n].framenum)
 		{
 			if (e == framenum)
-				Con_Print("EntityFrame_AddFrame: tried to add out of sequence frame to database\n");
+				Con_DPrintf("EntityFrame_AddFrame: tried to add out of sequence frame to database\n");
 			else
-				Con_Print("EntityFrame_AddFrame: out of sequence frames in database\n");
+				Con_DPrintf("EntityFrame_AddFrame: out of sequence frames in database\n");
 			return;
 		}
 		e = d->frames[n].framenum;
@@ -1385,9 +1385,9 @@ void EntityFrame_AddFrame_Server(entityframe_database_t *d, vec3_t eye, int fram
 		if (e >= d->frames[n].framenum)
 		{
 			if (e == framenum)
-				Con_Print("EntityFrame_AddFrame: tried to add out of sequence frame to database\n");
+				Con_DPrintf("EntityFrame_AddFrame: tried to add out of sequence frame to database\n");
 			else
-				Con_Print("EntityFrame_AddFrame: out of sequence frames in database\n");
+				Con_DPrintf("EntityFrame_AddFrame: out of sequence frames in database\n");
 			return;
 		}
 		e = d->frames[n].framenum;
@@ -1748,7 +1748,7 @@ int EntityFrame4_AckFrame(entityframe4_database_t *d, int framenum, int servermo
 		for (i = 0;i < MAX_ENTITY_HISTORY;i++)
 			if (d->commit[i].numentities)
 				Con_DPrintf(" %i", d->commit[i].framenum);
-		Con_Print("\n");
+		Con_DPrintf("\n");
 	}
 	return found;
 }
@@ -1774,11 +1774,11 @@ void EntityFrame4_CL_ReadFrame(void)
 		for (i = 0;i < MAX_ENTITY_HISTORY;i++)
 			if (d->commit[i].numentities)
 				Con_DPrintf(" %i", d->commit[i].framenum);
-		Con_Print("\n");
+		Con_DPrintf("\n");
 	}
 	if (!EntityFrame4_AckFrame(d, referenceframenum, false))
 	{
-		Con_Print("EntityFrame4_CL_ReadFrame: reference frame invalid (VERY BAD ERROR), this update will be skipped\n");
+		Con_DPrintf("EntityFrame4_CL_ReadFrame: reference frame invalid (VERY BAD ERROR), this update will be skipped\n");
 		skip = true;
 	}
 	d->currentcommit = NULL;
@@ -1926,7 +1926,7 @@ qboolean EntityFrame4_WriteFrame(sizebuf_t *msg, int maxsize, entityframe4_datab
 		for (i = 0;i < MAX_ENTITY_HISTORY;i++)
 			if (d->commit[i].numentities)
 				Con_DPrintf(" %i", d->commit[i].framenum);
-		Con_Print(")\n");
+		Con_DPrintf(")\n");
 	}
 	if (d->currententitynumber >= prog->max_edicts)
 		startnumber = 1;
@@ -2587,24 +2587,24 @@ static void EntityState5_ReadUpdate(entity_state_t *s, int number)
 		{
 			Con_DPrintf(" E5_FLAGS %i (", s->flags);
 			if (s->flags & RENDER_STEP)
-				Con_Print(" STEP");
+				Con_DPrintf(" STEP");
 			if (s->flags & RENDER_GLOWTRAIL)
-				Con_Print(" GLOWTRAIL");
+				Con_DPrintf(" GLOWTRAIL");
 			if (s->flags & RENDER_VIEWMODEL)
-				Con_Print(" VIEWMODEL");
+				Con_DPrintf(" VIEWMODEL");
 			if (s->flags & RENDER_EXTERIORMODEL)
-				Con_Print(" EXTERIORMODEL");
+				Con_DPrintf(" EXTERIORMODEL");
 			if (s->flags & RENDER_LOWPRECISION)
-				Con_Print(" LOWPRECISION");
+				Con_DPrintf(" LOWPRECISION");
 			if (s->flags & RENDER_COLORMAPPED)
-				Con_Print(" COLORMAPPED");
+				Con_DPrintf(" COLORMAPPED");
 			if (s->flags & RENDER_SHADOW)
-				Con_Print(" SHADOW");
+				Con_DPrintf(" SHADOW");
 			if (s->flags & RENDER_LIGHT)
-				Con_Print(" LIGHT");
+				Con_DPrintf(" LIGHT");
 			if (s->flags & RENDER_NOSELFSHADOW)
-				Con_Print(" NOSELFSHADOW");
-			Con_Print(")");
+				Con_DPrintf(" NOSELFSHADOW");
+			Con_DPrintf(")");
 		}
 		if (bits & E5_ALPHA)
 			Con_DPrintf(" E5_ALPHA %f", s->alpha / 255.0f);
@@ -2626,7 +2626,7 @@ static void EntityState5_ReadUpdate(entity_state_t *s, int number)
 			Con_DPrintf(" E5_COMPLEXANIMATION");
 		if (bits & E5_TRAILEFFECTNUM)
 			Con_DPrintf(" E5_TRAILEFFECTNUM %i", s->traileffectnum);
-		Con_Print("\n");
+		Con_DPrintf("\n");
 	}
 }
 
@@ -3259,7 +3259,7 @@ static void EntityStateQW_ReadEntityUpdate(entity_state_t *s, int bits)
 			Con_DPrintf(" U_ANGLE3 %f", s->angles[2]);
 		if (bits & QW_U_SOLID)
 			Con_DPrintf(" U_SOLID");
-		Con_Print("\n");
+		Con_DPrintf("\n");
 	}
 }
 
